@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEAF GBC2 Lunar Plant Chamber — 3D CFD &amp; Biophysics Portal</title>
+  <style>
+    :root {
+      --bg-primary: #0b111e;
+      --bg-secondary: #131c2e;
+      --bg-card: #182338;
+      --bg-card-hover: #1e2c46;
+      --border-color: #283754;
+      --text-primary: #f0f4f8;
+      --text-secondary: #a0b2c6;
+      --text-muted: #6e849e;
+      --accent-green: #2ecc71;
+      --accent-green-dim: rgba(46, 204, 113, 0.14);
+      --accent-blue: #3498db;
+      --accent-blue-dim: rgba(52, 152, 219, 0.15);
+      --accent-purple: #9b59b6;
+      --accent-orange: #e67e22;
+      --accent-red: #e74c3c;
+      --radius-lg: 12px;
+      --radius-md: 8px;
+      --shadow-card: 0 8px 28px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Sticky Top Navigation */
+    header.navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(11, 17, 30, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.85rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, #27ae60, #2980b9);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 0.22rem 0.6rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    nav.nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    nav.nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav.nav-links a:hover {
+      color: #fff;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #27ae60, #219150);
+      color: #fff !important;
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.15);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(46, 204, 113, 0.35);
+    }
+
+    .btn-outline {
+      background: rgba(52, 152, 219, 0.12);
+      color: #5dade2 !important;
+      border: 1px solid rgba(52, 152, 219, 0.4);
+      padding: 0.42rem 0.9rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.82rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-outline:hover {
+      background: rgba(52, 152, 219, 0.24);
+      border-color: #5dade2;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: radial-gradient(circle at 80% 20%, rgba(41, 128, 185, 0.18), transparent 50%),
+                  radial-gradient(circle at 20% 80%, rgba(39, 174, 96, 0.14), transparent 50%),
+                  var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      margin-bottom: 2.25rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .hero-eyebrow {
+      color: var(--accent-green);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.65rem, 3vw, 2.35rem);
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 1rem;
+      color: #ffffff;
+    }
+
+    .hero p.lead {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 980px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
+    }
+
+    .kpi-card {
+      background: rgba(11, 17, 30, 0.65);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.15rem 1.25rem;
+      border-left: 4px solid var(--accent-blue);
+    }
+
+    .kpi-card.green { border-left-color: var(--accent-green); }
+    .kpi-card.orange { border-left-color: var(--accent-orange); }
+    .kpi-card.purple { border-left-color: var(--accent-purple); }
+
+    .kpi-label {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .kpi-value {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0.25rem 0;
+    }
+
+    .kpi-sub {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Section Styling */
+    section.section-block {
+      margin-bottom: 3rem;
+      content-visibility: auto;
+      contain-intrinsic-size: 1px 600px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-header h2 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .section-header p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+    }
+
+    /* 3D Viewer Embed Frame */
+    .viewer-frame-wrap {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .viewer-toolbar {
+      background: #101827;
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .viewer-toolbar-info {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .dot-indicator {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+
+    iframe.twin-iframe {
+      width: 100%;
+      height: 680px;
+      border: none;
+      display: block;
+      background: #0b101d;
+    }
+
+    /* Blueprint Switcher */
+    .tabs-bar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      padding: 0.45rem 0.95rem;
+      border-radius: var(--radius-md);
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+      background: var(--bg-card-hover);
+    }
+
+    .tab-btn.active {
+      background: var(--accent-blue);
+      color: #fff;
+      border-color: var(--accent-blue);
+    }
+
+    .blueprint-showcase {
+      display: grid;
+      grid-template-columns: 1.65fr 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+      .blueprint-showcase {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .blueprint-img-box {
+      background: #ffffff;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 0.75rem;
+      box-shadow: var(--shadow-card);
+      position: relative;
+      cursor: zoom-in;
+    }
+
+    .blueprint-img-box img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 6px;
+    }
+
+    .zoom-hint {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      background: rgba(15, 23, 42, 0.85);
+      color: #fff;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    .spec-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .spec-panel h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.9rem;
+      color: #fff;
+    }
+
+    .spec-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .spec-list li {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      padding-bottom: 0.65rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .spec-list li strong {
+      color: #fff;
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    /* Species Comparison Cards */
+    .species-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 920px) {
+      .species-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chamber-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.35rem;
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chamber-card.brapa {
+      border-top: 4px solid var(--accent-green);
+    }
+
+    .chamber-card.athal {
+      border-top: 4px solid var(--accent-blue);
+    }
+
+    .chamber-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.85rem;
+    }
+
+    .chamber-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .chamber-species {
+      font-style: italic;
+      font-size: 0.88rem;
+      color: var(--accent-green);
+    }
+
+    .chamber-card.athal .chamber-species {
+      color: #5dade2;
+    }
+
+    .seed-pill {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.16);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.84rem;
+      padding: 0.38rem 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.07);
+    }
+
+    .metric-row span:first-child {
+      color: var(--text-secondary);
+    }
+
+    .metric-row span:last-child {
+      color: #fff;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Interactive Telemetry Table */
+    .table-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow-x: auto;
+      box-shadow: var(--shadow-card);
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      text-align: left;
+    }
+
+    table.data-table th {
+      background: #101827;
+      color: var(--text-secondary);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+      letter-spacing: 0.04em;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    table.data-table td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    table.data-table tr:hover td {
+      background: rgba(255,255,255,0.03);
+    }
+
+    /* Figure Gallery Grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(410px, 1fr));
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 500px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .fig-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .fig-card:hover {
+      transform: translateY(-3px);
+      border-color: #3d5680;
+    }
+
+    .fig-thumb-wrap {
+      background: #fff;
+      padding: 0.5rem;
+      cursor: zoom-in;
+      position: relative;
+      height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .fig-thumb-wrap img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: transform 0.25s;
+    }
+
+    .fig-card:hover .fig-thumb-wrap img {
+      transform: scale(1.02);
+    }
+
+    .fig-body {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .fig-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.18rem 0.55rem;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+      background: var(--accent-blue-dim);
+      color: #5dade2;
+    }
+
+    .fig-card h3 {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.45rem;
+    }
+
+    .fig-card p {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .fig-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 0.85rem;
+    }
+
+    /* Native Dialog Lightbox */
+    dialog#lightbox {
+      margin: auto;
+      max-width: 94vw;
+      max-height: 92vh;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      background: #0f172a;
+      color: #fff;
+      padding: 1rem;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.75);
+    }
+
+    dialog#lightbox::backdrop {
+      background: rgba(5, 9, 18, 0.85);
+      backdrop-filter: blur(5px);
+    }
+
+    .lightbox-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      gap: 1rem;
+    }
+
+    .lightbox-title {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .lightbox-close {
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 0.35rem 0.8rem;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .lightbox-img-container {
+      background: #fff;
+      border-radius: 8px;
+      padding: 0.5rem;
+      overflow: auto;
+      max-height: 80vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .lightbox-img-container img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      background: var(--bg-secondary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="navbar">
+    <div class="brand">
+      <span class="brand-badge">LEAF GBC2</span>
+      <span>Lunar Plant Growth Chamber CFD &amp; Biophysics Portal</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#digital-twin">3D Digital Twin</a>
+      <a href="#cad-blueprints">CAD Blueprints</a>
+      <a href="#species-morphometrics">Species &amp; Seeds</a>
+      <a href="#cfd-gallery">Figure Gallery</a>
+      <a href="#data-tables">TSV Datasets</a>
+      <a href="viewer_3d.html" target="_blank" class="btn-primary">Launch Fullscreen 3D Sim ↗</a>
+    </nav>
+  </header>
+
+  <main class="container">
+
+    <!-- Hero Overview -->
+    <section class="hero">
+      <div class="hero-eyebrow">Spaceflight Hardware Fluidics &amp; Multi-Species Gas Exchange</div>
+      <h1>LEAF GBC2 Plant Chamber: 1g Earth vs. 0.166g Lunar CFD Model</h1>
+      <p class="lead">
+        Full 3D Navier–Stokes, Brinkman–Darcy porous media, and coupled Farquhar–von Caemmerer–Berry (FvCB) photosynthetic modeling for the mated GBC2 pot (<code>M09024F-MDL-5</code>) and lid (<code>M09025F-MDL-2</code>). Incorporates a 3-part partitioned porous substrate ($Y = 7.62\text{–}14.62\ \text{mm}$), lower aeration wells ($Y = 0\text{–}7.62\ \text{mm}$), asymmetric planting densities (<strong>32 <em>Brassica rapa</em> seeds</strong> in Chambers 1 &amp; 3 vs. <strong>100 <em>Arabidopsis thaliana</em> seeds</strong> in central Chamber 2), diurnal photoperiod inversion, and harvest-phase RNAlater fixative perfusion.
+      </p>
+      <div class="hero-actions">
+        <a href="#digital-twin" class="btn-primary">Explore Interactive 3D Digital Twin</a>
+        <a href="#cad-blueprints" class="btn-outline">View ABAI QC Orthographic Blueprints</a>
+        <a href="figures/fig_orthographic_projection_annotated.svg" target="_blank" class="btn-outline">Download Blueprint SVG</a>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card green">
+          <div class="kpi-label">Daytime Lunar Pump Target</div>
+          <div class="kpi-value">0.85 L/min</div>
+          <div class="kpi-sub">Compensates 0.166g buoyancy loss; cuts boundary-layer CO₂ drawdown by 37%</div>
+        </div>
+        <div class="kpi-card purple">
+          <div class="kpi-label">Nocturnal Lunar Setback Floor</div>
+          <div class="kpi-value">&ge; 0.60 L/min</div>
+          <div class="kpi-sub">Maintains Ri &le; 0.05 during 8h night to flush dense respiratory CO₂ pooling</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Inter-Chamber Age Uniformity</div>
+          <div class="kpi-value">6.05 – 6.10 s</div>
+          <div class="kpi-sub">&lt; 1.0% residence time disparity across Chambers 1, 2 &amp; 3 (Sandberg verified)</div>
+        </div>
+        <div class="kpi-card orange">
+          <div class="kpi-label">RNAlater Perfusion (10 mL/min)</div>
+          <div class="kpi-value">31.7 s / 6.46 m</div>
+          <div class="kpi-sub">31.7 s root saturation (5.28 mL void); 6.46 min full flood (&Delta;P = 0.73 kPa)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 1: Interactive 3D Digital Twin -->
+    <section id="digital-twin" class="section-block">
+      <div class="section-header">
+        <div>
+          <h2>1. Interactive 3D Chamber Digital Twin &amp; Live CFD Simulator</h2>
+          <p>Orbit, slice, toggle the 3 partitioned substrate blocks, inspect the 32 <em>B. rapa</em> vs. 100 <em>Arabidopsis</em> canopies, and modulate pump speed under 1g Earth or 0.166g Lunar gravity.</p>
+        </div>
+        <a href="viewer_3d.html" target="_blank" class="btn-outline">Open Standalone Fullscreen ↗</a>
+      </div>
+
+      <div class="viewer-frame-wrap">
+        <div class="viewer-toolbar">
+          <div class="viewer-toolbar-info">
+            <span><span class="dot-indicator" style="background:#e74c3c;"></span>Port 1: Air Inlet ($Z=-21.6\text{ mm}$)</span>
+            <span><span class="dot-indicator" style="background:#9b59b6;"></span>Port 2: Central Exhaust ($Z=0.0\text{ mm}$)</span>
+            <span><span class="dot-indicator" style="background:#3498db;"></span>Port 3: Dipping Nozzle ($Z=+21.6\text{ mm}, Y=9.5\text{ mm}$)</span>
+            <span><span class="dot-indicator" style="background:#e67e22;"></span>3-Part Substrate ($Y=7.62\text{–}14.62\text{ mm}$)</span>
+          </div>
+          <span style="font-size:0.78rem; color:var(--text-muted);">Drag to Orbit · Scroll to Zoom · Right-Click to Pan</span>
+        </div>
+        <iframe src="viewer_3d.html" class="twin-iframe" title="LEAF GBC2 3D Interactive Chamber Viewer"></iframe>
+      </div>
+    </section>
+
+    <!-- Section 2: CAD Orthographic Blueprints & Cross Sections -->
+    <section id="cad-blueprints" class="section-block">
+      <div class="section-header">
+        <div>
+          <h2>2. ABAI QC Orthographic Blueprints &amp; Mated CAD Cross-Sections</h2>
+          <p>Exact 3D STEP cross-sections verifying lid mating ($Y = 33.67\ \text{mm}$), 3-part partitioned substrate, Port 3 dipping nozzle, and "dip-and-converge" airflow streamlines.</p>
+        </div>
+        <div class="tabs-bar">
+          <button class="tab-btn active" onclick="switchBlueprint('ortho', this)">Orthographic 3-View Blueprint</button>
+          <button class="tab-btn" onclick="switchBlueprint('annotated', this)">Mated Cross-Sections (Annotated)</button>
+          <button class="tab-btn" onclick="switchBlueprint('exact', this)">Pure CAD Engineering Slices</button>
+        </div>
+      </div>
+
+      <div class="blueprint-showcase">
+        <div class="blueprint-img-box" onclick="openLightbox(document.getElementById('active-blueprint-img').src, document.getElementById('active-blueprint-img').alt)">
+          <img id="active-blueprint-img" src="figures/fig_orthographic_projection_annotated.png" alt="LEAF GBC2 Orthographic Projection Blueprint" fetchpriority="high" />
+          <div class="zoom-hint">🔍 Click to Expand High-Res Blueprint</div>
+        </div>
+
+        <div class="spec-panel">
+          <h3>Hardware &amp; Fluidic Architecture</h3>
+          <ul class="spec-list">
+            <li>
+              <strong>Mated CAD Envelope (Pot + Lid)</strong>
+              Pot (`M09024F-MDL-5`): $47.63 \times 33.67 \times 67.95\ \text{mm}$. Lid (`M09025F-MDL-2`) rotated $90^\circ$ and seated at $Y = 33.67\ \text{mm}$ ($Y \in [32.40, 38.11]\ \text{mm}$).
+            </li>
+            <li>
+              <strong>3-Part Partitioned Porous Substrate ($Y = 7.62\text{–}14.62\ \text{mm}$)</strong>
+              Split into 3 discrete blocks seated on internal chamber retainer ledges ($\Delta Y = 7.00\ \text{mm}$, $\epsilon = 0.50$, $K = 10^{-10}\ \text{m}^2$). Total bulk volume $= 10.55\ \text{cm}^3$ ($5.28\ \text{mL}$ void volume).
+            </li>
+            <li>
+              <strong>Lower Aeration &amp; Drainage Base ($Y = 0.0\text{–}7.62\ \text{mm}$)</strong>
+              Molded basal troughs ($8.74\ \text{cm}^3$) below the substrate ledges provide root zone oxygenation and capillary moisture buffering.
+            </li>
+            <li>
+              <strong>Open Central Plenum ($\Delta Y = 14.2\ \text{mm}$ in Chamber 2)</strong>
+              Because Chamber 2 houses prostrate <em>Arabidopsis</em> rosettes ($h = 4.9\ \text{mm}$) between tall <em>B. rapa</em> canopies ($h = 11.4\ \text{mm}$), air skims across Chamber 1, dips into Chamber 2's open plenum, converges with Chamber 3, and exits cleanly out Port 2.
+            </li>
+            <li>
+              <strong>Port 3 Sub-Surface Dipping Nozzle ($Y = 9.5\ \text{mm}$)</strong>
+              Delivers water and harvest-phase RNAlater directly into the core of Substrate Block 3, driving bottom-up capillary imbibition without foliar splashing.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Multi-Species Morphometrics & Planting Density -->
+    <section id="species-morphometrics" class="section-block">
+      <div class="section-header">
+        <div>
+          <h2>3. Multi-Species Planting Densities &amp; Asymmetric Gas Exchange</h2>
+          <p>Contrasting morphological architecture, aerodynamic drag, and FvCB photosynthetic assimilation across the three growth compartments.</p>
+        </div>
+      </div>
+
+      <div class="species-grid">
+        <!-- Chamber 1 -->
+        <div class="chamber-card brapa">
+          <div class="chamber-header">
+            <div>
+              <div class="chamber-title">Chamber 1 (Port 1 Inlet Side)</div>
+              <div class="chamber-species">Brassica rapa (Tall Erect Canopy)</div>
+            </div>
+            <span class="seed-pill">32 Seeds</span>
+          </div>
+          <div class="metric-row"><span>Axial Span ($Z$)</span><span>-30.5 to -9.5 mm</span></div>
+          <div class="metric-row"><span>Planting Density</span><span>47.2 seeds / dm²</span></div>
+          <div class="metric-row"><span>Total Chamber Leaf Area</span><span>64.0 cm² (2.0 cm²/plant)</span></div>
+          <div class="metric-row"><span>Canopy Vertical Span ($Y$)</span><span>15.0 – 26.0 mm (h = 11.4 mm)</span></div>
+          <div class="metric-row"><span>Leaf Area Index (LAI) / Density ($a$)</span><span>9.44 / 828 m²/m³</span></div>
+          <div class="metric-row"><span>Aerodynamic Drag ($D = C_d a U$)</span><span>8.28 s⁻¹ (L_leaf = 20 mm)</span></div>
+          <div class="metric-row"><span>Substrate Block 1 Void Volume</span><span>2.01 mL (4.02 cm³ bulk)</span></div>
+        </div>
+
+        <!-- Chamber 2 -->
+        <div class="chamber-card athal">
+          <div class="chamber-header">
+            <div>
+              <div class="chamber-title">Chamber 2 (Central Exhaust)</div>
+              <div class="chamber-species">Arabidopsis thaliana (Rosette Lawn)</div>
+            </div>
+            <span class="seed-pill">100 Seeds</span>
+          </div>
+          <div class="metric-row"><span>Axial Span ($Z$)</span><span>-7.5 to +7.5 mm</span></div>
+          <div class="metric-row"><span>Planting Density</span><span>206.2 seeds / dm²</span></div>
+          <div class="metric-row"><span>Total Chamber Leaf Area</span><span>15.0 cm² (0.15 cm²/plant)</span></div>
+          <div class="metric-row"><span>Canopy Vertical Span ($Y$)</span><span>15.0 – 19.5 mm (h = 4.9 mm)</span></div>
+          <div class="metric-row"><span>Leaf Area Index (LAI) / Density ($a$)</span><span>3.09 / 630 m²/m³</span></div>
+          <div class="metric-row"><span>Aerodynamic Drag ($D = C_d a U$)</span><span>4.72 s⁻¹ (L_leaf = 8 mm)</span></div>
+          <div class="metric-row"><span>Open Central Plenum Headspace</span><span>&Delta;Y = 14.2 mm (Y = 19.5–33.7 mm)</span></div>
+        </div>
+
+        <!-- Chamber 3 -->
+        <div class="chamber-card brapa">
+          <div class="chamber-header">
+            <div>
+              <div class="chamber-title">Chamber 3 (Port 3 Nozzle Side)</div>
+              <div class="chamber-species">Brassica rapa (Tall Erect Canopy)</div>
+            </div>
+            <span class="seed-pill">32 Seeds</span>
+          </div>
+          <div class="metric-row"><span>Axial Span ($Z$)</span><span>+9.5 to +30.5 mm</span></div>
+          <div class="metric-row"><span>Planting Density</span><span>47.2 seeds / dm²</span></div>
+          <div class="metric-row"><span>Total Chamber Leaf Area</span><span>64.0 cm² (2.0 cm²/plant)</span></div>
+          <div class="metric-row"><span>Canopy Vertical Span ($Y$)</span><span>15.0 – 26.0 mm (h = 11.4 mm)</span></div>
+          <div class="metric-row"><span>Leaf Area Index (LAI) / Density ($a$)</span><span>9.44 / 828 m²/m³</span></div>
+          <div class="metric-row"><span>Aerodynamic Drag ($D = C_d a U$)</span><span>8.28 s⁻¹ (L_leaf = 20 mm)</span></div>
+          <div class="metric-row"><span>Substrate Block 3 Void Volume</span><span>2.01 mL (Nozzle at Y = 9.5 mm)</span></div>
+        </div>
+      </div>
+
+      <!-- Chamber Telemetry Comparison Table -->
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Gravity &amp; Pump Regime</th>
+              <th>Flow ($Q$)</th>
+              <th>Gravity ($g$)</th>
+              <th>Ch 1 &amp; 3 (32 <em>B. rapa</em>) $g_{bl}$</th>
+              <th>Ch 1 &amp; 3 $\Delta[\text{CO}_2]$ / $\Delta[\text{H}_2\text{O}]$</th>
+              <th>Ch 1 &amp; 3 $A_{\text{net}}$</th>
+              <th>Ch 2 (100 <em>Arabidopsis</em>) $g_{bl}$</th>
+              <th>Ch 2 $\Delta[\text{CO}_2]$ / $\Delta[\text{H}_2\text{O}]$</th>
+              <th>Ch 2 $A_{\text{net}}$</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1g Earth Baseline</strong></td>
+              <td>0.50 L/min</td>
+              <td>9.81 m/s²</td>
+              <td>0.0604 mol m⁻² s⁻¹</td>
+              <td>-3.76 ppm / +7.11 mmol m⁻³</td>
+              <td style="color:#2ecc71; font-weight:700;">13.04 &mu;mol m⁻² s⁻¹</td>
+              <td>0.0759 mol m⁻² s⁻¹</td>
+              <td>-1.31 ppm / +2.40 mmol m⁻³</td>
+              <td style="color:#5dade2; font-weight:700;">10.06 &mu;mol m⁻² s⁻¹</td>
+            </tr>
+            <tr>
+              <td><strong>Lunar 0.166g Uncompensated</strong></td>
+              <td>0.50 L/min</td>
+              <td>1.62 m/s²</td>
+              <td>0.0385 mol m⁻² s⁻¹</td>
+              <td>-3.77 ppm / +7.12 mmol m⁻³</td>
+              <td style="color:#e67e22; font-weight:700;">10.63 &mu;mol m⁻² s⁻¹ (81.5%)</td>
+              <td>0.0484 mol m⁻² s⁻¹</td>
+              <td>-1.32 ppm / +2.42 mmol m⁻³</td>
+              <td style="color:#e67e22; font-weight:700;">8.43 &mu;mol m⁻² s⁻¹ (83.8%)</td>
+            </tr>
+            <tr>
+              <td><strong>Lunar 0.166g Compensated</strong></td>
+              <td><strong>0.85 L/min</strong></td>
+              <td>1.62 m/s²</td>
+              <td>0.0384 mol m⁻² s⁻¹</td>
+              <td style="color:#2ecc71; font-weight:700;">-2.35 ppm / +4.50 mmol m⁻³ (-37%)</td>
+              <td style="color:#2ecc71; font-weight:700;">10.66 &mu;mol m⁻² s⁻¹</td>
+              <td>0.0483 mol m⁻² s⁻¹</td>
+              <td style="color:#5dade2; font-weight:700;">-0.85 ppm / +1.59 mmol m⁻³ (-37%)</td>
+              <td style="color:#5dade2; font-weight:700;">8.44 &mu;mol m⁻² s⁻¹</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 4: Complete CFD & Biophysics Figure Gallery -->
+    <section id="cfd-gallery" class="section-block">
+      <div class="section-header">
+        <div>
+          <h2>4. Complete CFD &amp; Biophysics Simulation Gallery (Figures 1–8)</h2>
+          <p>Click any figure to inspect in full resolution or download publication-ready SVG/PNG vector assets.</p>
+        </div>
+        <div class="tabs-bar">
+          <button class="tab-btn active" onclick="filterGallery('all', this)">All Figures (8)</button>
+          <button class="tab-btn" onclick="filterGallery('aero', this)">Aerodynamics &amp; Gravity</button>
+          <button class="tab-btn" onclick="filterGallery('bio', this)">Gas Exchange &amp; Omics</button>
+          <button class="tab-btn" onclick="filterGallery('ops', this)">RNAlater &amp; Diurnal Ops</button>
+        </div>
+      </div>
+
+      <div class="gallery-grid" id="gallery-container">
+        <!-- Fig 1 -->
+        <article class="fig-card" data-cat="aero">
+          <div class="fig-thumb-wrap" onclick="openLightbox('figures/fig1_pump_speed_vs_aerodynamics.png', 'Figure 1: Parametric Pump Speed Sweep vs. Canopy Aerodynamics')">
+            <img src="figures/fig1_pump_speed_vs_aerodynamics.png" alt="Figure 1 Pump Speed vs Aerodynamics" loading="lazy" decoding="async" />
+          </div>
+          <div class="fig-body">
+            <div>
+              <span class="fig-tag">Figure 1 · Parametric Sweep</span>
+              <h3>Pump Speed vs. Canopy Aerodynamics &amp; Gas Exchange</h3>
+              <p>16-condition sweep ($Q = 0.05\text{–}4.0\ \text{L/min}$) comparing Earth $1.0\,g$ and Lunar $0.166\,g$ canopy velocity, boundary-layer conductance ($g_{bl}$), $\text{CO}_2$ drawdown, and FvCB photosynthesis.</p>
+            </div>
+            <div class="fig-actions">
+              <button class="btn-outline" onclick="openLightbox('figures/fig1_pump_speed_vs_aerodynamics.png', 'Figure 1: Parametric Pump Speed Sweep')">🔍 Zoom PNG</button>
+              <a href="figures/fig1_pump_speed_vs_aerodynamics.svg" target="_blank" class="btn-outline">⬇ SVG Vector</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Fig 2 -->
+        <article class="fig-card" data-cat="aero">
+          <div class="fig-thumb-wrap" onclick="openLightbox('figures/fig2_velocity_fields_earth_vs_lunar.png', 'Figure 2: Velocity, CO2, and H2O Fields — Earth 1g vs Lunar 0.166g')">
+            <img src="figures/fig2_velocity_fields_earth_vs_lunar.png" alt="Figure 2 Velocity Fields Earth vs Lunar" loading="lazy" decoding="async" />
+          </div>
+          <div class="fig-body">
+            <div>
+              <span class="fig-tag">Figure 2 · Spatial Fields</span>
+              <h3>Velocity, CO₂ &amp; H₂O Fields: Earth 1g vs. Lunar 0.166g</h3>
+              <p>Mid-plane slices illustrating buoyant plume suppression at $0.166\,g$, 3-part substrate boundaries ($Y = 7.62\text{–}14.62\ \text{mm}$), and restoration of scalar uniformity at $Q = 0.85\ \text{L/min}$.</p>
+            </div>
+            <div class="fig-actions">
+              <button class="btn-outline" onclick="openLightbox('figures/fig2_velocity_fields_earth_vs_lunar.png', 'Figure 2: Spatial Fields Earth vs Lunar')">🔍 Zoom PNG</button>
+              <a href="figures/fig2_velocity_fields_earth_vs_lunar.svg" target="_blank" class="btn-outline">⬇ SVG Vector</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Fig 3 -->
+        <article class="fig-card" data-cat="aero">
+          <div class="fig-thumb-wrap" onclick="openLightbox('figures/fig3_lunar_compensatory_pump_curve.png', 'Figure 3: Lunar Compensatory Pump Sizing Curve')">
+            <img src="figures/fig3_lunar_compensatory_pump_curve.png" alt="Figure 3 Lunar Compensatory Pump Curve" loading="lazy" decoding="async" />
+          </div>
+          <div class="fig-body">
+            <div>
+              <span class="fig-tag">Figure 3 · Pump Sizing</span>
+              <h3>Lunar Compensatory Pump Curve &amp; Convection Regimes</h3>
+              <p>Maps Richardson number ($\text{Ri} = \text{Gr}/\text{Re}^2$) and Peclet number ($\text{Pe}$) across flow rates, identifying $Q = 0.85\ \text{L/min}$ as the daytime compensation setpoint.</p>
+            </div>
+            <div class="fig-actions">
+              <button class="btn-outline" onclick="openLightbox('figures/fig3_lunar_compensatory_pump_curve.png', 'Figure 3: Lunar Compensatory Pump Curve')">🔍 Zoom PNG</button>
+              <a href="figures/fig3_lunar_compensatory_pump_curve.svg" target="_blank" class="btn-outline">⬇ SVG Vector</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Fig 4 -->
+        <article class="fig-card" data-cat="aero">
+          <div class="fig-thumb-wrap" onclick="openLightbox('figures/fig4_mean_age_of_air_and_chamber_uniformity.png', 'Figure 4: 3D Mean Age of Air & Inter-Chamber Uniformity')">
+            <img src="figures/fig4_mean_age_of_air_and_chamber_uniformity.png" alt="Figure 4 Mean Age of Air" loading="lazy" decoding="async" />
+          </div>
+          <div class="fig-body">
+            <div>
+              <span class="fig-tag">Figure 4 · Residence Time</span>
+              <h3>3D Mean Age of Air ($\theta$) &amp; Sandberg Conservation</h3>
+              <p>Solves $\mathbf{u}\cdot\nabla\theta - D_\theta\nabla^2\theta = 1$, confirming $< 1.0\%$ inter-chamber age disparity ($6.05\text{–}6.10\ \text{s}$) and exact Sandberg outlet flux conservation.</p>
+            </div>
+            <div class="fig-actions">
+              <button class="btn-outline" onclick="openLightbox('figures/fig4_mean_age_of_air_and_chamber_uniformity.png', 'Figure 4: Mean Age of Air & Uniformity')">🔍 Zoom PNG</button>
+              <a href="figures/fig4_mean_age_of_air_and_chamber_uniformity.svg" target="_blank" class="btn-outline">⬇ SVG Vector</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Fig 5 -->
+        <article class="fig-card" data-cat="bio">
+          <div class="fig-thumb-wrap" onclick="openLightbox('figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.png', 'Figure 5: Flight Hardware Benchmark — GBC2 vs NASA BRIC, CARA, Veggie')">
+            <img src="figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.png" alt="Figure 5 Flight Hardware Benchmark" loading="lazy" decoding="async" />
+          </div>
+          <div class="fig-body">
+            <div>
+              <span class="fig-tag">Figure 5 · Hardware Benchmark</span>
+              <h3>Spaceflight Hardware Benchmark: GBC2 vs. BRIC, CARA &amp; Veggie</h3>
+              <p>Demonstrates how active forced ventilation in GBC2 ($0.50\text{–}0.85\ \text{L/min}$) eliminates the diffusive hypoxia and $\text{CO}_2$ starvation characteristic of sealed passive Petri hardware.</p>
+            </div>
+            <div class="fig-actions">
+              <button class="btn-outline" onclick="openLightbox('figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.png', 'Figure 5: NASA Flight Hardware Benchmark')">🔍 Zoom PNG</button>
+              <a href="figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.svg" target="_blank" class="btn-outline">⬇ SVG Vector</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Fig 6 -->
+        <article class="fig-card" data-cat="bio">
+          <div class="fig-thumb-wrap" onclick="openLightbox('figures/fig6_predicted_hormone_carbon_phenotypes.png', 'Figure 6: Predicted Transcriptomic & Hormone Signaling Phenotypes')">
+            <img src="figures/fig6_predicted_hormone_carbon_phenotypes.png" alt="Figure 6 Predicted Hormone Carbon Phenotypes" loading="lazy" decoding="async" />
+          </div>
+          <div class="fig-body">
+            <div>
+              <span class="fig-tag">Figure 6 · Omics Covariates</span>
+              <h3>Predicted Phytohormone &amp; Transcriptomic Stress Signatures</h3>
+              <p>Projects boundary-layer Péclet and $\Delta[\text{H}_2\text{O}]$ metrics onto Auxin, ABA, Ethylene, and cell-wall remodeling gene expression indices across pump speeds.</p>
+            </div>
+            <div class="fig-actions">
+              <button class="btn-outline" onclick="openLightbox('figures/fig6_predicted_hormone_carbon_phenotypes.png', 'Figure 6: Predicted Hormone & Carbon Phenotypes')">🔍 Zoom PNG</button>
+              <a href="figures/fig6_predicted_hormone_carbon_phenotypes.svg" target="_blank" class="btn-outline">⬇ SVG Vector</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Fig 7 -->
+        <article class="fig-card" data-cat="ops">
+          <div class="fig-thumb-wrap" onclick="openLightbox('figures/fig7_rnalater_perfusion_and_species_dynamics.png', 'Figure 7: RNAlater Fixative Perfusion & Multi-Species Gas Exchange')">
+            <img src="figures/fig7_rnalater_perfusion_and_species_dynamics.png" alt="Figure 7 RNAlater Perfusion and Species Dynamics" loading="lazy" decoding="async" />
+          </div>
+          <div class="fig-body">
+            <div>
+              <span class="fig-tag">Figure 7 · Harvest Fixation &amp; Species</span>
+              <h3>RNAlater Perfusion Kinetics &amp; 32 vs. 100 Seed Asymmetry</h3>
+              <p>Two-stage Darcy + VOF front progression from Port 3 nozzle ($Y = 9.5\ \text{mm}$ in Substrate 3) alongside chamber-specific <em>B. rapa</em> and <em>A. thaliana</em> assimilation profiles.</p>
+            </div>
+            <div class="fig-actions">
+              <button class="btn-outline" onclick="openLightbox('figures/fig7_rnalater_perfusion_and_species_dynamics.png', 'Figure 7: RNAlater Perfusion & Species Dynamics')">🔍 Zoom PNG</button>
+              <a href="figures/fig7_rnalater_perfusion_and_species_dynamics.svg" target="_blank" class="btn-outline">⬇ SVG Vector</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Fig 8 -->
+        <article class="fig-card" data-cat="ops">
+          <div class="fig-thumb-wrap" onclick="openLightbox('figures/fig8_diurnal_day_night_photoperiod_inversion.png', 'Figure 8: Diurnal Day/Night Photoperiod Inversion & Nocturnal Setback')">
+            <img src="figures/fig8_diurnal_day_night_photoperiod_inversion.png" alt="Figure 8 Diurnal Day Night Photoperiod Inversion" loading="lazy" decoding="async" />
+          </div>
+          <div class="fig-body">
+            <div>
+              <span class="fig-tag">Figure 8 · Diurnal Cycle</span>
+              <h3>Diurnal Photoperiod Inversion &amp; Nocturnal Lunar Setback</h3>
+              <p>Contrasts 16h daytime buoyant transpiration against 8h nocturnal radiative cooling and dense respiratory $\text{CO}_2$ pooling, establishing the $Q_{\text{night}} \ge 0.60\ \text{L/min}$ rule.</p>
+            </div>
+            <div class="fig-actions">
+              <button class="btn-outline" onclick="openLightbox('figures/fig8_diurnal_day_night_photoperiod_inversion.png', 'Figure 8: Diurnal Day/Night Photoperiod Inversion')">🔍 Zoom PNG</button>
+              <a href="figures/fig8_diurnal_day_night_photoperiod_inversion.svg" target="_blank" class="btn-outline">⬇ SVG Vector</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Section 5: Downloadable Quantitative TSV Datasets -->
+    <section id="data-tables" class="section-block">
+      <div class="section-header">
+        <div>
+          <h2>5. Quantitative Simulation Datasets (TSV Tables)</h2>
+          <p>Machine-readable telemetry outputs generated by the GBC2 simulation pipeline for downstream statistical and multi-omics integration.</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Dataset File</th>
+              <th>Scope &amp; Contents</th>
+              <th>Key Variables</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>gbc2_asymmetric_canopy_species_results.tsv</code></td>
+              <td>Chamber-resolved gas exchange for 32 <em>B. rapa</em> (Ch 1 &amp; 3) vs. 100 <em>Arabidopsis</em> (Ch 2)</td>
+              <td><code>ch*_seeds</code>, <code>leaf_area_cm2</code>, <code>gbl</code>, <code>dCO2_ppm</code>, <code>dH2O_mmol</code>, <code>A_net</code></td>
+              <td><a href="results/tables/gbc2_asymmetric_canopy_species_results.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+            </tr>
+            <tr>
+              <td><code>gbc2_cfd_sweep_results.tsv</code></td>
+              <td>16-run parametric pump speed sweep ($0.05\text{–}4.0\ \text{L/min}$) at Earth $1.0\,g$ and Lunar $0.166\,g$</td>
+              <td><code>u_canopy_mean</code>, <code>Re</code>, <code>Gr</code>, <code>Ri</code>, <code>Pe</code>, <code>g_bl</code>, <code>delta_CO2</code>, <code>A_net</code></td>
+              <td><a href="results/tables/gbc2_cfd_sweep_results.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+            </tr>
+            <tr>
+              <td><code>gbc2_advanced_analytics.tsv</code></td>
+              <td>Mean Age of Air ($\theta$), Sandberg conservation ratio, and hormone signaling indices</td>
+              <td><code>age_ch1_s</code>, <code>age_ch2_s</code>, <code>age_ch3_s</code>, <code>sandberg_ratio</code>, <code>auxin_idx</code>, <code>aba_idx</code></td>
+              <td><a href="results/tables/gbc2_advanced_analytics.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+            </tr>
+            <tr>
+              <td><code>gbc2_diurnal_day_night_results.tsv</code></td>
+              <td>16h Day vs. 8h Night photoperiod inversion across pump speeds and gravity levels</td>
+              <td><code>photoperiod</code>, <code>Ri_signed</code>, <code>CO2_canopy_ppm</code>, <code>dCO2_from_ambient</code>, <code>H2O_canopy</code></td>
+              <td><a href="results/tables/gbc2_diurnal_day_night_results.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+            </tr>
+            <tr>
+              <td><code>gbc2_rnalater_perfusion_kinetics.tsv</code></td>
+              <td>Harvest RNAlater injection kinetics ($2\text{–}25\ \text{mL/min}$) through Port 3 dipping nozzle</td>
+              <td><code>Q_inj_mL_min</code>, <code>t_root_saturation_s</code>, <code>t_full_chamber_s</code>, <code>dP_total_kPa</code></td>
+              <td><a href="results/tables/gbc2_rnalater_perfusion_kinetics.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+            </tr>
+            <tr>
+              <td><code>gbc2_hardware_benchmark_comparison.tsv</code></td>
+              <td>Comparison of LEAF GBC2 against NASA BRIC-19, CARA, and Veggie hardware</td>
+              <td><code>peclet_number</code>, <code>g_bl</code>, <code>co2_drawdown_pct</code>, <code>o2_depletion_pct</code>, <code>hypoxia_idx</code></td>
+              <td><a href="results/tables/gbc2_hardware_benchmark_comparison.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+            </tr>
+            <tr>
+              <td><code>gbc2_covariates_for_omics.tsv</code></td>
+              <td>Standardized physical microclimate covariates for RNA-seq / multi-omics regression</td>
+              <td><code>Pe_mass</code>, <code>Sh_effective</code>, <code>Re_leaf</code>, <code>Ri_buoyancy</code>, <code>C_i_ppm</code>, <code>WUE</code></td>
+              <td><a href="results/tables/gbc2_covariates_for_omics.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Native HTML Dialog Lightbox -->
+  <dialog id="lightbox" onclick="if(event.target===this) this.close()">
+    <div class="lightbox-header">
+      <div class="lightbox-title" id="lightbox-caption">Figure Preview</div>
+      <button class="lightbox-close" onclick="document.getElementById('lightbox').close()">✕ Close</button>
+    </div>
+    <div class="lightbox-img-container">
+      <img id="lightbox-img" src="" alt="Expanded Figure" />
+    </div>
+  </dialog>
+
+  <footer>
+    <p>LEAF GBC2 Lunar Plant Growth Chamber CFD &amp; Multi-Species Biophysics Modeling Suite · CAD Models <code>M09024F-MDL-5</code> &amp; <code>M09025F-MDL-2</code></p>
+  </footer>
+
+  <script>
+    const blueprints = {
+      ortho: {
+        src: 'figures/fig_orthographic_projection_annotated.png',
+        alt: 'LEAF GBC2 3-View Orthographic Projection Blueprint (ABAI QC Verified)'
+      },
+      annotated: {
+        src: 'figures/assembly_cross_sections_annotated.png',
+        alt: 'LEAF GBC2 Mated CAD Assembly Cross-Sections (Annotated)'
+      },
+      exact: {
+        src: 'figures/assembly_cross_sections_exact.png',
+        alt: 'LEAF GBC2 Pure CAD Engineering Cross-Sections (Exact STEP Slices)'
+      }
+    };
+
+    function switchBlueprint(key, btn) {
+      const img = document.getElementById('active-blueprint-img');
+      img.src = blueprints[key].src;
+      img.alt = blueprints[key].alt;
+      btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function filterGallery(cat, btn) {
+      btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('#gallery-container .fig-card').forEach(card => {
+        if (cat === 'all' || card.dataset.cat === cat) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function openLightbox(src, title) {
+      const dlg = document.getElementById('lightbox');
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox-caption').textContent = title;
+      dlg.showModal();
+    }
+  </script>
+</body>
+</html>

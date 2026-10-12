@@ -1,0 +1,23 @@
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# macOS / OS files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Temporary / scratch
+*.log
+/tmp/
+/cad_detailed_cuts.png
+/lid_pot_overlay.png
+/lid_rotated_test.png
+/pot_lid_cross_sections.png

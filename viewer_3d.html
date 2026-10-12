@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LEAF GBC2 Interactive 3D Chamber & CFD Digital Twin</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      background-color: #0f172a;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      overflow-x: hidden;
+    }
+    canvas {
+      display: block;
+      cursor: grab;
+      touch-action: none;
+    }
+    canvas:active {
+      cursor: grabbing;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 antialiased min-h-screen flex flex-col">
+  <!-- Top Header Bar -->
+  <header class="bg-slate-950/80 backdrop-blur border-b border-slate-800 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-30">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold text-lg">
+        🌱
+      </div>
+      <div>
+        <h1 class="font-bold text-base md:text-lg tracking-tight text-white flex items-center gap-2">
+          LEAF GBC2 Plant Growth Chamber
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            Interactive 3D Digital Twin
+          </span>
+        </h1>
+        <p class="text-xs text-slate-400">CAD M09024F (Pot) + M09025F (Lid) · 3D CFD Aerodynamics & Perfusion</p>
+      </div>
+    </div>
+
+    <!-- Quick Status Badges -->
+    <div class="flex items-center gap-2 text-xs">
+      <span class="px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 font-medium flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        Volume: 64.7 cm³
+      </span>
+      <span class="px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 font-medium">
+        Ports: 3 (Air In, Exh, Water/RNA)
+      </span>
+      <span class="px-2.5 py-1 rounded-md bg-blue-500/20 text-blue-300 border border-blue-500/30 font-medium">
+        Payload: 2× B. rapa + 1× A. thaliana
+      </span>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 flex flex-col lg:flex-row h-[calc(100vh-65px)] overflow-hidden">
+    <!-- Left 3D Viewport Area -->
+    <div class="flex-1 relative flex flex-col bg-slate-950">
+      <!-- 3D Canvas -->
+      <canvas id="glCanvas" class="w-full h-full flex-1"></canvas>
+
+      <!-- Floating Viewport Controls -->
+      <div class="absolute top-4 left-4 flex flex-wrap gap-2 z-10">
+        <div class="bg-slate-900/90 backdrop-blur border border-slate-700/80 rounded-lg p-1.5 flex gap-1 shadow-xl">
+          <button id="btnIso" class="px-3 py-1 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 text-white transition">
+            Isometric
+          </button>
+          <button id="btnTop" class="px-3 py-1 text-xs font-semibold rounded bg-transparent hover:bg-slate-800 text-slate-300 transition">
+            Top Plan (Z-X)
+          </button>
+          <button id="btnSide" class="px-3 py-1 text-xs font-semibold rounded bg-transparent hover:bg-slate-800 text-slate-300 transition">
+            Side (X-Y)
+          </button>
+          <button id="btnFront" class="px-3 py-1 text-xs font-semibold rounded bg-transparent hover:bg-slate-800 text-slate-300 transition">
+            Longitudinal (Z-Y)
+          </button>
+        </div>
+
+        <div class="bg-slate-900/90 backdrop-blur border border-slate-700/80 rounded-lg p-1.5 flex gap-1 shadow-xl">
+          <button id="btnSpin" class="px-3 py-1 text-xs font-semibold rounded bg-emerald-600/30 text-emerald-300 hover:bg-emerald-600/50 transition">
+            ⟳ Auto-Rotate
+          </button>
+          <button id="btnReset" class="px-3 py-1 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+            Reset View
+          </button>
+        </div>
+      </div>
+
+      <!-- Flow Mode Selector (Bottom Left Floating) -->
+      <div class="absolute bottom-4 left-4 z-10 bg-slate-900/90 backdrop-blur border border-slate-700/80 rounded-xl p-3 shadow-2xl max-w-md">
+        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Simulated Fluid Operating Mode</div>
+        <div class="grid grid-cols-3 gap-2">
+          <button id="modeEarth" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-sky-500 bg-sky-500/20 text-sky-200 transition text-center">
+            Earth 1g Air<br><span class="text-[11px] text-sky-300">0.50 L/min</span>
+          </button>
+          <button id="modeLunarComp" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:border-emerald-500 hover:bg-emerald-500/10 transition text-center">
+            Lunar Comp<br><span class="text-[11px] text-emerald-400">0.85 L/min</span>
+          </button>
+          <button id="modeRNA" class="px-2.5 py-1.5 text-xs font-medium rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:border-purple-500 hover:bg-purple-500/10 transition text-center">
+            RNAlater Perfusion<br><span class="text-[11px] text-purple-400">10 mL/min liquid</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Help Tip -->
+      <div class="absolute top-4 right-4 z-10 bg-slate-900/70 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-800 text-[11px] text-slate-400">
+        🖱 Drag: Rotate · Scroll: Zoom · Shift+Drag: Pan
+      </div>
+    </div>
+
+    <!-- Right Control & Telemetry Sidebar -->
+    <aside class="w-full lg:w-96 bg-slate-950 border-t lg:border-t-0 lg:border-l border-slate-800 flex flex-col h-full overflow-y-auto custom-scrollbar">
+      <!-- Section 1: Biological Payloads -->
+      <div class="p-5 border-b border-slate-800">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center justify-between">
+          <span>Biological Allocation</span>
+          <span class="text-emerald-400 font-semibold">3 Compartments</span>
+        </h2>
+        <div class="space-y-2.5">
+          <!-- Chamber 1 -->
+          <div class="bg-slate-900/90 rounded-lg p-3 border border-emerald-500/30">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-emerald-400">CHAMBER 1 (32 Seeds)</span>
+              <span class="text-[11px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Brassica rapa</span>
+            </div>
+            <p class="text-xs text-slate-300 mt-1">Tall canopy (h = 11.4 mm, Y = 14.6–26 mm) · Area: ~64 cm²</p>
+            <div class="mt-2 grid grid-cols-2 gap-2 text-[11px] text-slate-400 bg-slate-950/60 p-2 rounded">
+              <div>A_net: <span class="text-emerald-400 font-mono font-bold" id="c1_A">13.41</span> μmol/m²s</div>
+              <div>ΔCO₂: <span class="text-sky-400 font-mono" id="c1_co2">-3.44</span> ppm</div>
+            </div>
+          </div>
+
+          <!-- Chamber 2 -->
+          <div class="bg-slate-900/90 rounded-lg p-3 border border-sky-500/30">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-sky-400">CHAMBER 2 (100 Seeds)</span>
+              <span class="text-[11px] px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300">Arabidopsis thaliana</span>
+            </div>
+            <p class="text-xs text-slate-300 mt-1">Rosette lawn (h = 4.9 mm) · Area: ~15 cm² · Plenum ΔY = 14.2 mm</p>
+            <div class="mt-2 grid grid-cols-2 gap-2 text-[11px] text-slate-400 bg-slate-950/60 p-2 rounded">
+              <div>A_net: <span class="text-sky-400 font-mono font-bold" id="c2_A">9.52</span> μmol/m²s</div>
+              <div>ΔCO₂: <span class="text-sky-400 font-mono" id="c2_co2">-1.20</span> ppm</div>
+            </div>
+          </div>
+
+          <!-- Chamber 3 -->
+          <div class="bg-slate-900/90 rounded-lg p-3 border border-emerald-500/30">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-emerald-400">CHAMBER 3 (32 Seeds)</span>
+              <span class="text-[11px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Brassica rapa</span>
+            </div>
+            <p class="text-xs text-slate-300 mt-1">Tall canopy (h = 11.4 mm, Y = 14.6–26 mm) · Area: ~64 cm²</p>
+            <div class="mt-2 grid grid-cols-2 gap-2 text-[11px] text-slate-400 bg-slate-950/60 p-2 rounded">
+              <div>A_net: <span class="text-emerald-400 font-mono font-bold" id="c3_A">13.42</span> μmol/m²s</div>
+              <div>ΔCO₂: <span class="text-sky-400 font-mono" id="c3_co2">-3.38</span> ppm</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Port & Fluid Architecture -->
+      <div class="p-5 border-b border-slate-800">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Fluidic Ports & Hardware Layering</h2>
+        <div class="space-y-2 text-xs">
+          <div class="flex items-start gap-2.5 p-2 rounded bg-slate-900/60 border border-slate-800">
+            <span class="w-3 h-3 rounded-full bg-rose-500 mt-0.5 shrink-0"></span>
+            <div>
+              <div class="font-bold text-slate-200">Port 1 (Z = -21.6 mm) — Air Inlet</div>
+              <div class="text-[11px] text-slate-400">Connected to pump loop; feeds upper manifold (Y = 28–32 mm)</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-2.5 p-2 rounded bg-slate-900/60 border border-slate-800">
+            <span class="w-3 h-3 rounded-full bg-purple-500 mt-0.5 shrink-0"></span>
+            <div>
+              <div class="font-bold text-slate-200">Port 2 (Z = 0.0 mm) — Central Exhaust</div>
+              <div class="text-[11px] text-slate-400">Return to cabin loop; vents air displaced by RNAlater</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-2.5 p-2 rounded bg-slate-900/60 border border-slate-800">
+            <span class="w-3 h-3 rounded-full bg-sky-500 mt-0.5 shrink-0"></span>
+            <div>
+              <div class="font-bold text-slate-200">Port 3 (Z = +21.6 mm) — Water / RNAlater</div>
+              <div class="text-[11px] text-slate-400">Dipping nozzle extends down to Y = 9.5 mm in Substrate Block 3</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3D Layer Toggles -->
+        <div class="mt-4 pt-3 border-t border-slate-800 space-y-2 text-xs">
+          <div class="font-semibold text-slate-300 mb-1.5">3D Render Toggles:</div>
+          <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+            <input type="checkbox" id="chkHousing" checked class="rounded bg-slate-800 border-slate-700 text-emerald-500 focus:ring-0">
+            <span>Pot Body & Acrylic Lid Housing</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+            <input type="checkbox" id="chkSubstrate" checked class="rounded bg-slate-800 border-slate-700 text-emerald-500 focus:ring-0">
+            <span>3-Part Substrate Matrix (Y = 7.62–14.62 mm)</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+            <input type="checkbox" id="chkPlants" checked class="rounded bg-slate-800 border-slate-700 text-emerald-500 focus:ring-0">
+            <span>Plant Canopies (Brassica & Arabidopsis)</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+            <input type="checkbox" id="chkStreamlines" checked class="rounded bg-slate-800 border-slate-700 text-emerald-500 focus:ring-0">
+            <span>Airflow Velocity Streamlines</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-slate-300">
+            <input type="checkbox" id="chkNozzle" checked class="rounded bg-slate-800 border-slate-700 text-emerald-500 focus:ring-0">
+            <span>Port 3 Dipping Injection Nozzle (to Y = 9.5 mm)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Section 3: Live Verification Metrics -->
+      <div class="p-5 flex-1">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">CFD & Kinematic Telemetry</h2>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+            <div class="text-slate-400 text-[11px]">Flow Rate Q</div>
+            <div class="text-sm font-mono font-bold text-white mt-0.5" id="val_q">0.50 L/min</div>
+          </div>
+          <div class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+            <div class="text-slate-400 text-[11px]">Gravity Vector</div>
+            <div class="text-sm font-mono font-bold text-white mt-0.5" id="val_g">1.00 g (9.81 m/s²)</div>
+          </div>
+          <div class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+            <div class="text-slate-400 text-[11px]">Sandberg Ratio</div>
+            <div class="text-sm font-mono font-bold text-emerald-400 mt-0.5" id="val_sandberg">0.937 (Valid)</div>
+          </div>
+          <div class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+            <div class="text-slate-400 text-[11px]">Chamber Flushtime</div>
+            <div class="text-sm font-mono font-bold text-sky-400 mt-0.5" id="val_tau">7.76 s</div>
+          </div>
+          <div class="bg-slate-900/80 p-2.5 rounded-lg border border-slate-800 col-span-2">
+            <div class="text-slate-400 text-[11px]">Root Fixation / Flooding Time</div>
+            <div class="text-sm font-mono font-bold text-purple-300 mt-0.5" id="val_perfusion">t_root = 1.3 min · t_total = 6.5 min</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Interactive 3D Projection & Particle Engine Script -->
+  <script>
+    const canvas = document.getElementById('glCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // State
+    let width = 0, height = 0;
+    let rotX = 0.5, rotY = -0.7; // angles
+    let zoom = 8.5;
+    let panX = 0, panY = 0;
+    let isDragging = false;
+    let lastMouseX = 0, lastMouseY = 0;
+    let isShiftDown = false;
+    let autoSpin = false;
+    let currentMode = 'earth'; // 'earth', 'lunar', 'rna'
+
+    // Toggles
+    const toggles = {
+      housing: true,
+      substrate: true,
+      plants: true,
+      streamlines: true,
+      nozzle: true
+    };
+
+    // Resize handler
+    function resize() {
+      const rect = canvas.getBoundingClientRect();
+      width = canvas.width = rect.width * window.devicePixelRatio;
+      height = canvas.height = rect.height * window.devicePixelRatio;
+    }
+    window.addEventListener('resize', resize);
+
+    // 3D Math Primitives
+    // Chamber CAD dimensions in mm: X: [-24, 24], Y: [0, 34], Z: [-34, 34]
+    function project(x, y, z) {
+      // Center coordinates
+      const cy = y - 17.0;
+      
+      // Rotate around Y
+      const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+      const x1 = x * cosY - z * sinY;
+      const z1 = x * sinY + z * cosY;
+
+      // Rotate around X
+      const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+      const y2 = cy * cosX - z1 * sinX;
+      const z2 = cy * sinX + z1 * cosX;
+
+      // Perspective projection
+      const cameraDist = 180.0;
+      const depth = cameraDist + z2;
+      const scale = (cameraDist / Math.max(depth, 20.0)) * zoom * (height / 600.0);
+
+      return {
+        x: (width / 2) + panX + x1 * scale,
+        y: (height / 2) + panY - y2 * scale,
+        z: z2,
+        scale: scale
+      };
+    }
+
+    // Particles for animated streamlines
+    const particles = [];
+    const NUM_PARTICLES = 160;
+    for (let i = 0; i < NUM_PARTICLES; i++) {
+      particles.push({
+        x: (Math.random() - 0.5) * 36,
+        y: 8 + Math.random() * 22,
+        z: (Math.random() - 0.5) * 60,
+        age: Math.random() * 100,
+        speed: 0.4 + Math.random() * 0.6,
+        stage: Math.random() // for perfusion liquid fill
+      });
+    }
+
+    // Main Render Loop
+    function render() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Auto rotation
+      if (autoSpin) {
+        rotY += 0.005;
+      }
+
+      // Collect 3D primitives to depth-sort
+      const renderList = [];
+
+      // Helper to add lines
+      function addLine(p1, p2, color, lw = 1.5, alpha = 1.0) {
+        const pr1 = project(p1[0], p1[1], p1[2]);
+        const pr2 = project(p2[0], p2[1], p2[2]);
+        const zMid = (pr1.z + pr2.z) / 2;
+        renderList.push({
+          type: 'line',
+          z: zMid,
+          draw: () => {
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lw * (width / 1200);
+            ctx.beginPath();
+            ctx.moveTo(pr1.x, pr1.y);
+            ctx.lineTo(pr2.x, pr2.y);
+            ctx.stroke();
+            ctx.restore();
+          }
+        });
+      }
+
+      // Helper to add translucent boxes
+      function addBox(min, max, strokeColor, fillColor, fillAlpha = 0.15) {
+        const corners = [
+          [min[0], min[1], min[2]], [max[0], min[1], min[2]],
+          [max[0], min[1], max[2]], [min[0], min[1], max[2]],
+          [min[0], max[1], min[2]], [max[0], max[1], min[2]],
+          [max[0], max[1], max[2]], [min[0], max[1], max[2]]
+        ];
+        const proj = corners.map(c => project(c[0], c[1], c[2]));
+        const zMid = proj.reduce((acc, p) => acc + p.z, 0) / 8;
+
+        const edges = [
+          [0,1],[1,2],[2,3],[3,0],
+          [4,5],[5,6],[6,7],[7,4],
+          [0,4],[1,5],[2,6],[3,7]
+        ];
+
+        renderList.push({
+          type: 'box',
+          z: zMid,
+          draw: () => {
+            ctx.save();
+            // Fill bottom / top faces
+            const drawPoly = (indices) => {
+              ctx.beginPath();
+              ctx.moveTo(proj[indices[0]].x, proj[indices[0]].y);
+              for (let i = 1; i < indices.length; i++) {
+                ctx.lineTo(proj[indices[i]].x, proj[indices[i]].y);
+              }
+              ctx.closePath();
+              ctx.fillStyle = fillColor;
+              ctx.globalAlpha = fillAlpha;
+              ctx.fill();
+            };
+            drawPoly([0,1,2,3]); // bottom
+            drawPoly([4,5,6,7]); // top
+            drawPoly([0,1,5,4]); // front
+            drawPoly([2,3,7,6]); // back
+
+            // Wireframe strokes
+            ctx.strokeStyle = strokeColor;
+            ctx.globalAlpha = 0.8;
+            ctx.lineWidth = 1.2;
+            for (let edge of edges) {
+              ctx.beginPath();
+              ctx.moveTo(proj[edge[0]].x, proj[edge[0]].y);
+              ctx.lineTo(proj[edge[1]].x, proj[edge[1]].y);
+              ctx.stroke();
+            }
+            ctx.restore();
+          }
+        });
+      }
+
+      // 1. Pot Housing & Lid Outer Boundaries
+      if (toggles.housing) {
+        addBox([-24, 0, -34], [24, 34, 34], '#475569', '#1e293b', 0.10);
+        // Lower drainage & aeration wells wireframe (Y = 0 to 7.62 mm)
+        addBox([-23.5, 0.5, -33.5], [23.5, 7.62, 33.5], '#334155', '#0f172a', 0.08);
+        // Lid rim line at Y = 33.67 mm
+        addLine([-24, 33.67, -34], [24, 33.67, -34], '#f43f5e', 2.0);
+        addLine([24, 33.67, -34], [24, 33.67, 34], '#f43f5e', 2.0);
+        addLine([24, 33.67, 34], [-24, 33.67, 34], '#f43f5e', 2.0);
+        addLine([-24, 33.67, 34], [-24, 33.67, -34], '#f43f5e', 2.0);
+        // Chamber Divider Baffles in Housing (Z = -9.5 to -7.5 mm and +7.5 to +9.5 mm)
+        addBox([-11.0, 7.62, -9.5], [21.3, 24.0, -7.5], '#64748b', '#334155', 0.20);
+        addBox([-11.0, 7.62, 7.5], [21.3, 24.0, 9.5], '#64748b', '#334155', 0.20);
+      }
+
+      // 2. Porous Substrate Root Matrix (3 Distinct Blocks at Y = 7.62 to 14.62 mm)
+      if (toggles.substrate) {
+        // Chamber 1 Substrate Block (Z = -30.5 to -9.5 mm)
+        addBox([-11.0, 7.62, -30.5], [21.3, 14.62, -9.5], '#d97706', '#b45309', 0.35);
+        // Chamber 2 Substrate Block (Z = -7.5 to +7.5 mm)
+        addBox([-11.0, 7.62, -7.5], [21.3, 14.62, 7.5], '#d97706', '#b45309', 0.35);
+        // Chamber 3 Substrate Block (Z = +9.5 to +30.5 mm)
+        addBox([-11.0, 7.62, 9.5], [21.3, 14.62, 30.5], '#d97706', '#b45309', 0.35);
+      }
+
+      // 3. Growth Compartments & Plants (Headspace Y = 14.62 to 32 mm)
+      if (toggles.plants) {
+        // Chamber 1: 32 Brassica rapa seeds (Tall canopy: Y = 14.62 to 26.0 mm, h = 11.4 mm)
+        addBox([-11.0, 14.62, -30.5], [21.3, 26.0, -9.5], '#10b981', '#059669', 0.16);
+        // Center tall plant (Z = -20 mm)
+        addLine([5.0, 14.62, -20.0], [5.0, 23.0, -20.0], '#10b981', 3.0);
+        addLine([5.0, 23.0, -20.0], [-2.0, 26.0, -20.0], '#34d399', 2.5);
+        addLine([5.0, 23.0, -20.0], [12.0, 26.0, -20.0], '#34d399', 2.5);
+        addLine([5.0, 20.0, -20.0], [5.0, 24.5, -15.0], '#34d399', 2.0);
+        addLine([5.0, 20.0, -20.0], [5.0, 24.5, -25.0], '#34d399', 2.0);
+        // Left plant (Z = -25 mm)
+        addLine([-1.0, 14.62, -25.0], [-1.0, 22.0, -25.0], '#10b981', 2.2);
+        addLine([-1.0, 22.0, -25.0], [-6.0, 24.5, -25.0], '#34d399', 1.8);
+        addLine([-1.0, 22.0, -25.0], [4.0, 24.5, -25.0], '#34d399', 1.8);
+        // Right plant (Z = -15 mm)
+        addLine([11.0, 14.62, -15.0], [11.0, 22.0, -15.0], '#10b981', 2.2);
+        addLine([11.0, 22.0, -15.0], [6.0, 24.5, -15.0], '#34d399', 1.8);
+        addLine([11.0, 22.0, -15.0], [16.0, 24.5, -15.0], '#34d399', 1.8);
+
+        // Chamber 2: 100 Arabidopsis thaliana seeds (Miniature rosette lawn: Y = 14.62 to 19.5 mm, h = 4.9 mm)
+        addBox([-11.0, 14.62, -7.5], [21.3, 19.5, 7.5], '#38bdf8', '#0284c7', 0.22);
+        // Open central headspace plenum above Arabidopsis (Y = 19.5 to 32.0 mm)
+        addBox([-11.0, 19.5, -7.5], [21.3, 32.0, 7.5], '#94a3b8', '#e2e8f0', 0.04);
+        // Dense rosette carpet nodes representing 100 seedlings
+        const arabNodes = [
+          [-4, -4], [-4, 0], [-4, 4],
+          [2, -5], [2, -1.5], [2, 2], [2, 5.5],
+          [8, -4], [8, 0], [8, 4],
+          [14, -3], [14, 2]
+        ];
+        arabNodes.forEach(([ax, az]) => {
+          addLine([ax, 14.62, az], [ax, 17.5, az], '#38bdf8', 2.0);
+          addLine([ax, 17.5, az], [ax - 1.8, 18.8, az], '#7dd3fc', 1.5);
+          addLine([ax, 17.5, az], [ax + 1.8, 18.8, az], '#7dd3fc', 1.5);
+          addLine([ax, 17.0, az], [ax, 18.5, az - 1.5], '#7dd3fc', 1.3);
+          addLine([ax, 17.0, az], [ax, 18.5, az + 1.5], '#7dd3fc', 1.3);
+        });
+
+        // Chamber 3: 32 Brassica rapa seeds (Tall canopy: Y = 14.62 to 26.0 mm, h = 11.4 mm)
+        addBox([-11.0, 14.62, 9.5], [21.3, 26.0, 30.5], '#10b981', '#059669', 0.16);
+        // Center tall plant (Z = +20 mm)
+        addLine([5.0, 14.62, 20.0], [5.0, 23.0, 20.0], '#10b981', 3.0);
+        addLine([5.0, 23.0, 20.0], [-2.0, 26.0, 20.0], '#34d399', 2.5);
+        addLine([5.0, 23.0, 20.0], [12.0, 26.0, 20.0], '#34d399', 2.5);
+        addLine([5.0, 20.0, 20.0], [5.0, 24.5, 15.0], '#34d399', 2.0);
+        addLine([5.0, 20.0, 20.0], [5.0, 24.5, 25.0], '#34d399', 2.0);
+        // Left plant (Z = +15 mm)
+        addLine([-1.0, 14.62, 15.0], [-1.0, 22.0, 15.0], '#10b981', 2.2);
+        addLine([-1.0, 22.0, 15.0], [-6.0, 24.5, 15.0], '#34d399', 1.8);
+        addLine([-1.0, 22.0, 15.0], [4.0, 24.5, 15.0], '#34d399', 1.8);
+        // Right plant (Z = +25 mm)
+        addLine([11.0, 14.62, 25.0], [11.0, 22.0, 25.0], '#10b981', 2.2);
+        addLine([11.0, 22.0, 25.0], [6.0, 24.5, 25.0], '#34d399', 1.8);
+        addLine([11.0, 22.0, 25.0], [16.0, 24.5, 25.0], '#34d399', 1.8);
+      }
+
+      // 4. Fluid Ports & Dipping Nozzle
+      // Port 1 (Air Inlet, red, Z = -21.6 mm)
+      addLine([-15.49, 33.67, -21.59], [-15.49, 41.0, -21.59], '#ef4444', 4.0);
+      // Port 2 (Exhaust, purple, Z = 0.0 mm)
+      addLine([-15.49, 33.67, 0.0], [-15.49, 41.0, 0.0], '#a855f7', 4.0);
+      // Port 3 (Water/RNAlater, blue, Z = +21.6 mm)
+      addLine([-15.49, 33.67, 21.59], [-15.49, 41.0, 21.59], '#0284c7', 4.0);
+
+      // Port 3 DIPPING NOZZLE (runs down into Chamber 3 Substrate Block at Y = 9.5 mm)
+      if (toggles.nozzle) {
+        addLine([-15.49, 33.67, 21.59], [-15.49, 9.5, 21.59], '#38bdf8', 4.5, 0.95);
+        // Nozzle discharge indicator ring
+        addLine([-17.0, 9.5, 21.59], [-14.0, 9.5, 21.59], '#0284c7', 3.0);
+      }
+
+      // 5. Particles & Streamlines
+      if (toggles.streamlines) {
+        particles.forEach(p => {
+          if (currentMode === 'rna') {
+            // Liquid injection mode: expands from nozzle at [-15.5, 9.5, 21.6] inside Substrate 3
+            p.age += 0.8;
+            if (p.age > 100) {
+              p.age = 0;
+              p.x = -15.49 + (Math.random() - 0.5) * 3;
+              p.y = 9.5;
+              p.z = 21.59 + (Math.random() - 0.5) * 3;
+            }
+            // First lateral spread in Substrate 3 & spill over baffles, then rise
+            if (p.y < 14.62) {
+              p.x += (Math.random() - 0.5) * 0.8;
+              p.z -= 0.7; // spreads toward Ch 2 and Ch 1
+              if (Math.random() < 0.15) p.y += 0.2;
+            } else {
+              p.y += 0.4; // rising liquid level filling headspace
+              p.z += (Math.random() - 0.5) * 0.3;
+            }
+          } else {
+            // Air mode: Inflow at Port 1 [-15.5, 33.7, -21.6], skimming over Ch 1 foliage, dipping into Ch 2 open plenum, exhaust at Port 2
+            const speedMult = (currentMode === 'lunar') ? 1.4 : 1.0;
+            p.age += p.speed * speedMult;
+            if (p.age > 120) {
+              p.age = 0;
+              p.x = -15.49;
+              p.y = 33.0;
+              p.z = -21.59;
+            }
+            // Pathway: enter manifold, flow toward +Z, dip into canopies, return to Port 2 [Z=0]
+            if (p.age < 30) {
+              p.x += 0.4;
+              p.z += 0.8;
+              p.y = Math.max(26.0, p.y - 0.2); // skimming across tall B. rapa canopy (Y = 15-26 mm)
+            } else if (p.age < 80) {
+              p.y = Math.max(20.0, p.y - 0.25); // dipping down into open plenum above Arabidopsis lawn (Y = 20-32 mm)
+              p.z += (p.z < 0) ? 0.35 : -0.35; // converge toward center
+            } else {
+              p.y += 0.6; // rising toward exhaust (Y = 33.67 mm)
+              p.x += (-15.49 - p.x) * 0.12;
+              p.z += (0.0 - p.z) * 0.12;
+            }
+          }
+
+          const pr = project(p.x, p.y, p.z);
+          renderList.push({
+            type: 'particle',
+            z: pr.z,
+            draw: () => {
+              ctx.save();
+              ctx.beginPath();
+              const pColor = (currentMode === 'rna') ? '#60a5fa' : ((currentMode === 'lunar') ? '#34d399' : '#38bdf8');
+              ctx.fillStyle = pColor;
+              ctx.globalAlpha = 0.75;
+              ctx.arc(pr.x, pr.y, 2.5 * (width / 1200), 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
+          });
+        });
+      }
+
+      // Depth sort all primitives from back to front
+      renderList.sort((a, b) => b.z - a.z);
+
+      // Execute draw routines
+      renderList.forEach(item => item.draw());
+
+      requestAnimationFrame(render);
+    }
+
+    // User Interaction Handlers
+    canvas.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - lastMouseX;
+      const dy = e.clientY - lastMouseY;
+
+      if (e.shiftKey) {
+        panX += dx * 1.5;
+        panY += dy * 1.5;
+      } else {
+        rotY += dx * 0.008;
+        rotX += dy * 0.008;
+        rotX = Math.max(-1.5, Math.min(1.5, rotX));
+      }
+
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
+    });
+
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      zoom *= (e.deltaY < 0) ? 1.08 : 0.92;
+      zoom = Math.max(3.0, Math.min(25.0, zoom));
+    }, { passive: false });
+
+    // UI Buttons
+    document.getElementById('btnIso').onclick = () => {
+      rotX = 0.5; rotY = -0.7; panX = 0; panY = 0; zoom = 8.5;
+    };
+    document.getElementById('btnTop').onclick = () => {
+      rotX = 1.57; rotY = 0.0; panX = 0; panY = 0; zoom = 9.0;
+    };
+    document.getElementById('btnSide').onclick = () => {
+      rotX = 0.0; rotY = 1.57; panX = 0; panY = 0; zoom = 9.0;
+    };
+    document.getElementById('btnFront').onclick = () => {
+      rotX = 0.0; rotY = 0.0; panX = 0; panY = 0; zoom = 9.0;
+    };
+    document.getElementById('btnReset').onclick = () => {
+      rotX = 0.5; rotY = -0.7; panX = 0; panY = 0; zoom = 8.5; autoSpin = false;
+    };
+    document.getElementById('btnSpin').onclick = () => {
+      autoSpin = !autoSpin;
+      document.getElementById('btnSpin').classList.toggle('bg-emerald-600', autoSpin);
+    };
+
+    // Mode Buttons
+    const modeEarthBtn = document.getElementById('modeEarth');
+    const modeLunarBtn = document.getElementById('modeLunarComp');
+    const modeRnaBtn = document.getElementById('modeRNA');
+
+    function updateModeUI(mode) {
+      currentMode = mode;
+      [modeEarthBtn, modeLunarBtn, modeRnaBtn].forEach(b => {
+        b.classList.remove('border-sky-500', 'bg-sky-500/20', 'border-emerald-500', 'bg-emerald-500/20', 'border-purple-500', 'bg-purple-500/20');
+        b.classList.add('border-slate-700', 'bg-slate-800');
+      });
+
+      if (mode === 'earth') {
+        modeEarthBtn.classList.add('border-sky-500', 'bg-sky-500/20');
+        document.getElementById('val_q').innerText = '0.50 L/min';
+        document.getElementById('val_g').innerText = '1.00 g (9.81 m/s²)';
+        document.getElementById('c1_A').innerText = '13.42';
+        document.getElementById('c2_A').innerText = '9.52';
+        document.getElementById('c3_A').innerText = '13.43';
+        document.getElementById('c1_co2').innerText = '-3.14';
+        document.getElementById('c2_co2').innerText = '-1.09';
+      } else if (mode === 'lunar') {
+        modeLunarBtn.classList.add('border-emerald-500', 'bg-emerald-500/20');
+        document.getElementById('val_q').innerText = '0.85 L/min (Comp)';
+        document.getElementById('val_g').innerText = '0.166 g (1.62 m/s²)';
+        document.getElementById('c1_A').innerText = '11.07';
+        document.getElementById('c2_A').innerText = '7.84';
+        document.getElementById('c3_A').innerText = '11.07';
+        document.getElementById('c1_co2').innerText = '-2.07';
+        document.getElementById('c2_co2').innerText = '-0.74';
+      } else if (mode === 'rna') {
+        modeRnaBtn.classList.add('border-purple-500', 'bg-purple-500/20');
+        document.getElementById('val_q').innerText = '10 mL/min (RNA)';
+        document.getElementById('val_g').innerText = 'Perfusion Mode';
+        document.getElementById('val_perfusion').innerText = 'Root sat: 78 s · Full flood: 388 s';
+      }
+    }
+
+    modeEarthBtn.onclick = () => updateModeUI('earth');
+    modeLunarBtn.onclick = () => updateModeUI('lunar');
+    modeRnaBtn.onclick = () => updateModeUI('rna');
+
+    // Toggles
+    document.getElementById('chkHousing').onchange = (e) => toggles.housing = e.target.checked;
+    document.getElementById('chkSubstrate').onchange = (e) => toggles.substrate = e.target.checked;
+    document.getElementById('chkPlants').onchange = (e) => toggles.plants = e.target.checked;
+    document.getElementById('chkStreamlines').onchange = (e) => toggles.streamlines = e.target.checked;
+    document.getElementById('chkNozzle').onchange = (e) => toggles.nozzle = e.target.checked;
+
+    // Initialize
+    resize();
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+hardware	condition	ventilation	carbon_12h_pct_earth	g_bl_mol_m2_s	delta_bl_mm	dC_CO2_ppm	enclosure_co2_depletion_min	notes
+BRIC	Microgravity (0g)	Sealed (0 cm/s)	1.0	0.291	2.29	13.2	7.0	Extreme hypoxia & CO2 starvation in 7 min
+CARA	Microgravity (0g)	Passive membrane (0 cm/s)	50.0	0.291	2.29	13.2	999.0	Diffusive boundary layer limitation
+Veggie	Microgravity (0g)	Forced fan (~2.8 cm/s)	99.3	0.291	2.29	7.8	999.0	Open-cabin ventilation with fans
+LEAF GBC2	Lunar (0.166g, Q=0.10 L/min)	Low Pump (u=0.21 m/s)	81.2351919009216	0.04180105811732726	15.805068568583282	10.223198652267456	999.0	Lunar convection penalty regime
+LEAF GBC2	Lunar (0.166g, Q=0.50 L/min)	Nominal Pump (u=1.05 m/s)	82.77312954250303	0.04175198833990109	15.824662579917183	2.9351940949757895	999.0	Forced-convection threshold reached
+LEAF GBC2	Lunar (0.166g, Q=1.00 L/min)	Optimal Pump (u=2.10 m/s)	83.05984203874418	0.04174611823049073	15.826912843548614	1.5886994202931721	999.0	Optimal gas exchange; zero gravity penalty
