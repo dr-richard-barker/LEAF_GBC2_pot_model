@@ -1,16 +1,18 @@
 # LEAF GBC2 Lunar Plant Growth Chamber — 3D CFD & Multi-Species Biophysics Model
 
-[![3D Digital Twin](https://img.shields.io/badge/Interactive-3D_Digital_Twin-27ae60?style=for-the-badge)](./viewer_3d.html)
-[![GitHub Pages Portal](https://img.shields.io/badge/Research_Summary-GitHub_Pages-2980b9?style=for-the-badge)](./index.html)
+[![3D Digital Twin](https://img.shields.io/badge/Interactive-3D_Digital_Twin-27ae60?style=for-the-badge)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html)
+[![GitHub Pages Portal](https://img.shields.io/badge/Live_Portal-GitHub_Pages-2980b9?style=for-the-badge)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/)
+[![Technical Manuscript](https://img.shields.io/badge/Manuscript-Full_Text_Report-8e44ad?style=for-the-badge)](./MANUSCRIPT_LEAF_GBC2_CFD.md)
 
-Computational Fluid Dynamics (CFD), multi-species gas exchange, diurnal photoperiod inversion, and harvest-phase RNAlater fixative perfusion modeling for the **LEAF GBC2 spaceflight plant growth pot (`M09024F-MDL-5.STEP`) and lid (`M09025F-MDL-2.STEP`) assembly** under **Earth ($1.0\,g$, $9.81\ \text{m/s}^2$)** and **Lunar ($0.166\,g$, $1.62\ \text{m/s}^2$)** gravity regimes.
+Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developmental canopy ontogeny, diurnal photoperiod inversion, off-nominal spacecraft fault-tolerance, and harvest-phase RNAlater fixative perfusion modeling for the **LEAF GBC2 spaceflight plant growth pot (`M09024F-MDL-5.STEP`) and lid (`M09025F-MDL-2.STEP`) assembly** under **Earth ($1.0\,g$, $9.81\ \text{m/s}^2$)** and **Lunar ($0.166\,g$, $1.62\ \text{m/s}^2$)** gravity regimes.
 
 ---
 
 ## Quick Links
 
-- **Interactive Research Summary Portal**: [`index.html`](./index.html)
-- **Interactive 3D Chamber Digital Twin & Live CFD Simulator**: [`viewer_3d.html`](./viewer_3d.html)
+- **Live GitHub Pages Research Portal**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/) ([`index.html`](./index.html))
+- **Live Interactive 3D Chamber Digital Twin & CFD Simulator**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html) ([`viewer_3d.html`](./viewer_3d.html))
+- **Full Technical Manuscript (Methods, Results & Figure Legends)**: [`MANUSCRIPT_LEAF_GBC2_CFD.md`](./MANUSCRIPT_LEAF_GBC2_CFD.md)
 - **Orthographic Blueprint (ABAI QC Annotated)**: [`figures/fig_orthographic_projection_annotated.png`](./figures/fig_orthographic_projection_annotated.png) | [`.svg`](./figures/fig_orthographic_projection_annotated.svg)
 - **Mated CAD Assembly Cross-Sections**: [`figures/assembly_cross_sections_annotated.png`](./figures/assembly_cross_sections_annotated.png) | [`exact`](./figures/assembly_cross_sections_exact.png)
 - **Quantitative Telemetry Tables**: [`results/tables/`](./results/tables/)
@@ -79,6 +81,16 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, diurnal photoper
 - **Nominal Injection ($Q_{\text{inj}} = 10\ \text{mL/min}$)**: Root substrate saturation ($5.28\ \text{mL}$ void volume) completes in **$t_{\text{root}} = 31.7\ \text{s}$**; full chamber immersion ($64.60\ \text{mL}$) completes in **$t_{\text{flood}} = 387.6\ \text{s}$ ($6.46\ \text{min}$)** with total pressure drop **$\Delta P = 0.73\ \text{kPa}$**.
 - **Rapid Injection ($Q_{\text{inj}} = 20\ \text{mL/min}$)**: Root saturation in **$15.8\ \text{s}$**, full chamber flooding in **$3.23\ \text{min}$**, with **$\Delta P = 1.47\ \text{kPa}$** (well below seal safety margins).
 
+### 3.5 14-Day Developmental Growth Trajectory (Days 0–14)
+- **Imbibition Setback (Days 0–2)**: A gentle $Q = 0.25\ \text{L/min}$ germination flow prevents seed-coat desiccation on the top surface of Substrate Blocks 1–3 ($Y = 14.62\ \text{mm}$) while clearing dark seed respiration ($-0.45\ \text{to}\ -0.72\ \text{nmol CO}_2/\text{s}$).
+- **Autotrophic Transition**: Net daily carbon fixation turns positive at **Day 2.8** for *B. rapa* and **Day 3.2** for *A. thaliana*.
+- **Adaptive Lunar Pump Schedule**: Stepping $Q_{\text{day}}$ from $0.25 \rightarrow 0.50 \rightarrow 0.65 \rightarrow 0.85\ \text{L/min}$ across Days 0–14 reduces *B. rapa* boundary-layer drawdown by **$41\%$** ($\Delta[CO_2]$ from $-3.98\ \text{ppm}$ to $-2.35\ \text{ppm}$ at Day 14) while root biomass compaction ($\epsilon: 0.50 \rightarrow 0.34$) raises Day 14 RNAlater injection $\Delta P$ from $0.73\ \text{kPa}$ to $4.04\ \text{kPa}$ (safely below the $5.0\ \text{kPa}$ seal limit).
+
+### 3.6 Off-Nominal Spacecraft Sensitivity & Fault-Tolerance Sweeps
+- **Elevated Spacecraft Cabin $\text{CO}_2$ ($420\text{--}5{,}000\ \text{ppm}$)**: Cabin $\text{CO}_2 \ge 2{,}000\ \text{ppm}$ saturates FvCB carboxylation at the TPU plateau ($A_{\text{net}} \approx 29.9\text{--}31.6\ \mu\text{mol m}^{-2}\ \text{s}^{-1}$ in *B. rapa*), masking Lunar carbon limitation, **but** induces $50\%$ stomatal closure ($g_s$: $0.165 \rightarrow 0.082\ \text{mol m}^{-2}\ \text{s}^{-1}$ at $4{,}000\ \text{ppm}$), reducing evaporative cooling and elevating Lunar leaf temperature to $\Delta T_{\text{leaf}} = +3.05\ ^\circ\text{C}$ at $0.50\ \text{L/min}$ vs. $+2.19\ ^\circ\text{C}$ at $0.85\ \text{L/min}$.
+- **Root-Induced Substrate Compaction ($\epsilon = 0.50 \rightarrow 0.20$)**: If root density compresses substrate porosity below $\epsilon = 0.32$, stepping RNAlater injection down from $10\ \text{mL/min}$ to $5\ \text{mL/min}$ maintains $\Delta P < 3.5\ \text{kPa}$.
+- **Pump Brownout Grace Window**: Complete pump outage ($Q \le 0.04\ \text{L/min}$) has a **grace window of $t_{\text{grace}} = 10.4\text{--}18.5\ \text{min}$** before transpired humidity reaches $92\%$ RH condensation onset on the lid window.
+
 ---
 
 ## 4. Simulation Figure Suite
@@ -95,6 +107,8 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, diurnal photoper
 | **Figure 6** | Predicted transcriptomic stress & phytohormone signaling phenotypes (Auxin, ABA, Ethylene) | [PNG](figures/fig6_predicted_hormone_carbon_phenotypes.png) · [SVG](figures/fig6_predicted_hormone_carbon_phenotypes.svg) |
 | **Figure 7** | Transient RNAlater perfusion front progression & multi-species asymmetric gas exchange | [PNG](figures/fig7_rnalater_perfusion_and_species_dynamics.png) · [SVG](figures/fig7_rnalater_perfusion_and_species_dynamics.svg) |
 | **Figure 8** | Diurnal day/night photoperiod inversion, respiratory $CO_2$ pooling, and nocturnal setback envelope | [PNG](figures/fig8_diurnal_day_night_photoperiod_inversion.png) · [SVG](figures/fig8_diurnal_day_night_photoperiod_inversion.svg) |
+| **Figure 9** | 14-day developmental growth time-series: logistic canopy ontogeny, channelling, cumulative C, & root compaction | [PNG](figures/fig9_developmental_growth_timeseries.png) · [SVG](figures/fig9_developmental_growth_timeseries.svg) |
+| **Figure 10** | Off-nominal spacecraft sensitivity sweeps: cabin $CO_2$ ($420\text{--}5{,}000\ \text{ppm}$), root compaction, & pump brownout | [PNG](figures/fig10_off_nominal_sensitivity_sweeps.png) · [SVG](figures/fig10_off_nominal_sensitivity_sweeps.svg) |
 
 ---
 
@@ -104,6 +118,7 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, diurnal photoper
 LEAF_GBC2_pot_model/
 ├── index.html                           # GitHub Pages Interactive Research Summary Portal
 ├── viewer_3d.html                       # Interactive 3D WebGL Digital Twin & CFD Simulator
+├── MANUSCRIPT_LEAF_GBC2_CFD.md          # Complete Technical Manuscript (Methods, Results, Legends)
 ├── README.md                            # Project documentation & summary
 ├── requirements.txt                     # Python environment dependencies
 ├── cad/
@@ -121,7 +136,9 @@ LEAF_GBC2_pot_model/
 │   ├── run_parametric_sweep.py          # Parametric pump speed sweep (Figs 1-3)
 │   ├── run_advanced_pipeline.py         # Age of air, hardware benchmark & phenotypes (Figs 4-6)
 │   ├── simulate_rnalater_perfusion.py   # RNAlater fixation & species asymmetry (Fig 7)
-│   └── simulate_diurnal_cycle.py        # Day/night photoperiod inversion (Fig 8)
+│   ├── simulate_diurnal_cycle.py        # Day/night photoperiod inversion (Fig 8)
+│   ├── simulate_developmental_growth_timeseries.py # 14-day developmental growth trajectory (Fig 9)
+│   └── simulate_off_nominal_sensitivity.py         # Off-nominal mission sensitivity sweeps (Fig 10)
 ├── figures/                             # All publication figures (.png and .svg)
 └── results/
     └── tables/                          # All quantitative simulation tables (.tsv)
@@ -141,9 +158,12 @@ python3 -m venv .venv
 .venv/bin/python sim/generate_orthographic_projections.py
 .venv/bin/python sim/generate_assembly_cross_sections.py
 
-# 4. Run CFD & Biophysics Simulation Suites (Figures 1-8 & TSV tables)
+# 4. Run CFD & Biophysics Simulation Suites (Figures 1-10 & TSV tables)
 .venv/bin/python sim/run_parametric_sweep.py
 .venv/bin/python sim/run_advanced_pipeline.py
 .venv/bin/python sim/simulate_rnalater_perfusion.py
 .venv/bin/python sim/simulate_diurnal_cycle.py
+.venv/bin/python sim/simulate_developmental_growth_timeseries.py
+.venv/bin/python sim/simulate_off_nominal_sensitivity.py
 ```
+
