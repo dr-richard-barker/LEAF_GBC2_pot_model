@@ -91,6 +91,11 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 - **Root-Induced Substrate Compaction ($\epsilon = 0.50 \rightarrow 0.20$)**: If root density compresses substrate porosity below $\epsilon = 0.32$, stepping RNAlater injection down from $10\ \text{mL/min}$ to $5\ \text{mL/min}$ maintains $\Delta P < 3.5\ \text{kPa}$.
 - **Pump Brownout Grace Window**: Complete pump outage ($Q \le 0.04\ \text{L/min}$) has a **grace window of $t_{\text{grace}} = 10.4\text{--}18.5\ \text{min}$** before transpired humidity reaches $92\%$ RH condensation onset on the lid window.
 
+### 3.7 Porous Substrate Capillarity & Optical Lid Condensation Defense
+- **Lunar Capillary Retention (Richards / van Genuchten)**: In Lunar $0.166\,g$, capillary forces ($P_c = 2\sigma\cos\theta_c / r_{\text{pore}}$) exceed gravity drainage by $>250\times$, producing a uniform hydration profile ($\theta_w = 0.314\ \text{m}^3/\text{m}^3$) across the $7.0\ \text{mm}$ substrate cassettes. Air-filled porosity is sustained at $\varepsilon_{\text{air}} = 0.266\ \text{m}^3/\text{m}^3$ (above the hypoxia ceiling $\varepsilon_{\text{crit}} = 0.15$), with active drainage through the lower aeration wells ($Y \in [0, 7.62]\ \text{mm}$).
+- **Optical Lid Condensation Margin ($\Delta T_{\text{margin}}$)**: Transpiration across 164 plants injects $4.4\ \text{mL/day}$ of moisture. Nominal flow ($Q = 0.50\ \text{L/min}$) maintains inner lid temperature above dew point ($\Delta T_{\text{margin}} = +0.83\ ^\circ\text{C}$ daytime, $+2.15\ ^\circ\text{C}$ at $0.85\ \text{L/min}$), preventing camera window fogging unless ventilation drops below $Q_{\text{crit}} \approx 0.08\ \text{L/min}$.
+- **Two-Phase RNAlater Venting**: Injection at $10\ \text{mL/min}$ via Port 3 dipping nozzle ($Y = 9.5\ \text{mm}$) operates at $Ca = 1.78 \times 10^{-3}$ and $Bo_{\text{lunar}} = 6.31 \times 10^{-5} \ll 1$. Root substrate wets in $26.4\ \text{s}$, with $100\%$ displaced air vented via Port 2 at $\Delta P_{\text{vent}} < 0.01\ \text{kPa}$ with zero trapped bubbles.
+
 ---
 
 ## 4. Simulation Figure Suite
@@ -109,6 +114,7 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 | **Figure 8** | Diurnal day/night photoperiod inversion, respiratory $CO_2$ pooling, and nocturnal setback envelope | [PNG](figures/fig8_diurnal_day_night_photoperiod_inversion.png) · [SVG](figures/fig8_diurnal_day_night_photoperiod_inversion.svg) |
 | **Figure 9** | 14-day developmental growth time-series: logistic canopy ontogeny, channelling, cumulative C, & root compaction | [PNG](figures/fig9_developmental_growth_timeseries.png) · [SVG](figures/fig9_developmental_growth_timeseries.svg) |
 | **Figure 10** | Off-nominal spacecraft sensitivity sweeps: cabin $CO_2$ ($420\text{--}5{,}000\ \text{ppm}$), root compaction, & pump brownout | [PNG](figures/fig10_off_nominal_sensitivity_sweeps.png) · [SVG](figures/fig10_off_nominal_sensitivity_sweeps.svg) |
+| **Figure 11** | Porous substrate unsaturated capillarity, evapotranspiration, optical lid condensation defense, & two-phase venting | [PNG](figures/fig11_water_capillarity_evapotranspiration_condensation.png) · [SVG](figures/fig11_water_capillarity_evapotranspiration_condensation.svg) |
 
 ---
 
@@ -116,8 +122,8 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 
 ```text
 LEAF_GBC2_pot_model/
-├── index.html                           # GitHub Pages Interactive Research Summary Portal
-├── viewer_3d.html                       # Interactive 3D WebGL Digital Twin & CFD Simulator
+├── index.html                           # GitHub Pages Interactive Research Summary Portal (CoSE Theme)
+├── viewer_3d.html                       # Interactive 3D WebGL Digital Twin (Three.js & OrbitControls)
 ├── MANUSCRIPT_LEAF_GBC2_CFD.md          # Complete Technical Manuscript (Methods, Results, Legends)
 ├── README.md                            # Project documentation & summary
 ├── requirements.txt                     # Python environment dependencies
@@ -138,7 +144,8 @@ LEAF_GBC2_pot_model/
 │   ├── simulate_rnalater_perfusion.py   # RNAlater fixation & species asymmetry (Fig 7)
 │   ├── simulate_diurnal_cycle.py        # Day/night photoperiod inversion (Fig 8)
 │   ├── simulate_developmental_growth_timeseries.py # 14-day developmental growth trajectory (Fig 9)
-│   └── simulate_off_nominal_sensitivity.py         # Off-nominal mission sensitivity sweeps (Fig 10)
+│   ├── simulate_off_nominal_sensitivity.py         # Off-nominal mission sensitivity sweeps (Fig 10)
+│   └── simulate_water_capillarity_and_humidity.py  # Capillary retention & lid condensation (Fig 11)
 ├── figures/                             # All publication figures (.png and .svg)
 └── results/
     └── tables/                          # All quantitative simulation tables (.tsv)

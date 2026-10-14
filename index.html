@@ -1166,11 +1166,11 @@
     <section id="cfd-gallery" class="section-block">
       <div class="section-header">
         <div>
-          <h2>4. Complete CFD &amp; Biophysics Simulation Gallery (Figures 1–10)</h2>
+          <h2>4. Complete CFD &amp; Biophysics Simulation Gallery (Figures 1–11)</h2>
           <p>Click any figure to inspect in full resolution or download publication-ready SVG/PNG vector assets.</p>
         </div>
         <div class="tabs-bar">
-          <button class="tab-btn active" onclick="filterGallery('all', this)">All Figures (10)</button>
+          <button class="tab-btn active" onclick="filterGallery('all', this)">All Figures (11)</button>
           <button class="tab-btn" onclick="filterGallery('aero', this)">Aerodynamics &amp; Gravity</button>
           <button class="tab-btn" onclick="filterGallery('bio', this)">Gas Exchange &amp; Ontogeny</button>
           <button class="tab-btn" onclick="filterGallery('ops', this)">RNAlater, Diurnal &amp; Fault Ops</button>
@@ -1357,6 +1357,24 @@
             </div>
           </div>
         </article>
+
+        <!-- Fig 11 -->
+        <article class="fig-card" data-cat="ops">
+          <div class="fig-thumb-wrap" onclick="openLightbox('figures/fig11_water_capillarity_evapotranspiration_condensation.png', 'Figure 11: Porous Substrate Capillarity, Evapotranspiration & Optical Lid Condensation Defense')">
+            <img src="figures/fig11_water_capillarity_evapotranspiration_condensation.png" alt="Figure 11 Water Capillarity & Condensation Defense" loading="lazy" decoding="async" />
+          </div>
+          <div class="fig-body">
+            <div>
+              <span class="fig-tag">Figure 11 · Water Capillarity &amp; Condensation Defense</span>
+              <h3>Porous Media Capillarity, Multi-Species Evapotranspiration &amp; Fogging Defense</h3>
+              <p>Solves van Genuchten capillary retention across the $7.0\ \text{mm}$ substrate cassettes under Lunar $0.166\,g$, tracks 164-plant transpiration ($4.4\ \text{mL/day}$), proves optical lid camera window remains fog-free ($+0.83\ ^\circ\text{C}$ to $+2.15\ ^\circ\text{C}$ margin), and confirms two-phase displaced gas purging through Port 2.</p>
+            </div>
+            <div class="fig-actions">
+              <button class="btn-outline" onclick="openLightbox('figures/fig11_water_capillarity_evapotranspiration_condensation.png', 'Figure 11: Water Capillarity & Condensation Defense')">🔍 Zoom PNG</button>
+              <a href="figures/fig11_water_capillarity_evapotranspiration_condensation.svg" target="_blank" class="btn-outline">⬇ SVG Vector</a>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -1434,6 +1452,12 @@
               <td><code>sweep_type</code>, <code>parameter_value</code>, <code>gs_stomatal</code>, <code>leaf_dT_elevation_C</code>, <code>grace_window_min</code></td>
               <td><a href="results/tables/gbc2_off_nominal_sensitivity.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
             </tr>
+            <tr>
+              <td><code>gbc2_water_and_humidity_transport.tsv</code></td>
+              <td>Porous media capillary retention, air-filled porosity, vapor accumulation, optical lid dew point margins, and two-phase gas venting kinetics</td>
+              <td><code>y_mm</code>, <code>theta_w_lunar</code>, <code>eps_air_lunar</code>, <code>D_eff_lunar</code>, <code>RH_chamber_pct</code>, <code>T_dew_C</code>, <code>dT_margin_C</code>, <code>S_substrate</code></td>
+              <td><a href="results/tables/gbc2_water_and_humidity_transport.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -1490,6 +1514,10 @@
       }
       try {
         localStorage.setItem(LS_THEME, theme);
+        const iframe = document.querySelector(".twin-iframe");
+        if (iframe && iframe.contentWindow) {
+          iframe.contentWindow.postMessage({ type: 'cose-theme-change', theme: theme }, '*');
+        }
       } catch (e) {}
     }
 
