@@ -80,11 +80,11 @@ def generate_orthographic_figure():
         ax_top.text(z_c, 0.0, title_text, ha='center', va='center', fontsize=8.0, fontweight='bold',
                     color=text_col, bbox=dict(boxstyle='round,pad=0.25', facecolor='white', edgecolor=border_col, lw=1.0, alpha=0.95))
                     
-    # Port locations in Top View (X = -15.49 mm)
+    # Port locations in Top View (X = -15.49 mm) - Staggered Y for zero horizontal crowding
     ports_top = [
-        (-21.59, -15.49, 'PORT 1: AIR INLET\n(Z = -21.6 mm, Ø 3.18 mm)', '#c0392b', '#fce4ec', -24.5),
-        (0.00, -15.49, 'PORT 2: CENTRAL EXHAUST\n(Z = 0.0 mm, Ø 3.18 mm)', '#8e44ad', '#f3e5f5', -24.5),
-        (21.59, -15.49, 'PORT 3: WATER / RNALATER\n(Z = +21.6 mm, Ø 3.18 mm)', '#1f618d', '#e8f8f5', -24.5)
+        (-21.59, -15.49, 'PORT 1: AIR INLET\n(Z = -21.6 mm, Ø 3.18 mm)', '#c0392b', '#fce4ec', -24.0),
+        (0.00, -15.49, 'PORT 2: CENTRAL EXHAUST\n(Z = 0.0 mm, Ø 3.18 mm)', '#8e44ad', '#f3e5f5', -28.0),
+        (21.59, -15.49, 'PORT 3: WATER / RNALATER\n(Z = +21.6 mm, Ø 3.18 mm)', '#1f618d', '#e8f8f5', -24.0)
     ]
     for z_p, x_p, p_label, p_col, p_bg, y_text in ports_top:
         circle_out = patches.Circle((z_p, x_p), 5.5, edgecolor=p_col, facecolor='white', lw=2.0)
@@ -93,7 +93,7 @@ def generate_orthographic_figure():
         ax_top.add_patch(circle_in)
         ax_top.annotate(p_label, xy=(z_p, x_p - 5.5), xytext=(z_p, y_text),
                         ha='center', va='top', fontsize=7.5, fontweight='bold', color=p_col,
-                        bbox=dict(boxstyle='round,pad=0.2', facecolor=p_bg, edgecolor=p_col, lw=1.0),
+                        bbox=dict(boxstyle='round,pad=0.25', facecolor=p_bg, edgecolor=p_col, lw=1.0),
                         arrowprops=dict(arrowstyle='->', color=p_col, lw=1.3))
                         
     # Perimeter manifold airflow indicator with badge
@@ -104,7 +104,7 @@ def generate_orthographic_figure():
                 bbox=dict(boxstyle='round,pad=0.2', facecolor='#fef9e7', edgecolor='#f39c12', lw=0.8))
 
     ax_top.set_xlim([-38, 38])
-    ax_top.set_ylim([-31, 24])
+    ax_top.set_ylim([-34, 25])
     ax_top.set_xlabel('Z Length (mm)', fontsize=11, fontweight='bold')
     ax_top.set_ylabel('X Width (mm)', fontsize=11, fontweight='bold')
     ax_top.set_title('TOP PLAN VIEW (Looking Down -Y)\nHardware Boundaries & Port Configuration', fontsize=12, fontweight='bold', pad=10)
@@ -229,15 +229,15 @@ def generate_orthographic_figure():
     # Open central plenum box above Arabidopsis
     c2_plenum = patches.Rectangle((-7.0, 19.5), 14.0, 14.17, facecolor='#ebf5fb', alpha=0.35, edgecolor='#aed6f1', linestyle=':')
     ax_front.add_patch(c2_plenum)
-    ax_front.text(0.0, 25.0, 'OPEN CENTRAL PLENUM\n(ΔY = 14.2 mm Headspace)\nDirect Exhaust Corridor',
+    ax_front.text(0.0, 26.2, 'OPEN CENTRAL PLENUM\n(ΔY = 14.2 mm Headspace)\nDirect Exhaust Corridor',
                   ha='center', va='center', fontsize=7.2, fontweight='bold', color='#1b4f72',
                   bbox=dict(boxstyle='round,pad=0.25', facecolor='#ffffff', edgecolor='#3498db', lw=0.9, alpha=0.95))
 
     # Compartment 3: B. rapa (32 seeds, tall foliage Y = 14.62 to 26.0 mm)
-    # Badge placed at Z = 16.0 to avoid overlapping dipping nozzle at Z = 21.6 mm
+    # Badge placed at Z = 15.2 to avoid overlapping dipping nozzle at Z = 21.6 mm
     c3_box = patches.Rectangle((10.5, 14.62), 19.0, 11.38, facecolor='#27ae60', alpha=0.18, edgecolor='#1e8449', linestyle='--')
     ax_front.add_patch(c3_box)
-    ax_front.text(16.0, 24.8, 'CHAMBER 3 (32 Seeds)\nBrassica rapa (h = 11.4 mm)\nArea: 64 cm² · LAI = 9.4',
+    ax_front.text(15.2, 24.8, 'CHAMBER 3 (32 Seeds)\nBrassica rapa (h = 11.4 mm)\nArea: 64 cm² · LAI = 9.4',
                   ha='center', va='center', fontsize=7.5, fontweight='bold', color='#145a32',
                   bbox=dict(boxstyle='round,pad=0.25', facecolor='#eafaf1', edgecolor='#27ae60', lw=0.9, alpha=0.95))
     for z_off in [13.0, 17.0, 25.0]:
@@ -285,7 +285,7 @@ def generate_orthographic_figure():
     
     # Clean leader line callout for dipping nozzle in right margin
     ax_front.annotate('RNAlater / Water Discharge\n(Y = 9.5 mm in Substrate 3)\nPrevents foliar splashing',
-                      xy=(21.59, 9.5), xytext=(29.5, 14.0),
+                      xy=(21.59, 9.5), xytext=(30.0, 14.0),
                       ha='left', va='center', fontsize=7.5, fontweight='bold', color='#1b4f72',
                       bbox=dict(boxstyle='round,pad=0.25', facecolor='#e8f8f5', edgecolor='#2980b9', lw=1.0),
                       arrowprops=dict(arrowstyle='->', color='#2980b9', lw=1.4))
@@ -307,9 +307,9 @@ def generate_orthographic_figure():
     # Skim across Ch 1
     ax_front.annotate('', xy=(-10.0, 19.5), xytext=(-17.0, 21.0), arrowprops=dict(arrowstyle='->', color='#27ae60', lw=1.8, ls='-.'))
     # Dip into Chamber 2 plenum from Ch 1
-    ax_front.annotate('', xy=(-2.0, 27.5), xytext=(-7.0, 21.0), arrowprops=dict(arrowstyle='->', color='#8e44ad', lw=2.0))
+    ax_front.annotate('', xy=(-2.5, 31.0), xytext=(-7.0, 21.0), arrowprops=dict(arrowstyle='->', color='#8e44ad', lw=2.0))
     # Dip into Chamber 2 plenum from Ch 3
-    ax_front.annotate('', xy=(2.0, 27.5), xytext=(7.0, 21.0), arrowprops=dict(arrowstyle='->', color='#8e44ad', lw=2.0))
+    ax_front.annotate('', xy=(2.5, 31.0), xytext=(7.0, 21.0), arrowprops=dict(arrowstyle='->', color='#8e44ad', lw=2.0))
     # Skim across Ch 3
     ax_front.annotate('', xy=(10.0, 19.5), xytext=(17.0, 21.0), arrowprops=dict(arrowstyle='->', color='#27ae60', lw=1.8, ls='-.'))
 
@@ -320,7 +320,7 @@ def generate_orthographic_figure():
                       bbox=dict(boxstyle='round,pad=0.2', facecolor='#fef5e7', edgecolor='#d35400', lw=0.8),
                       arrowprops=dict(arrowstyle='->', color='#d35400', lw=1.2))
 
-    ax_front.set_xlim([-42, 42])
+    ax_front.set_xlim([-42, 44])
     ax_front.set_ylim([-2, 57])
     ax_front.set_xlabel('Z Length (mm)', fontsize=12, fontweight='bold')
     ax_front.set_ylabel('Y Height (mm)', fontsize=12, fontweight='bold')

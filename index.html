@@ -797,6 +797,167 @@
       padding-top: 0.85rem;
     }
 
+    /* =========================================================================
+       CoSE Design System: Featured Research Spotlight & Mathematical Physics
+       ========================================================================= */
+    .feature-spotlight {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.75rem;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      margin-bottom: 2.25rem;
+      box-shadow: var(--shadow-card);
+      align-items: center;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .feature-spotlight:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      box-shadow: var(--shadow-elevated);
+    }
+
+    @media (max-width: 960px) {
+      .feature-spotlight {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .feature-img-wrap {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      cursor: pointer;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .feature-img-wrap img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.25s ease;
+    }
+
+    .feature-img-wrap:hover img {
+      transform: scale(1.015);
+    }
+
+    .feature-content h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--fg);
+      margin-bottom: 0.65rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .feature-pill {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      letter-spacing: 0.05em;
+    }
+
+    .pill-aero { background: rgba(59, 110, 165, 0.15); color: var(--accent); border: 1px solid rgba(59, 110, 165, 0.3); }
+    .pill-bio { background: rgba(63, 182, 168, 0.15); color: var(--accent2); border: 1px solid rgba(63, 182, 168, 0.3); }
+    .pill-ops { background: rgba(142, 68, 173, 0.15); color: #8e44ad; border: 1px solid rgba(142, 68, 173, 0.3); }
+    .pill-hotspot { background: rgba(217, 119, 6, 0.15); color: #d97706; border: 1px solid rgba(217, 119, 6, 0.3); }
+
+    .feature-content p {
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: var(--muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .feature-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin: 1rem 0;
+      padding: 0.85rem;
+      background: var(--code);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+    }
+
+    .feature-metric-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .feature-metric-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .feature-metric-val {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--fg);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    /* Equation Display Card */
+    .equation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.25rem;
+    }
+
+    .equation-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .equation-card h4 {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--fg);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .equation-box {
+      background: var(--code);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--accent);
+      padding: 0.85rem 1.15rem;
+      border-radius: 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      color: var(--fg);
+      margin: 0.6rem 0;
+      overflow-x: auto;
+    }
+
+    .equation-desc {
+      font-size: 0.82rem;
+      line-height: 1.48;
+      color: var(--muted);
+    }
+
     /* Native Dialog Lightbox */
     dialog#lightbox {
       margin: auto;
@@ -993,11 +1154,13 @@
       <a href="#digital-twin">3D Digital Twin</a>
       <a href="#cad-blueprints">CAD Blueprints</a>
       <a href="#species-morphometrics">Species &amp; Seeds</a>
+      <a href="#governing-equations">Physics Equations</a>
+      <a href="#featured-research">Research Highlights</a>
       <a href="#cfd-gallery">Figure Gallery</a>
+      <a href="#data-tables">Data Tables</a>
       <a href="#model-lunar-leaf">Model Lunar LEAF</a>
       <a href="#asme-gci">ASME V&amp;V 20 &amp; Hotspots</a>
       <a href="#hardware-benchmark">Flight Benchmark</a>
-      <a href="#data-tables">Data Tables</a>
       <a href="MANUSCRIPT_LEAF_GBC2_CFD.md" target="_blank">Manuscript</a>
       <a href="viewer_3d.html" target="_blank" class="btn-primary">Launch Fullscreen 3D Sim ↗</a>
       <button id="theme-toggle" class="cose-theme-btn" aria-label="Toggle light or dark theme" title="Toggle light / dark"></button>
@@ -1236,15 +1399,352 @@
       </div>
     </section>
 
-    <!-- Section 4: Complete CFD & Biophysics Figure Gallery -->
+    <!-- Section 4: Governing Mathematical Equations & Biophysical Framework -->
+    <section id="governing-equations" class="section-block">
+      <div class="section-header">
+        <div>
+          <h2>4. Mathematical Physics &amp; CFD Transport Governing Equations</h2>
+          <p>Full 3D Navier&ndash;Stokes, Brinkman&ndash;Darcy porous media drag, Churchill mixed convection, and coupled Farquhar&ndash;von Caemmerer&ndash;Berry (FvCB) photosynthesis formulations.</p>
+        </div>
+      </div>
+
+      <div class="equation-grid">
+        <!-- Eq 1: Navier-Stokes -->
+        <div class="equation-card">
+          <div>
+            <h4>1. Incompressible Navier&ndash;Stokes with Brinkman Porous Drag &amp; Boussinesq Buoyancy</h4>
+            <div class="equation-box">
+              &nabla; &middot; u = 0<br>
+              &part;u/&part;t + (u &middot; &nabla;)u = -(1/&rho;₀)&nabla;p + &nu;&nabla;&sup2;u - D(x)u + g[&beta;<sub>T</sub>(T - T₀) + &beta;<sub>H₂O</sub>(C<sub>H₂O</sub> - C<sub>H₂O,0</sub>) + &beta;<sub>CO₂</sub>(C<sub>CO₂</sub> - C<sub>CO₂,0</sub>)]
+            </div>
+            <p class="equation-desc">
+              Continuity and momentum balance where &nu; = 1.51 &times; 10⁻⁵ m²/s. The momentum sink <em>D(x)</em> equals Darcy drag <em>&nu; / (&epsilon;K)</em> inside the 3 partitioned substrate blocks (<em>Y</em> = 7.62&ndash;14.62 mm) and canopy drag <em>C<sub>d</sub> &middot; a<sub>leaf</sub>(x) &middot; |u|</em> in foliar zones. Buoyancy acceleration drops 83.4% on the Moon (<em>g</em> = 1.62 m/s&sup2;).
+            </p>
+          </div>
+        </div>
+
+        <!-- Eq 2: Multi-Species Transport & Mean Age of Air -->
+        <div class="equation-card">
+          <div>
+            <h4>2. Multi-Species Advection&ndash;Diffusion &amp; Sandberg Residence-Time Identity</h4>
+            <div class="equation-box">
+              &part;C<sub>k</sub>/&part;t + u &middot; &nabla;C<sub>k</sub> = D<sub>k</sub> &nabla;&sup2;C<sub>k</sub> + S<sub>k</sub>(x)<br>
+              u &middot; &nabla;&theta; - D<sub>&theta;</sub> &nabla;&sup2;&theta; = 1, &nbsp; &theta;|<sub>Port 1</sub> = 0<br>
+              &lang;&theta;&rang;<sub>outlet, flux</sub> = &int;<sub>Port 2</sub> (u &middot; n)&theta; dA / &int;<sub>Port 2</sub> (u &middot; n) dA &equiv; &tau;<sub>nominal</sub> = V<sub>fluid</sub> / Q
+            </div>
+            <p class="equation-desc">
+              Scalar transport for CO₂ (<em>D</em> = 1.60 &times; 10⁻⁵ m²/s) and H₂O vapor (<em>D</em> = 2.42 &times; 10⁻⁵ m²/s). The Mean Age-of-Air (&theta;) PDE verifies ventilation efficiency, validated against the exact Sandberg conservation ratio (&theta;<sub>out</sub> / &tau; = 0.938).
+            </p>
+          </div>
+        </div>
+
+        <!-- Eq 3: Churchill Mixed-Convection Boundary Layer -->
+        <div class="equation-card">
+          <div>
+            <h4>3. Churchill Combined Free-and-Forced Leaf Boundary Layer Conductance</h4>
+            <div class="equation-box">
+              &delta;<sub>eff,c</sub> = (&delta;<sub>forced,c</sub>⁻³ + &delta;<sub>nat,c</sub>⁻³)<sup>-1/3</sup><br>
+              &delta;<sub>forced,c</sub> = 4.92 &radic;(&nu; L<sub>leaf,c</sub> / |u<sub>c</sub>|), &nbsp; &delta;<sub>nat,c</sub> = 3.5 L<sub>leaf,c</sub> Gr<sub>c</sub><sup>-1/4</sup><br>
+              g<sub>bl,c</sub> = D<sub>CO₂</sub> / (&delta;<sub>eff,c</sub> &middot; V<sub>mol</sub>)
+            </div>
+            <p class="equation-desc">
+              Churchill asymptotic blending across laminar forced Blasius flat-plate boundary layers and natural Grashof buoyancy convection. Evaluated with <em>L</em><sub>leaf</sub> = 20 mm for <em>B. rapa</em> and 8 mm for <em>Arabidopsis</em>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Eq 4: Coupled FvCB Photosynthesis -->
+        <div class="equation-card">
+          <div>
+            <h4>4. Coupled Farquhar&ndash;von Caemmerer&ndash;Berry (FvCB) Photosynthesis &amp; Stomatal Supply</h4>
+            <div class="equation-box">
+              A<sub>net</sub> = min(W<sub>c</sub>, W<sub>j</sub>) - R<sub>d</sub><br>
+              W<sub>c</sub> = V<sub>cmax</sub> (C<sub>i</sub> - &Gamma;*) / [C<sub>i</sub> + K<sub>c</sub>(1 + O / K<sub>o</sub>)]<br>
+              A<sub>net</sub> = [ (1/g<sub>bl</sub>) + (1/g<sub>s</sub>) ]⁻¹ &middot; (C<sub>a</sub> - C<sub>i</sub>)
+            </div>
+            <p class="equation-desc">
+              Biochemical carbon fixation analytically solved by matching RuBisCO/electron-transport capacity against boundary-layer (<em>g</em><sub>bl</sub>) and stomatal (<em>g</em><sub>s</sub>) diffusive supply, resolving exact intercellular CO₂ (<em>C</em><sub>i</sub>).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Featured Scientific Research Highlights & Static Graphs -->
+    <section id="featured-research" class="section-block">
+      <div class="section-header">
+        <div>
+          <h2>5. Featured Scientific Research Highlights &amp; Static Graphs</h2>
+          <p>Key biophysical findings and static figure spotlights synthesized from the flight modeling campaign.</p>
+        </div>
+      </div>
+
+      <!-- Spotlight 1: Velocity Fields & Buoyancy Suppression (Fig 2) -->
+      <article class="feature-spotlight">
+        <div class="feature-img-wrap" onclick="openLightbox('figures/fig2_velocity_fields_earth_vs_lunar.png', 'Figure 2: Velocity, CO2, and H2O Spatial Fields — Earth 1g vs. Lunar 0.166g')">
+          <img src="figures/fig2_velocity_fields_earth_vs_lunar.png" alt="Figure 2: Velocity Fields Earth vs Lunar" loading="lazy" decoding="async" />
+        </div>
+        <div class="feature-content">
+          <span class="feature-pill pill-aero">Research Spotlight 1 · Aerodynamics</span>
+          <h3>Velocity Fields &amp; Lunar Buoyancy Suppression</h3>
+          <p>
+            At terrestrial gravity (1.0<em>g</em>), buoyant thermal and solutal plumes continuously strip away diffusive boundary layers. Under Lunar fractional gravity (0.166<em>g</em>), buoyant acceleration plummets by 83.4%, causing laminar stagnation envelopes to envelop the foliage. Air entering Port 1 follows a &ldquo;dip-and-converge&rdquo; streamline trajectory across the tall <em>B. rapa</em> canopies into the central <em>Arabidopsis</em> plenum before exiting Port 2.
+          </p>
+          <div class="feature-metric-grid">
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Earth g_bl</span>
+              <span class="feature-metric-val">0.0604 mol/m²s</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Lunar g_bl</span>
+              <span class="feature-metric-val" style="color:#e67e22;">0.0385 mol/m²s</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Conductance Drop</span>
+              <span class="feature-metric-val" style="color:#dc2626;">-36.3%</span>
+            </div>
+          </div>
+          <div class="fig-actions" style="border:none; padding:0;">
+            <button class="btn-outline" onclick="openLightbox('figures/fig2_velocity_fields_earth_vs_lunar.png', 'Figure 2: Spatial Velocity Fields')">🔍 Zoom High-Res Figure</button>
+            <a href="figures/fig2_velocity_fields_earth_vs_lunar.svg" target="_blank" class="btn-outline">⬇ Download SVG Vector</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Spotlight 2: Lunar Compensatory Pump Sizing Curve (Fig 3) -->
+      <article class="feature-spotlight">
+        <div class="feature-img-wrap" onclick="openLightbox('figures/fig3_lunar_compensatory_pump_curve.png', 'Figure 3: Lunar Compensatory Pump Sizing Curve & Convection Regimes')">
+          <img src="figures/fig3_lunar_compensatory_pump_curve.png" alt="Figure 3: Lunar Compensatory Pump Curve" loading="lazy" decoding="async" />
+        </div>
+        <div class="feature-content">
+          <span class="feature-pill pill-aero">Research Spotlight 2 · Flight Operations</span>
+          <h3>Compensatory Pump Sizing Curve (Q = 0.85 L/min)</h3>
+          <p>
+            By mapping the mixed-convection Richardson number (<em>Ri</em> = <em>Gr</em> / <em>Re</em>&sup2;) and canopy P&eacute;clet number across 21 flow rates, we prove that elevating daytime ventilation from nominal 0.50 L/min to <strong>0.85 L/min</strong> fully overcomes the fractional-gravity buoyancy deficit. This restores 98% of terrestrial foliar conductance, reduces canopy CO₂ drawdown by 37%, and establishes uniform scalar fields.
+          </p>
+          <div class="feature-metric-grid">
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Daytime Setpoint</span>
+              <span class="feature-metric-val" style="color:var(--accent);">0.85 L/min</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Péclet Number</span>
+              <span class="feature-metric-val">Pe = 224</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">CO₂ Drawdown Fix</span>
+              <span class="feature-metric-val" style="color:var(--accent2);">-37%</span>
+            </div>
+          </div>
+          <div class="fig-actions" style="border:none; padding:0;">
+            <button class="btn-outline" onclick="openLightbox('figures/fig3_lunar_compensatory_pump_curve.png', 'Figure 3: Lunar Compensatory Sizing')">🔍 Zoom High-Res Figure</button>
+            <a href="figures/fig3_lunar_compensatory_pump_curve.svg" target="_blank" class="btn-outline">⬇ Download SVG Vector</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Spotlight 3: Diurnal Photoperiod Inversion & Nocturnal Setback (Fig 8) -->
+      <article class="feature-spotlight">
+        <div class="feature-img-wrap" onclick="openLightbox('figures/fig8_diurnal_day_night_photoperiod_inversion.png', 'Figure 8: Diurnal Day/Night Photoperiod Inversion & Nocturnal Buoyancy Reversal')">
+          <img src="figures/fig8_diurnal_day_night_photoperiod_inversion.png" alt="Figure 8: Diurnal Day/Night Photoperiod Inversion" loading="lazy" decoding="async" />
+        </div>
+        <div class="feature-content">
+          <span class="feature-pill pill-bio">Research Spotlight 3 · Plant Physiology</span>
+          <h3>Diurnal Photoperiod Inversion &amp; Nocturnal Setback Floor</h3>
+          <p>
+            During the 8-hour dark period, leaves switch from photosynthetic CO₂ absorption to mitochondrial respiration (&beta;<sub>CO₂</sub> = -0.517). Combined with radiative cooling (&Delta;<em>T</em> = -0.3 K), buoyancy forces invert (<em>Ri</em> &lt; 0), causing heavy respiratory CO₂ to pool inside the lower aeration wells (<em>Y</em> &lt; 7.62 mm). We establish that a <strong>nocturnal setback flow floor of Q &ge; 0.60 L/min</strong> (or 0.425 L/min at 50% duty cycle) is essential to purge respiratory hypercapnia.
+          </p>
+          <div class="feature-metric-grid">
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Dark Respiration</span>
+              <span class="feature-metric-val">1.18 µmol/m²s</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Buoyancy State</span>
+              <span class="feature-metric-val" style="color:#dc2626;">Ri &lt; 0 (Inverted)</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Night Flow Floor</span>
+              <span class="feature-metric-val" style="color:var(--accent);">Q &ge; 0.60 L/min</span>
+            </div>
+          </div>
+          <div class="fig-actions" style="border:none; padding:0;">
+            <button class="btn-outline" onclick="openLightbox('figures/fig8_diurnal_day_night_photoperiod_inversion.png', 'Figure 8: Diurnal Inversion')">🔍 Zoom High-Res Figure</button>
+            <a href="figures/fig8_diurnal_day_night_photoperiod_inversion.svg" target="_blank" class="btn-outline">⬇ Download SVG Vector</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Spotlight 4: 5-Day Ontogeny & Foam Activation (Fig 14) -->
+      <article class="feature-spotlight">
+        <div class="feature-img-wrap" onclick="openLightbox('figures/fig14_model_lunar_leaf_5day_ontogeny.png', 'Figure 14: Model Lunar LEAF 5-Day Developmental Growth Ontogeny')">
+          <img src="figures/fig14_model_lunar_leaf_5day_ontogeny.png" alt="Figure 14: 5-Day Developmental Growth Ontogeny" loading="lazy" decoding="async" />
+        </div>
+        <div class="feature-content">
+          <span class="feature-pill pill-bio">Research Spotlight 4 · Ontogeny</span>
+          <h3>5-Day &ldquo;Model Lunar LEAF&rdquo; Ontogeny &amp; Foam Activation</h3>
+          <p>
+            The mission begins with automated injection of 5.28 mL water through Port 3 to saturate the open-cell rooting foam beneath the 40 &mu;m Nytex root-barrier mesh. Dormant seeds germinate within 24 hours (radicle emergence) and rapidly transition into leafy seedlings. As canopy stature increases from 0.0 mm to 11.4 mm in <em>B. rapa</em> and 4.9 mm in <em>Arabidopsis</em>, canopy drag increases by 14.8&times;, yet inter-chamber residence time remains tightly balanced (&Delta;&theta; &lt; 1.0%).
+          </p>
+          <div class="feature-metric-grid">
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Water Injection</span>
+              <span class="feature-metric-val">5.28 mL (100%)</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Germination</span>
+              <span class="feature-metric-val" style="color:var(--accent2);">&lt; 24 Hours</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Day 5 LAI</span>
+              <span class="feature-metric-val">9.44 / 3.09</span>
+            </div>
+          </div>
+          <div class="fig-actions" style="border:none; padding:0;">
+            <button class="btn-outline" onclick="openLightbox('figures/fig14_model_lunar_leaf_5day_ontogeny.png', 'Figure 14: 5-Day Ontogeny')">🔍 Zoom High-Res Figure</button>
+            <a href="figures/fig14_model_lunar_leaf_5day_ontogeny.svg" target="_blank" class="btn-outline">⬇ Download SVG Vector</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Spotlight 5: Push vs Pull & Optical Lid Condensation (Fig 16) -->
+      <article class="feature-spotlight">
+        <div class="feature-img-wrap" onclick="openLightbox('figures/fig16_optical_lid_condensation_envelope.png', 'Figure 16: Optical Lid Condensation Risk Envelope Across Flow Rates')">
+          <img src="figures/fig16_optical_lid_condensation_envelope.png" alt="Figure 16: Optical Lid Condensation Risk Envelope" loading="lazy" decoding="async" />
+        </div>
+        <div class="feature-content">
+          <span class="feature-pill pill-ops">Research Spotlight 5 · Optical Clarity</span>
+          <h3>Push vs. Pull Aerodynamics &amp; Lid Condensation Shield</h3>
+          <p>
+            Operating the micro-peristaltic pump in <strong>Pull Mode</strong> (suction at Port 2) draws stagnant transpired moisture out of the chamber before it can condense against the cool optical viewing window. At <em>Q</em> = 0.85 L/min, lid surface relative humidity remains safely below 62% (&Delta;<em>T</em><sub>dew</sub> = +4.8 &deg;C margin above saturation), ensuring crystal-clear phenotyping imaging throughout the 5-day lunar surface mission.
+          </p>
+          <div class="feature-metric-grid">
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Lid Humidity</span>
+              <span class="feature-metric-val" style="color:var(--accent2);">RH = 58.4%</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Dew Point Margin</span>
+              <span class="feature-metric-val">+4.8 °C</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Condensation Risk</span>
+              <span class="feature-metric-val" style="color:var(--accent2);">Zero (Unfogged)</span>
+            </div>
+          </div>
+          <div class="fig-actions" style="border:none; padding:0;">
+            <button class="btn-outline" onclick="openLightbox('figures/fig16_optical_lid_condensation_envelope.png', 'Figure 16: Lid Condensation Envelope')">🔍 Zoom High-Res Figure</button>
+            <a href="figures/fig16_optical_lid_condensation_envelope.svg" target="_blank" class="btn-outline">⬇ Download SVG Vector</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Spotlight 6: In-Situ Harvest Fixation Perfusion (Fig 7) -->
+      <article class="feature-spotlight">
+        <div class="feature-img-wrap" onclick="openLightbox('figures/fig7_rnalater_perfusion_and_species_dynamics.png', 'Figure 7: RNAlater Fixation Perfusion Dynamics & Species Front Advancement')">
+          <img src="figures/fig7_rnalater_perfusion_and_species_dynamics.png" alt="Figure 7: RNAlater Fixation Perfusion Dynamics" loading="lazy" decoding="async" />
+        </div>
+        <div class="feature-content">
+          <span class="feature-pill pill-ops">Research Spotlight 6 · Harvest Ops</span>
+          <h3>In-Situ Harvest Fixation via Port 3 Dipping Nozzle</h3>
+          <p>
+            At end-of-mission, high-fidelity transcriptomic preservation is achieved by injecting saturated ammonium sulfate fixative (RNAlater; &rho; = 1250 kg/m&sup3;, &mu; = 1.85 mPa&middot;s) through the Port 3 dipping nozzle (<em>Y</em> = 9.5 mm in Substrate Block 3). The fluid front saturates the porous rooting media in 31.7 s and smoothly submerges the entire 64.6 cm&sup3; chamber in 6.46 min at a peak pressure of 0.73 kPa, remaining well below the 5.0 kPa seal rupture threshold.
+          </p>
+          <div class="feature-metric-grid">
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Substrate Saturation</span>
+              <span class="feature-metric-val">31.7 s</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Total Submersion</span>
+              <span class="feature-metric-val">6.46 min</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Peak Pressure</span>
+              <span class="feature-metric-val" style="color:var(--accent2);">0.73 kPa (&lt; 5 kPa)</span>
+            </div>
+          </div>
+          <div class="fig-actions" style="border:none; padding:0;">
+            <button class="btn-outline" onclick="openLightbox('figures/fig7_rnalater_perfusion_and_species_dynamics.png', 'Figure 7: RNAlater Perfusion')">🔍 Zoom High-Res Figure</button>
+            <a href="figures/fig7_rnalater_perfusion_and_species_dynamics.svg" target="_blank" class="btn-outline">⬇ Download SVG Vector</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Spotlight 7: Individual Foliar Hotspots across 164 Seedlings (Fig 17) -->
+      <article class="feature-spotlight">
+        <div class="feature-img-wrap" onclick="openLightbox('figures/fig17_foliar_surface_distribution_and_hotspots.png', 'Figure 17: Foliar Surface Microclimate Distribution & Individual Plant Hotspots across 164 Seedlings')">
+          <img src="figures/fig17_foliar_surface_distribution_and_hotspots.png" alt="Figure 17: Foliar Surface Hotspots" loading="lazy" decoding="async" />
+        </div>
+        <div class="feature-content">
+          <span class="feature-pill pill-hotspot">Research Spotlight 7 · High-Resolution Hotspots</span>
+          <h3>164-Plant Foliar Microclimate Telemetry &amp; Hotspots</h3>
+          <p>
+            Resolving individual foliar boundary layer conditions across all 164 plant positions (32 <em>B. rapa</em> + 100 <em>Arabidopsis</em> + 32 <em>B. rapa</em>) reveals a 10.56&times; dynamic range in foliar CO₂ drawdown (0.37 to 3.94 ppm). Plants directly beneath the central Port 2 exhaust plenum experience rapid purging (&Delta;<em>C</em> = 0.94 ppm), while downwind foliage in leeward Chamber 3 experiences higher scalar accumulation (&Delta;<em>C</em> = 3.47 ppm), demonstrating the value of spatial CFD digital twins.
+          </p>
+          <div class="feature-metric-grid">
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Sample Count</span>
+              <span class="feature-metric-val">164 Plants</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Dynamic Range</span>
+              <span class="feature-metric-val">10.56×</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">Ch 2 vs Ch 3 CO₂</span>
+              <span class="feature-metric-val">0.94 vs 3.47 ppm</span>
+            </div>
+          </div>
+          <div class="fig-actions" style="border:none; padding:0;">
+            <button class="btn-outline" onclick="openLightbox('figures/fig17_foliar_surface_distribution_and_hotspots.png', 'Figure 17: Foliar Hotspots')">🔍 Zoom High-Res Figure</button>
+            <a href="figures/fig17_foliar_surface_distribution_and_hotspots.svg" target="_blank" class="btn-outline">⬇ Download SVG Vector</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Spotlight 8: Spaceflight Hardware Cross-Comparison (Fig 18) -->
+      <article class="feature-spotlight">
+        <div class="feature-img-wrap" onclick="openLightbox('figures/fig18_spaceflight_hardware_comprehensive_benchmark.png', 'Figure 18: Spaceflight Hardware Cross-Comparison Benchmark: NASA BRIC, CARA, VEGGIE vs. LEAF GBC2')">
+          <img src="figures/fig18_spaceflight_hardware_comprehensive_benchmark.png" alt="Figure 18: Spaceflight Hardware Benchmark" loading="lazy" decoding="async" />
+        </div>
+        <div class="feature-content">
+          <span class="feature-pill pill-ops">Research Spotlight 8 · Hardware Synthesis</span>
+          <h3>Spaceflight Hardware Continuum: NASA BRIC, CARA &amp; VEGGIE</h3>
+          <p>
+            Comparing flight hardware architectures proves that hermetically sealed Petri dishes (NASA BRIC-60) starve seedlings of CO₂ in just 7.0 minutes, while passive gas-permeable tape systems (CARA) remain diffusion-limited (ACH = 1.76 h⁻¹). In contrast, the actively ventilated LEAF GBC2 micro-peristaltic architecture delivers 554.5 ACH (one chamber volume turnover every 6.5 s), sustaining autotrophic growth indefinitely while maintaining optical lid clarity.
+          </p>
+          <div class="feature-metric-grid">
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">BRIC Starve Time</span>
+              <span class="feature-metric-val" style="color:#dc2626;">7.0 min</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">CARA ACH</span>
+              <span class="feature-metric-val">1.76 h⁻¹</span>
+            </div>
+            <div class="feature-metric-item">
+              <span class="feature-metric-label">LEAF GBC2 ACH</span>
+              <span class="feature-metric-val" style="color:var(--accent);">554.5 h⁻¹</span>
+            </div>
+          </div>
+          <div class="fig-actions" style="border:none; padding:0;">
+            <button class="btn-outline" onclick="openLightbox('figures/fig18_spaceflight_hardware_comprehensive_benchmark.png', 'Figure 18: Hardware Benchmark')">🔍 Zoom High-Res Figure</button>
+            <a href="figures/fig18_spaceflight_hardware_comprehensive_benchmark.svg" target="_blank" class="btn-outline">⬇ Download SVG Vector</a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Section 6: Complete CFD & Biophysics Figure Gallery -->
     <section id="cfd-gallery" class="section-block">
       <div class="section-header">
         <div>
-          <h2>4. Complete CFD &amp; Biophysics Simulation Gallery (Figures 1–11)</h2>
+          <h2>6. Complete CFD &amp; Biophysics Simulation Gallery (Figures 1–18)</h2>
           <p>Click any figure to inspect in full resolution or download publication-ready SVG/PNG vector assets.</p>
         </div>
         <div class="tabs-bar">
-          <button class="tab-btn active" onclick="filterGallery('all', this)">All Figures (11)</button>
+          <button class="tab-btn active" onclick="filterGallery('all', this)">All Figures (18)</button>
           <button class="tab-btn" onclick="filterGallery('aero', this)">Aerodynamics &amp; Gravity</button>
           <button class="tab-btn" onclick="filterGallery('bio', this)">Gas Exchange &amp; Ontogeny</button>
           <button class="tab-btn" onclick="filterGallery('ops', this)">RNAlater, Diurnal &amp; Fault Ops</button>
@@ -1578,11 +2078,11 @@
       </div>
     </section>
 
-    <!-- Section 5: Downloadable Quantitative TSV Datasets -->
+    <!-- Section 7: Downloadable Quantitative TSV Datasets -->
     <section id="data-tables" class="section-block">
       <div class="section-header">
         <div>
-          <h2>5. Quantitative Simulation Datasets (TSV Tables)</h2>
+          <h2>7. Quantitative Simulation Datasets (TSV Tables)</h2>
           <p>Machine-readable telemetry outputs generated by the GBC2 simulation pipeline for downstream statistical and multi-omics integration.</p>
         </div>
       </div>
@@ -1711,11 +2211,11 @@
       </div>
     </section>
 
-    <!-- Section 6: Model Lunar LEAF 5-Day Simulation & Zenodo Open-Science Package -->
+    <!-- Section 8: Model Lunar LEAF 5-Day Simulation & Zenodo Open-Science Package -->
     <section id="model-lunar-leaf" class="section-block">
       <div class="section-header">
         <div>
-          <h2>6. Model Lunar LEAF: 5-Day Spaceflight Simulation &amp; Zenodo Package</h2>
+          <h2>8. Model Lunar LEAF: 5-Day Spaceflight Simulation &amp; Zenodo Package</h2>
           <p>Full 120-hour spaceflight experiment simulation modeling initial water activation, Nytex mesh root barrier physics, aerodynamic push vs. pull regimes, developmental ontogeny, and environmental sweeps.</p>
         </div>
       </div>
@@ -1825,11 +2325,11 @@
       </div>
     </section>
 
-    <!-- Section 7: ASME V&V 20 Discretization Verification & Foliar Hotspots -->
+    <!-- Section 9: ASME V&V 20 Discretization Verification & Foliar Hotspots -->
     <section id="asme-gci" class="section-block">
       <div class="section-header">
         <div>
-          <h2>7. ASME V&amp;V 20-2009 Discretization Verification &amp; Foliar Hotspots</h2>
+          <h2>9. ASME V&amp;V 20-2009 Discretization Verification &amp; Foliar Hotspots</h2>
           <p>Rigorous numerical mesh independence analysis using the ASME V&amp;V 20 standard Grid Convergence Index (GCI) across three spatial resolutions (&Delta;<em>x</em> = 1.50, 1.00, 0.75 mm), coupled with microenvironmental hotspot analytics across all 164 individual plant positions.</p>
         </div>
       </div>
@@ -2017,11 +2517,11 @@
       </div>
     </section>
 
-    <!-- Section 8: Spaceflight Hardware Benchmark Comparison -->
+    <!-- Section 10: Spaceflight Hardware Benchmark Comparison -->
     <section id="hardware-benchmark" class="section-block">
       <div class="section-header">
         <div>
-          <h2>8. Spaceflight Hardware Cross-Comparison (BRIC vs. CARA vs. VEGGIE vs. GBC2)</h2>
+          <h2>10. Spaceflight Hardware Cross-Comparison (BRIC vs. CARA vs. VEGGIE vs. GBC2)</h2>
           <p>Architectural synthesis comparing NASA flight hardware platforms to demonstrate why active controlled pull ventilation resolves the rapid carbon starvation, hypoxia, and optical fogging inherent to passive Petri dish cultivation.</p>
         </div>
       </div>
@@ -2204,6 +2704,25 @@
         }
       });
     } catch (e) {}
+
+    // Listen for theme sync requests from inside iframe
+    window.addEventListener("message", function(e) {
+      if (e.data && e.data.type === 'cose-theme-change' && e.data.theme) {
+        if (e.data.theme !== getEffectiveTheme()) {
+          applyTheme(e.data.theme);
+        }
+      }
+    });
+
+    // Ensure iframe receives initial theme on load
+    const twinIframe = document.querySelector(".twin-iframe");
+    if (twinIframe) {
+      twinIframe.addEventListener("load", function() {
+        try {
+          twinIframe.contentWindow.postMessage({ type: 'cose-theme-change', theme: getEffectiveTheme() }, '*');
+        } catch (e) {}
+      });
+    }
 
     const blueprints = {
       ortho: {

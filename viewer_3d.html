@@ -25,19 +25,23 @@
       --cose-panel-border: rgba(51, 65, 85, 0.85);
       --cose-text-primary: #f8fafc;
       --cose-text-secondary: #94a3b8;
-      --cose-brand-primary: #0284c7;
-      --cose-brand-accent: #10b981;
+      --cose-brand-primary: #3B6EA5;
+      --cose-brand-accent: #3FB6A8;
       --cose-card-bg: rgba(30, 41, 59, 0.75);
+      --cose-subcard-bg: rgba(15, 23, 42, 0.6);
+      color-scheme: dark;
     }
-    html.light {
+    html.light, html[data-theme="light"] {
       --cose-bg: #f8fafc;
-      --cose-panel-bg: rgba(255, 255, 255, 0.94);
-      --cose-panel-border: rgba(226, 232, 240, 0.95);
+      --cose-panel-bg: rgba(255, 255, 255, 0.96);
+      --cose-panel-border: #e2e8f0;
       --cose-text-primary: #0f172a;
       --cose-text-secondary: #475569;
-      --cose-brand-primary: #0284c7;
-      --cose-brand-accent: #059669;
-      --cose-card-bg: rgba(241, 245, 249, 0.9);
+      --cose-brand-primary: #3B6EA5;
+      --cose-brand-accent: #3FB6A8;
+      --cose-card-bg: #ffffff;
+      --cose-subcard-bg: #f1f5f9;
+      color-scheme: light;
     }
     body {
       margin: 0;
@@ -62,7 +66,8 @@
       background: #334155;
       border-radius: 3px;
     }
-    html.light .custom-scrollbar::-webkit-scrollbar-thumb {
+    html.light .custom-scrollbar::-webkit-scrollbar-thumb,
+    html[data-theme="light"] .custom-scrollbar::-webkit-scrollbar-thumb {
       background: #cbd5e1;
     }
     /* CoSE Theme Toggle Button */
@@ -91,6 +96,167 @@
       stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
+    }
+
+    /* =========================================================================
+       CoSE Light Theme Component Overrides for 3D Viewer
+       ========================================================================= */
+    html.light header, html[data-theme="light"] header {
+      background-color: rgba(255, 255, 255, 0.94) !important;
+      border-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+    html.light header h1, html[data-theme="light"] header h1 {
+      color: #0f172a !important;
+    }
+    html.light header p, html[data-theme="light"] header p {
+      color: #64748b !important;
+    }
+    html.light .header-badge, html[data-theme="light"] .header-badge {
+      background-color: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+      color: #334155 !important;
+    }
+
+    /* Floating Viewport Presets Bar */
+    html.light .viewport-preset-bar, html[data-theme="light"] .viewport-preset-bar {
+      background-color: rgba(255, 255, 255, 0.96) !important;
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+    }
+    html.light .preset-btn-inactive, html[data-theme="light"] .preset-btn-inactive {
+      color: #475569 !important;
+    }
+    html.light .preset-btn-inactive:hover, html[data-theme="light"] .preset-btn-inactive:hover {
+      background-color: #f1f5f9 !important;
+      color: #0f172a !important;
+    }
+    html.light .preset-btn-active, html[data-theme="light"] .preset-btn-active {
+      background-color: #3B6EA5 !important;
+      color: #ffffff !important;
+    }
+
+    /* 3D Sensor Probe HUD */
+    html.light #sensorProbeHUD, html[data-theme="light"] #sensorProbeHUD {
+      background-color: rgba(255, 255, 255, 0.97) !important;
+      border-color: #3FB6A8 !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+      color: #0f172a !important;
+    }
+    html.light #sensorProbeHUD .border-slate-800, html[data-theme="light"] #sensorProbeHUD .border-slate-800 {
+      border-color: #e2e8f0 !important;
+    }
+    html.light #sensorProbeHUD .bg-slate-950\/60, html[data-theme="light"] #sensorProbeHUD .bg-slate-950\/60 {
+      background-color: #f8fafc !important;
+      border: 1px solid #e2e8f0 !important;
+    }
+    html.light #probePlantId, html[data-theme="light"] #probePlantId {
+      color: #0f172a !important;
+    }
+    html.light #probeBody span.text-slate-400, html[data-theme="light"] #probeBody span.text-slate-400 {
+      color: #64748b !important;
+    }
+    html.light #probeBody div.text-white, html[data-theme="light"] #probeBody div.text-white {
+      color: #0f172a !important;
+    }
+
+    /* Bottom Flight Control Overlay */
+    html.light #flightControlOverlay, html[data-theme="light"] #flightControlOverlay {
+      background-color: rgba(255, 255, 255, 0.97) !important;
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+      color: #0f172a !important;
+    }
+    html.light #flightControlOverlay .border-slate-800, html[data-theme="light"] #flightControlOverlay .border-slate-800 {
+      border-color: #e2e8f0 !important;
+    }
+    html.light #flightControlOverlay span.text-slate-400, html[data-theme="light"] #flightControlOverlay span.text-slate-400 {
+      color: #64748b !important;
+    }
+    html.light #flightControlOverlay span.text-slate-300, html[data-theme="light"] #flightControlOverlay span.text-slate-300 {
+      color: #334155 !important;
+    }
+    html.light #flightControlOverlay span.font-medium, html[data-theme="light"] #flightControlOverlay span.font-medium {
+      color: #1e293b !important;
+    }
+    html.light #flightControlOverlay .mode-btn-inactive, html[data-theme="light"] #flightControlOverlay .mode-btn-inactive {
+      background-color: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+      color: #334155 !important;
+    }
+    html.light #flightControlOverlay .mode-btn-inactive:hover, html[data-theme="light"] #flightControlOverlay .mode-btn-inactive:hover {
+      background-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+
+    /* Navigation Guide HUD */
+    html.light #viewportGuideHUD, html[data-theme="light"] #viewportGuideHUD {
+      background-color: rgba(255, 255, 255, 0.92) !important;
+      border-color: #cbd5e1 !important;
+      color: #475569 !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
+    }
+
+    /* Right Control & Telemetry Sidebar */
+    html.light aside, html[data-theme="light"] aside {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+    html.light aside .border-slate-800, html[data-theme="light"] aside .border-slate-800 {
+      border-color: #e2e8f0 !important;
+    }
+    html.light aside h2, html[data-theme="light"] aside h2 {
+      color: #0f172a !important;
+    }
+    html.light aside h3, html[data-theme="light"] aside h3 {
+      color: #1e293b !important;
+    }
+    html.light aside p, html[data-theme="light"] aside p {
+      color: #64748b !important;
+    }
+    html.light aside .bg-slate-900\/90, 
+    html.light aside .bg-slate-900\/80, 
+    html.light aside .bg-slate-900\/60,
+    html[data-theme="light"] aside .bg-slate-900\/90, 
+    html[data-theme="light"] aside .bg-slate-900\/80, 
+    html[data-theme="light"] aside .bg-slate-900\/60 {
+      background-color: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+    html.light aside .bg-slate-950\/60, html[data-theme="light"] aside .bg-slate-950\/60 {
+      background-color: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+    html.light aside span.text-slate-200, 
+    html.light aside span.text-slate-300, 
+    html.light aside span.text-white,
+    html[data-theme="light"] aside span.text-slate-200, 
+    html[data-theme="light"] aside span.text-slate-300, 
+    html[data-theme="light"] aside span.text-white {
+      color: #0f172a !important;
+    }
+    html.light aside span.text-slate-400, html[data-theme="light"] aside span.text-slate-400 {
+      color: #64748b !important;
+    }
+    html.light aside label, html[data-theme="light"] aside label {
+      color: #334155 !important;
+    }
+    html.light aside select, html[data-theme="light"] aside select {
+      background-color: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+      color: #0f172a !important;
+    }
+    html.light aside .font-bold.text-white, html[data-theme="light"] aside .font-bold.text-white {
+      color: #0f172a !important;
+    }
+    html.light input[type="range"], html[data-theme="light"] input[type="range"] {
+      accent-color: #3B6EA5 !important;
+    }
+    html.light input[type="checkbox"], html[data-theme="light"] input[type="checkbox"] {
+      accent-color: #3FB6A8 !important;
     }
   </style>
 </head>
@@ -173,16 +339,18 @@
           </button>
         </div>
 
-        <div class="bg-slate-900/90 dark:bg-slate-900/90 light:bg-white/90 backdrop-blur border border-slate-700/80 dark:border-slate-700/80 light:border-slate-300 rounded-lg p-1 flex gap-1 shadow-xl">
-          <button id="btnSpin" class="px-2.5 py-1 text-xs font-semibold rounded bg-emerald-600/30 text-emerald-300 dark:text-emerald-300 light:text-emerald-700 hover:bg-emerald-600/50 transition">
+        <div class="viewport-preset-bar bg-slate-900/90 dark:bg-slate-900/90 backdrop-blur border border-slate-700/80 rounded-lg p-1 flex gap-1 shadow-xl">
+          <button id="btnSpin" class="px-2.5 py-1 text-xs font-semibold rounded bg-emerald-600/30 text-emerald-300 hover:bg-emerald-600/50 transition">
             ⟳ Auto-Rotate
           </button>
-          <button id="btnReset" class="px-2.5 py-1 text-xs font-semibold rounded bg-slate-800 dark:bg-slate-800 light:bg-slate-200 text-slate-300 dark:text-slate-300 light:text-slate-700 hover:bg-slate-700 transition">
+          <button id="btnReset" class="px-2.5 py-1 text-xs font-semibold rounded bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
             Reset View
           </button>
         </div>
+      </div>
+
       <!-- Live Virtual 3D Sensor Probe HUD (Top-Left Docked) -->
-      <div id="sensorProbeHUD" class="absolute top-14 left-3 z-20 bg-slate-900/95 dark:bg-slate-900/95 light:bg-white/95 backdrop-blur border border-emerald-500/40 rounded-xl p-3 shadow-2xl max-w-xs w-72 text-xs transition-all">
+      <div id="sensorProbeHUD" class="absolute top-14 left-3 z-20 bg-slate-900/95 dark:bg-slate-900/95 backdrop-blur border border-emerald-500/40 rounded-xl p-3 shadow-2xl max-w-xs w-72 text-xs transition-all">
         <div class="flex items-center justify-between border-b border-slate-800 dark:border-slate-800 light:border-slate-200 pb-1.5 mb-2">
           <span class="font-bold text-emerald-400 flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
@@ -226,7 +394,7 @@
       </div>
 
       <!-- Flow Mode Selector, Direction, Ontogeny Scrubber & Continuous Flow Slider (Bottom Floating Panel) -->
-      <div class="absolute bottom-3 left-3 right-3 sm:right-auto sm:max-w-lg z-10 bg-slate-900/95 dark:bg-slate-900/95 light:bg-white/95 backdrop-blur border border-slate-700/80 dark:border-slate-700/80 light:border-slate-300 rounded-xl p-3 shadow-2xl">
+      <div id="flightControlOverlay" class="absolute bottom-3 left-3 right-3 sm:right-auto sm:max-w-lg z-10 bg-slate-900/95 dark:bg-slate-900/95 backdrop-blur border border-slate-700/80 rounded-xl p-3 shadow-2xl">
         <!-- Mode Badges -->
         <div class="flex items-center justify-between mb-2">
           <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Fluid Operating Mode</span>
@@ -297,7 +465,7 @@
       </div>
 
       <!-- Navigation Help Tip -->
-      <div class="absolute top-3 right-3 z-10 bg-slate-900/80 dark:bg-slate-900/80 light:bg-white/80 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-800 dark:border-slate-800 light:border-slate-300 text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-600 shadow-md">
+      <div id="viewportGuideHUD" class="absolute top-3 right-3 z-10 bg-slate-900/80 dark:bg-slate-900/80 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-800 text-[11px] text-slate-400 shadow-md">
         🖱 Drag: Rotate · Scroll: Zoom · Shift+Drag: Pan
       </div>
     </div>
@@ -504,6 +672,10 @@
     let camera = null;
     let renderer = null;
     let controls = null;
+    let ambientLight = null;
+    let dirLight1 = null;
+    let dirLight2 = null;
+    let potEdgeMaterial = null;
 
     // -------------------------------------------------------------
     // Theme Management (CoSE Design System Sync)
@@ -513,16 +685,25 @@
     const moonIcon = document.getElementById('moonIcon');
 
     function applyTheme(theme) {
-      if (theme === 'light') {
+      const isLight = (theme === 'light');
+      if (isLight) {
         document.documentElement.classList.add('light');
+        document.documentElement.setAttribute('data-theme', 'light');
         if (sunIcon) { sunIcon.classList.add('hidden'); sunIcon.classList.remove('block'); }
         if (moonIcon) { moonIcon.classList.remove('hidden'); moonIcon.classList.add('block'); }
-        if (scene) scene.background = new THREE.Color(0xf1f5f9);
+        if (scene) scene.background = new THREE.Color(0xf8fafc);
+        if (ambientLight) ambientLight.intensity = 0.95;
+        if (dirLight1) dirLight1.intensity = 0.95;
+        if (potEdgeMaterial) potEdgeMaterial.color.setHex(0x94a3b8);
       } else {
         document.documentElement.classList.remove('light');
+        document.documentElement.setAttribute('data-theme', 'dark');
         if (sunIcon) { sunIcon.classList.remove('hidden'); sunIcon.classList.add('block'); }
         if (moonIcon) { moonIcon.classList.add('hidden'); moonIcon.classList.remove('block'); }
         if (scene) scene.background = new THREE.Color(0x0a0f1d);
+        if (ambientLight) ambientLight.intensity = 0.75;
+        if (dirLight1) dirLight1.intensity = 0.85;
+        if (potEdgeMaterial) potEdgeMaterial.color.setHex(0x64748b);
       }
       try {
         localStorage.setItem('barker.theme', theme);
@@ -531,7 +712,11 @@
 
     const savedTheme = (function() {
       try {
-        return localStorage.getItem('barker.theme') || 'dark';
+        if (window.parent && window.parent !== window && window.parent.document && window.parent.document.documentElement) {
+          const parentTheme = window.parent.document.documentElement.getAttribute('data-theme');
+          if (parentTheme) return parentTheme;
+        }
+        return localStorage.getItem('barker.theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
       } catch (e) {
         return 'dark';
       }
@@ -541,7 +726,11 @@
     if (themeToggleBtn) {
       themeToggleBtn.addEventListener('click', () => {
         const isLight = document.documentElement.classList.contains('light');
-        applyTheme(isLight ? 'dark' : 'light');
+        const nextTheme = isLight ? 'dark' : 'light';
+        applyTheme(nextTheme);
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'cose-theme-change', theme: nextTheme }, '*');
+        }
       });
     }
 
@@ -596,15 +785,15 @@
     controls.autoRotateSpeed = 2.0;
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+    ambientLight = new THREE.AmbientLight(0xffffff, savedTheme === 'light' ? 0.95 : 0.75);
     scene.add(ambientLight);
 
-    const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.85);
+    dirLight1 = new THREE.DirectionalLight(0xffffff, savedTheme === 'light' ? 0.95 : 0.85);
     dirLight1.position.set(40, 80, 50);
     dirLight1.castShadow = true;
     scene.add(dirLight1);
 
-    const dirLight2 = new THREE.DirectionalLight(0x38bdf8, 0.35);
+    dirLight2 = new THREE.DirectionalLight(0x38bdf8, 0.35);
     dirLight2.position.set(-50, 30, -50);
     scene.add(dirLight2);
 
@@ -640,7 +829,7 @@
       opacity: 0.35,
       wireframe: false
     });
-    const potEdgeMaterial = new THREE.LineBasicMaterial({ color: 0x64748b, linewidth: 1.5 });
+    potEdgeMaterial = new THREE.LineBasicMaterial({ color: savedTheme === 'light' ? 0x94a3b8 : 0x64748b, linewidth: 1.5 });
 
     // Outer Pot Walls (Box: 48 x 33.67 x 68 mm, centered at [0, 16.835, 0])
     const potGeo = new THREE.BoxGeometry(48, 33.67, 68);
