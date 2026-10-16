@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LEAF GBC2 Lunar Plant Chamber — 3D CFD &amp; Biophysics Portal</title>
+  <title>LEAF GBC1 Lunar Plant Chamber — 3D CFD &amp; Biophysics Portal</title>
   <link rel="icon" type="image/png" href="assets/moon-64.png" />
   <link rel="apple-touch-icon" href="assets/moon.png" />
   <script>
@@ -1139,15 +1139,15 @@
     }
   </style>
 </head>
-<body data-site-id="LEAF_GBC2_pot_model">
+<body data-site-id="LEAF_GBC1_pot_model">
 
   <!-- Top Navigation -->
   <header class="navbar">
     <div class="brand">
-      <a class="brand-moon-link" href="#digital-twin" title="Lunar LEAF GBC2 Mission" aria-label="Lunar LEAF GBC2 Mission">
+      <a class="brand-moon-link" href="#digital-twin" title="Lunar LEAF GBC1 Mission" aria-label="Lunar LEAF GBC1 Mission">
         <img src="assets/moon.png" alt="Moon" width="32" height="32" />
       </a>
-      <span class="brand-badge">Lunar LEAF · GBC2</span>
+      <span class="brand-badge">Lunar LEAF · GBC1</span>
       <span class="brand-title">Lunar Plant Growth Chamber CFD</span>
     </div>
     <nav class="nav-links">
@@ -1161,7 +1161,7 @@
       <a href="#model-lunar-leaf">Model Lunar LEAF</a>
       <a href="#asme-gci">ASME V&amp;V 20 &amp; Hotspots</a>
       <a href="#hardware-benchmark">Flight Benchmark</a>
-      <a href="MANUSCRIPT_LEAF_GBC2_CFD.md" target="_blank">Manuscript</a>
+      <a href="MANUSCRIPT_LEAF_GBC1_CFD.md" target="_blank">Manuscript</a>
       <a href="viewer_3d.html" target="_blank" class="btn-primary">Launch Fullscreen 3D Sim ↗</a>
       <button id="theme-toggle" class="theme-btn" aria-label="Toggle light or dark theme" title="Toggle light / dark"></button>
     </nav>
@@ -1172,13 +1172,13 @@
     <!-- Hero Overview -->
     <section class="hero">
       <div class="hero-eyebrow">Spaceflight Hardware Fluidics &amp; Multi-Species Gas Exchange</div>
-      <h1>LEAF GBC2 Plant Chamber: 1g Earth vs. 0.166g Lunar CFD Model</h1>
+      <h1>LEAF GBC1 Plant Chamber: 1g Earth vs. 0.166g Lunar CFD Model</h1>
       <p class="lead">
-        Full 3D Navier–Stokes, Brinkman–Darcy porous media, and coupled Farquhar–von Caemmerer–Berry (FvCB) photosynthetic modeling for the mated GBC2 pot (<code>M09024F-MDL-5</code>) and lid (<code>M09025F-MDL-2</code>). Incorporates a 3-part partitioned porous substrate (<em>Y</em> = 7.62–14.62 mm), lower aeration wells (<em>Y</em> = 0–7.62 mm), asymmetric planting densities (<strong>32 <em>Brassica rapa</em> seeds</strong> in Chambers 1 &amp; 3 vs. <strong>100 <em>Arabidopsis thaliana</em> seeds</strong> in central Chamber 2), diurnal photoperiod inversion, 14-day developmental growth time-series, off-nominal fault sweeps, and harvest-phase RNAlater fixative perfusion.
+        Full 3D Navier–Stokes, Brinkman–Darcy porous media, and coupled Farquhar–von Caemmerer–Berry (FvCB) photosynthetic modeling for the mated GBC1 pot (<code>M09024F-MDL-5</code>) and lid (<code>M09025F-MDL-2</code>). Incorporates a 3-part partitioned porous substrate (<em>Y</em> = 7.62–14.62 mm), lower aeration wells (<em>Y</em> = 0–7.62 mm), asymmetric planting densities (<strong>32 <em>Brassica rapa</em> seeds</strong> in Chambers 1 &amp; 3 vs. <strong>100 <em>Arabidopsis thaliana</em> seeds</strong> in central Chamber 2), diurnal photoperiod inversion, 14-day developmental growth time-series, off-nominal fault sweeps, and harvest-phase RNAlater fixative perfusion.
       </p>
       <div class="hero-actions">
         <a href="#digital-twin" class="btn-primary">Explore Interactive 3D Digital Twin</a>
-        <a href="MANUSCRIPT_LEAF_GBC2_CFD.md" target="_blank" class="btn-outline">📄 Read Full Technical Manuscript</a>
+        <a href="MANUSCRIPT_LEAF_GBC1_CFD.md" target="_blank" class="btn-outline">📄 Read Full Technical Manuscript</a>
         <a href="#cad-blueprints" class="btn-outline">View ABAI QC Orthographic Blueprints</a>
         <a href="figures/fig_orthographic_projection_annotated.svg" target="_blank" class="btn-outline">Download Blueprint SVG</a>
       </div>
@@ -1227,7 +1227,7 @@
           </div>
           <span style="font-size:0.78rem; color:var(--text-muted);">Drag to Orbit · Scroll to Zoom · Right-Click to Pan</span>
         </div>
-        <iframe src="viewer_3d.html" class="twin-iframe" title="LEAF GBC2 3D Interactive Chamber Viewer"></iframe>
+        <iframe src="viewer_3d.html" class="twin-iframe" title="LEAF GBC1 3D Interactive Chamber Viewer"></iframe>
       </div>
     </section>
 
@@ -1247,7 +1247,7 @@
 
       <div class="blueprint-showcase">
         <div class="blueprint-img-box" onclick="openLightbox(document.getElementById('active-blueprint-img').src, document.getElementById('active-blueprint-img').alt)">
-          <img id="active-blueprint-img" src="figures/fig_orthographic_projection_annotated.png" alt="LEAF GBC2 Orthographic Projection Blueprint" fetchpriority="high" />
+          <img id="active-blueprint-img" src="figures/fig_orthographic_projection_annotated.png" alt="LEAF GBC1 Orthographic Projection Blueprint" fetchpriority="high" />
           <div class="zoom-hint">🔍 Click to Expand High-Res Blueprint</div>
         </div>
 
@@ -1705,14 +1705,14 @@
 
       <!-- Spotlight 8: Spaceflight Hardware Cross-Comparison (Fig 18) -->
       <article class="feature-spotlight">
-        <div class="feature-img-wrap" onclick="openLightbox('figures/fig18_spaceflight_hardware_comprehensive_benchmark.png', 'Figure 18: Spaceflight Hardware Cross-Comparison Benchmark: NASA BRIC, CARA, VEGGIE vs. LEAF GBC2')">
+        <div class="feature-img-wrap" onclick="openLightbox('figures/fig18_spaceflight_hardware_comprehensive_benchmark.png', 'Figure 18: Spaceflight Hardware Cross-Comparison Benchmark: NASA BRIC, CARA, VEGGIE vs. LEAF GBC1')">
           <img src="figures/fig18_spaceflight_hardware_comprehensive_benchmark.png" alt="Figure 18: Spaceflight Hardware Benchmark" loading="lazy" decoding="async" />
         </div>
         <div class="feature-content">
           <span class="feature-pill pill-ops">Research Spotlight 8 · Hardware Synthesis</span>
           <h3>Spaceflight Hardware Continuum: NASA BRIC, CARA &amp; VEGGIE</h3>
           <p>
-            Comparing flight hardware architectures proves that hermetically sealed Petri dishes (NASA BRIC-60) starve seedlings of CO₂ in just 7.0 minutes, while passive gas-permeable tape systems (CARA) remain diffusion-limited (ACH = 1.76 h⁻¹). In contrast, the actively ventilated LEAF GBC2 micro-peristaltic architecture delivers 554.5 ACH (one chamber volume turnover every 6.5 s), sustaining autotrophic growth indefinitely while maintaining optical lid clarity.
+            Comparing flight hardware architectures proves that hermetically sealed Petri dishes (NASA BRIC-60) starve seedlings of CO₂ in just 7.0 minutes, while passive gas-permeable tape systems (CARA) remain diffusion-limited (ACH = 1.76 h⁻¹). In contrast, the actively ventilated LEAF GBC1 micro-peristaltic architecture delivers 554.5 ACH (one chamber volume turnover every 6.5 s), sustaining autotrophic growth indefinitely while maintaining optical lid clarity.
           </p>
           <div class="feature-metric-grid">
             <div class="feature-metric-item">
@@ -1724,7 +1724,7 @@
               <span class="feature-metric-val">1.76 h⁻¹</span>
             </div>
             <div class="feature-metric-item">
-              <span class="feature-metric-label">LEAF GBC2 ACH</span>
+              <span class="feature-metric-label">LEAF GBC1 ACH</span>
               <span class="feature-metric-val" style="color:var(--accent);">554.5 h⁻¹</span>
             </div>
           </div>
@@ -1826,18 +1826,18 @@
 
         <!-- Fig 5 -->
         <article class="fig-card" data-cat="bio">
-          <div class="fig-thumb-wrap" onclick="openLightbox('figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.png', 'Figure 5: Flight Hardware Benchmark — GBC2 vs NASA BRIC, CARA, Veggie')">
-            <img src="figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.png" alt="Figure 5 Flight Hardware Benchmark" loading="lazy" decoding="async" />
+          <div class="fig-thumb-wrap" onclick="openLightbox('figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.png', 'Figure 5: Flight Hardware Benchmark — GBC1 vs NASA BRIC, CARA, Veggie')">
+            <img src="figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.png" alt="Figure 5 Flight Hardware Benchmark" loading="lazy" decoding="async" />
           </div>
           <div class="fig-body">
             <div>
               <span class="fig-tag">Figure 5 · Hardware Benchmark</span>
-              <h3>Spaceflight Hardware Benchmark: GBC2 vs. BRIC, CARA &amp; Veggie</h3>
-              <p>Demonstrates how active forced ventilation in GBC2 (0.50–0.85 L/min) eliminates the diffusive hypoxia and CO₂ starvation characteristic of sealed passive Petri hardware.</p>
+              <h3>Spaceflight Hardware Benchmark: GBC1 vs. BRIC, CARA &amp; Veggie</h3>
+              <p>Demonstrates how active forced ventilation in GBC1 (0.50–0.85 L/min) eliminates the diffusive hypoxia and CO₂ starvation characteristic of sealed passive Petri hardware.</p>
             </div>
             <div class="fig-actions">
-              <button class="btn-outline" onclick="openLightbox('figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.png', 'Figure 5: NASA Flight Hardware Benchmark')">🔍 Zoom PNG</button>
-              <a href="figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.svg" target="_blank" class="btn-outline">⬇ SVG Vector</a>
+              <button class="btn-outline" onclick="openLightbox('figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.png', 'Figure 5: NASA Flight Hardware Benchmark')">🔍 Zoom PNG</button>
+              <a href="figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.svg" target="_blank" class="btn-outline">⬇ SVG Vector</a>
             </div>
           </div>
         </article>
@@ -2060,14 +2060,14 @@
 
         <!-- Fig 18 -->
         <article class="fig-card" data-cat="ops">
-          <div class="fig-thumb-wrap" onclick="openLightbox('figures/fig18_spaceflight_hardware_comprehensive_benchmark.png', 'Figure 18: Spaceflight Hardware Comprehensive Benchmark (BRIC vs CARA vs VEGGIE vs GBC2)')">
+          <div class="fig-thumb-wrap" onclick="openLightbox('figures/fig18_spaceflight_hardware_comprehensive_benchmark.png', 'Figure 18: Spaceflight Hardware Comprehensive Benchmark (BRIC vs CARA vs VEGGIE vs GBC1)')">
             <img src="figures/fig18_spaceflight_hardware_comprehensive_benchmark.png" alt="Figure 18 Spaceflight Hardware Benchmark" loading="lazy" decoding="async" />
           </div>
           <div class="fig-body">
             <div>
               <span class="fig-tag">Figure 18 · Spaceflight Hardware Architectural Benchmark</span>
               <h3>Comparative Spaceflight Plant Cultivation Hardware Benchmark</h3>
-              <p>Cross-compares NASA BRIC (sealed 60 mm dish), NASA CARA (gas-permeable 120 mm plate), NASA VEGGIE (open ISS cabin blower), and LEAF GBC2 (active precision pull pot). Proves how GBC2's 554.5 ACH controlled pull suction eliminates the 7-minute carbon starvation of sealed BRIC hardware and the 100% condensation fogging risks of passive Petri dishes.</p>
+              <p>Cross-compares NASA BRIC (sealed 60 mm dish), NASA CARA (gas-permeable 120 mm plate), NASA VEGGIE (open ISS cabin blower), and LEAF GBC1 (active precision pull pot). Proves how GBC1's 554.5 ACH controlled pull suction eliminates the 7-minute carbon starvation of sealed BRIC hardware and the 100% condensation fogging risks of passive Petri dishes.</p>
             </div>
             <div class="fig-actions">
               <button class="btn-outline" onclick="openLightbox('figures/fig18_spaceflight_hardware_comprehensive_benchmark.png', 'Figure 18: Spaceflight Hardware Benchmark')">🔍 Zoom PNG</button>
@@ -2083,7 +2083,7 @@
       <div class="section-header">
         <div>
           <h2>7. Quantitative Simulation Datasets (TSV Tables)</h2>
-          <p>Machine-readable telemetry outputs generated by the GBC2 simulation pipeline for downstream statistical and multi-omics integration.</p>
+          <p>Machine-readable telemetry outputs generated by the GBC1 simulation pipeline for downstream statistical and multi-omics integration.</p>
         </div>
       </div>
 
@@ -2099,64 +2099,64 @@
           </thead>
           <tbody>
             <tr>
-              <td><code>gbc2_asymmetric_canopy_species_results.tsv</code></td>
+              <td><code>gbc1_asymmetric_canopy_species_results.tsv</code></td>
               <td>Chamber-resolved gas exchange for 32 <em>B. rapa</em> (Ch 1 &amp; 3) vs. 100 <em>Arabidopsis</em> (Ch 2)</td>
               <td><code>ch*_seeds</code>, <code>leaf_area_cm2</code>, <code>gbl</code>, <code>dCO2_ppm</code>, <code>dH2O_mmol</code>, <code>A_net</code></td>
-              <td><a href="results/tables/gbc2_asymmetric_canopy_species_results.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+              <td><a href="results/tables/gbc1_asymmetric_canopy_species_results.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
             </tr>
             <tr>
-              <td><code>gbc2_cfd_sweep_results.tsv</code></td>
+              <td><code>gbc1_cfd_sweep_results.tsv</code></td>
               <td>16-run parametric pump speed sweep (0.05–4.0 L/min) at Earth 1.0<em>g</em> and Lunar 0.166<em>g</em></td>
               <td><code>u_canopy_mean</code>, <code>Re</code>, <code>Gr</code>, <code>Ri</code>, <code>Pe</code>, <code>g_bl</code>, <code>delta_CO2</code>, <code>A_net</code></td>
-              <td><a href="results/tables/gbc2_cfd_sweep_results.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+              <td><a href="results/tables/gbc1_cfd_sweep_results.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
             </tr>
             <tr>
-              <td><code>gbc2_advanced_analytics.tsv</code></td>
+              <td><code>gbc1_advanced_analytics.tsv</code></td>
               <td>Mean Age of Air (&theta;), Sandberg conservation ratio, and hormone signaling indices</td>
               <td><code>age_ch1_s</code>, <code>age_ch2_s</code>, <code>age_ch3_s</code>, <code>sandberg_ratio</code>, <code>auxin_idx</code>, <code>aba_idx</code></td>
-              <td><a href="results/tables/gbc2_advanced_analytics.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+              <td><a href="results/tables/gbc1_advanced_analytics.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
             </tr>
             <tr>
-              <td><code>gbc2_diurnal_day_night_results.tsv</code></td>
+              <td><code>gbc1_diurnal_day_night_results.tsv</code></td>
               <td>16h Day vs. 8h Night photoperiod inversion across pump speeds and gravity levels</td>
               <td><code>photoperiod</code>, <code>Ri_signed</code>, <code>CO2_canopy_ppm</code>, <code>dCO2_from_ambient</code>, <code>H2O_canopy</code></td>
-              <td><a href="results/tables/gbc2_diurnal_day_night_results.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+              <td><a href="results/tables/gbc1_diurnal_day_night_results.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
             </tr>
             <tr>
-              <td><code>gbc2_rnalater_perfusion_kinetics.tsv</code></td>
+              <td><code>gbc1_rnalater_perfusion_kinetics.tsv</code></td>
               <td>Harvest RNAlater injection kinetics (2–25 mL/min) through Port 3 dipping nozzle</td>
               <td><code>Q_inj_mL_min</code>, <code>t_root_saturation_s</code>, <code>t_full_chamber_s</code>, <code>dP_total_kPa</code></td>
-              <td><a href="results/tables/gbc2_rnalater_perfusion_kinetics.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+              <td><a href="results/tables/gbc1_rnalater_perfusion_kinetics.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
             </tr>
             <tr>
-              <td><code>gbc2_hardware_benchmark_comparison.tsv</code></td>
-              <td>Comparison of LEAF GBC2 against NASA BRIC-19, CARA, and Veggie hardware</td>
+              <td><code>gbc1_hardware_benchmark_comparison.tsv</code></td>
+              <td>Comparison of LEAF GBC1 against NASA BRIC-19, CARA, and Veggie hardware</td>
               <td><code>peclet_number</code>, <code>g_bl</code>, <code>co2_drawdown_pct</code>, <code>o2_depletion_pct</code>, <code>hypoxia_idx</code></td>
-              <td><a href="results/tables/gbc2_hardware_benchmark_comparison.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+              <td><a href="results/tables/gbc1_hardware_benchmark_comparison.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
             </tr>
             <tr>
-              <td><code>gbc2_covariates_for_omics.tsv</code></td>
+              <td><code>gbc1_covariates_for_omics.tsv</code></td>
               <td>Standardized physical microclimate covariates for RNA-seq / multi-omics regression</td>
               <td><code>Pe_mass</code>, <code>Sh_effective</code>, <code>Re_leaf</code>, <code>Ri_buoyancy</code>, <code>C_i_ppm</code>, <code>WUE</code></td>
-              <td><a href="results/tables/gbc2_covariates_for_omics.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+              <td><a href="results/tables/gbc1_covariates_for_omics.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
             </tr>
             <tr>
-              <td><code>gbc2_developmental_growth_timeseries.tsv</code></td>
+              <td><code>gbc1_developmental_growth_timeseries.tsv</code></td>
               <td>14-day developmental growth time-series (Day 0 seed imbibition to Day 14 harvest closure)</td>
               <td><code>day</code>, <code>LAI_brapa</code>, <code>LAI_arab</code>, <code>cum_carbon_brapa_mg</code>, <code>substrate_porosity_brapa</code>, <code>rnalater_dP_kPa</code></td>
-              <td><a href="results/tables/gbc2_developmental_growth_timeseries.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+              <td><a href="results/tables/gbc1_developmental_growth_timeseries.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
             </tr>
             <tr>
-              <td><code>gbc2_off_nominal_sensitivity.tsv</code></td>
+              <td><code>gbc1_off_nominal_sensitivity.tsv</code></td>
               <td>Off-nominal mission sensitivity sweeps (Cabin CO₂ 420–5,000 ppm, root compaction, pump brownout)</td>
               <td><code>sweep_type</code>, <code>parameter_value</code>, <code>gs_stomatal</code>, <code>leaf_dT_elevation_C</code>, <code>grace_window_min</code></td>
-              <td><a href="results/tables/gbc2_off_nominal_sensitivity.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+              <td><a href="results/tables/gbc1_off_nominal_sensitivity.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
             </tr>
             <tr>
-              <td><code>gbc2_water_and_humidity_transport.tsv</code></td>
+              <td><code>gbc1_water_and_humidity_transport.tsv</code></td>
               <td>Porous media capillary retention, air-filled porosity, vapor accumulation, optical lid dew point margins, and two-phase gas venting kinetics</td>
               <td><code>y_mm</code>, <code>theta_w_lunar</code>, <code>eps_air_lunar</code>, <code>D_eff_lunar</code>, <code>RH_chamber_pct</code>, <code>T_dew_C</code>, <code>dT_margin_C</code>, <code>S_substrate</code></td>
-              <td><a href="results/tables/gbc2_water_and_humidity_transport.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
+              <td><a href="results/tables/gbc1_water_and_humidity_transport.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
             </tr>
             <tr>
               <td><code>zenodo_water_activation_foam_nytex.csv</code></td>
@@ -2183,28 +2183,28 @@
               <td><a href="results/tables/zenodo_gravity_temp_response_surface.csv" target="_blank" class="btn-outline">Download CSV</a></td>
             </tr>
             <tr>
-              <td><code>gbc2_gci_mesh_convergence.csv</code></td>
+              <td><code>gbc1_gci_mesh_convergence.csv</code></td>
               <td>ASME V&amp;V 20-2009 3-grid discretization convergence study (&Delta;<em>x</em> = 1.50, 1.00, 0.75 mm)</td>
               <td><code>apparent_order_p</code>, <code>phi_extrapolated</code>, <code>gci_fine_pct</code>, <code>asymptotic_ratio</code></td>
-              <td><a href="results/tables/gbc2_gci_mesh_convergence.csv" target="_blank" class="btn-outline">Download CSV</a></td>
+              <td><a href="results/tables/gbc1_gci_mesh_convergence.csv" target="_blank" class="btn-outline">Download CSV</a></td>
             </tr>
             <tr>
-              <td><code>gbc2_foliar_surface_distribution.csv</code></td>
+              <td><code>gbc1_foliar_surface_distribution.csv</code></td>
               <td>Canopy microclimate percentiles (<em>p</em><sub>10</sub>, <em>p</em><sub>50</sub>, <em>p</em><sub>90</sub>), CoV, and dynamic range across flight regimes</td>
               <td><code>subset</code>, <code>g_bl_p10</code>, <code>g_bl_p50</code>, <code>g_bl_p90</code>, <code>g_bl_cov</code>, <code>dC_CO2_dyn_range_p90_p10</code></td>
-              <td><a href="results/tables/gbc2_foliar_surface_distribution.csv" target="_blank" class="btn-outline">Download CSV</a></td>
+              <td><a href="results/tables/gbc1_foliar_surface_distribution.csv" target="_blank" class="btn-outline">Download CSV</a></td>
             </tr>
             <tr>
-              <td><code>gbc2_164plants_foliar_telemetry.csv</code></td>
+              <td><code>gbc1_164plants_foliar_telemetry.csv</code></td>
               <td>Foliar microclimate telemetry for all 164 individual plant positions (32 <em>B. rapa</em> + 100 <em>Arabidopsis</em>)</td>
               <td><code>plant_id</code>, <code>species</code>, <code>chamber</code>, <code>u_local_cm_s</code>, <code>g_bl_mol_m2_s</code>, <code>dC_CO2_ppm</code></td>
-              <td><a href="results/tables/gbc2_164plants_foliar_telemetry.csv" target="_blank" class="btn-outline">Download CSV</a></td>
+              <td><a href="results/tables/gbc1_164plants_foliar_telemetry.csv" target="_blank" class="btn-outline">Download CSV</a></td>
             </tr>
             <tr>
-              <td><code>gbc2_spaceflight_hardware_comprehensive_benchmark.csv</code></td>
-              <td>Comparative spaceflight hardware metrics across BRIC, CARA, VEGGIE, and LEAF GBC2</td>
+              <td><code>gbc1_spaceflight_hardware_comprehensive_benchmark.csv</code></td>
+              <td>Comparative spaceflight hardware metrics across BRIC, CARA, VEGGIE, and LEAF GBC1</td>
               <td><code>ach_per_hour</code>, <code>tau_carbon_starvation_min</code>, <code>g_bl_microgravity_0g</code>, <code>dC_CO2_surface_ppm</code></td>
-              <td><a href="results/tables/gbc2_spaceflight_hardware_comprehensive_benchmark.csv" target="_blank" class="btn-outline">Download CSV</a></td>
+              <td><a href="results/tables/gbc1_spaceflight_hardware_comprehensive_benchmark.csv" target="_blank" class="btn-outline">Download CSV</a></td>
             </tr>
           </tbody>
         </table>
@@ -2521,7 +2521,7 @@
     <section id="hardware-benchmark" class="section-block">
       <div class="section-header">
         <div>
-          <h2>10. Spaceflight Hardware Cross-Comparison (BRIC vs. CARA vs. VEGGIE vs. GBC2)</h2>
+          <h2>10. Spaceflight Hardware Cross-Comparison (BRIC vs. CARA vs. VEGGIE vs. GBC1)</h2>
           <p>Architectural synthesis comparing NASA flight hardware platforms to demonstrate why active controlled pull ventilation resolves the rapid carbon starvation, hypoxia, and optical fogging inherent to passive Petri dish cultivation.</p>
         </div>
       </div>
@@ -2529,7 +2529,7 @@
       <!-- Hardware Benchmark KPI Grid -->
       <div class="kpi-grid" style="margin-bottom:1.5rem;">
         <div class="kpi-card green">
-          <div class="kpi-label">GBC2 Air Turnover Rate</div>
+          <div class="kpi-label">GBC1 Air Turnover Rate</div>
           <div class="kpi-value">554.5 ACH (6.5s Flush)</div>
           <div class="kpi-sub">Continuous forced sweep (0.34 mmol fresh air/s) maintains &gt; 99.5% ambient CO₂ indefinitely</div>
         </div>
@@ -2560,7 +2560,7 @@
       <div class="spec-panel">
         <h3>Spaceflight Plant Cultivation Hardware: Architectural &amp; Biophysical Trade Matrix</h3>
         <p style="font-size:0.86rem; color:var(--muted); margin-bottom:1rem;">
-          Cross-platform benchmark compiled from empirical Vernier gas-exchange data, microscale Lattice-Boltzmann modeling, and 3D Navier–Stokes GBC2 flight digital twin simulations.
+          Cross-platform benchmark compiled from empirical Vernier gas-exchange data, microscale Lattice-Boltzmann modeling, and 3D Navier–Stokes GBC1 flight digital twin simulations.
         </p>
         <div class="table-wrap">
           <table class="data-table">
@@ -2612,7 +2612,7 @@
                 <td>Moderate (Inter-leaf Pockets)</td>
               </tr>
               <tr style="background:var(--card-hover);">
-                <td><strong>LEAF GBC2 (Pot Model)</strong></td>
+                <td><strong>LEAF GBC1 (Pot Model)</strong></td>
                 <td>Precision 3-Chamber Pot (54.1 cm&sup3;)</td>
                 <td>Controlled Active Pull Suction</td>
                 <td><strong>554.5 h<sup>&minus;1</sup></strong> (6.5s Flush)</td>
@@ -2644,15 +2644,15 @@
   <footer>
     <div style="max-width:1400px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.25rem;">
       <p style="margin:0; font-size:0.88rem; display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-        <a class="foot-moon-link" href="#digital-twin" title="Lunar LEAF GBC2 Mission" aria-label="Lunar LEAF GBC2 Mission">
+        <a class="foot-moon-link" href="#digital-twin" title="Lunar LEAF GBC1 Mission" aria-label="Lunar LEAF GBC1 Mission">
           <img src="assets/moon.png" alt="Moon" width="22" height="22" />
           <span>Lunar LEAF</span>
         </a>
-        <span>LEAF GBC2 Lunar Plant Growth Chamber CFD Suite · CAD <code>M09024F-MDL-5</code> &amp; <code>M09025F-MDL-2</code> · NASA Artemis III Surface Flight Science</span>
+        <span>LEAF GBC1 Lunar Plant Growth Chamber CFD Suite · CAD <code>M09024F-MDL-5</code> &amp; <code>M09025F-MDL-2</code> · NASA Artemis III Surface Flight Science</span>
       </p>
       <p style="margin:0; font-size:0.84rem;">
         <a href="https://github.com/dr-richard-barker/LEAF_GBC2_pot_model" target="_blank" rel="noopener">GitHub Repository</a> · 
-        <a href="MANUSCRIPT_LEAF_GBC2_CFD.md" target="_blank">Technical Manuscript</a> · 
+        <a href="MANUSCRIPT_LEAF_GBC1_CFD.md" target="_blank">Technical Manuscript</a> · 
         <a href="https://osdr.nasa.gov" target="_blank" rel="noopener">NASA OSDR</a>
       </p>
     </div>
@@ -2727,15 +2727,15 @@
     const blueprints = {
       ortho: {
         src: 'figures/fig_orthographic_projection_annotated.png',
-        alt: 'LEAF GBC2 3-View Orthographic Projection Blueprint (ABAI QC Verified)'
+        alt: 'LEAF GBC1 3-View Orthographic Projection Blueprint (ABAI QC Verified)'
       },
       annotated: {
         src: 'figures/assembly_cross_sections_annotated.png',
-        alt: 'LEAF GBC2 Mated CAD Assembly Cross-Sections (Annotated)'
+        alt: 'LEAF GBC1 Mated CAD Assembly Cross-Sections (Annotated)'
       },
       exact: {
         src: 'figures/assembly_cross_sections_exact.png',
-        alt: 'LEAF GBC2 Pure CAD Engineering Cross-Sections (Exact STEP Slices)'
+        alt: 'LEAF GBC1 Pure CAD Engineering Cross-Sections (Exact STEP Slices)'
       }
     };
 

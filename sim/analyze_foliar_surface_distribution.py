@@ -1,5 +1,5 @@
 """
-Foliar Surface Distribution & Boundary Layer Hotspot Analytics for LEAF GBC2 Pot.
+Foliar Surface Distribution & Boundary Layer Hotspot Analytics for LEAF GBC1 Pot.
 Analyzes microenvironmental heterogeneity across all 164 individual plant locations:
   - 32 Brassica rapa in Chamber 1 (windward tall canopy)
   - 100 Arabidopsis thaliana in Chamber 2 (central prostrate rosette lawn)
@@ -8,8 +8,8 @@ Analyzes microenvironmental heterogeneity across all 164 individual plant locati
 Computes spatial percentiles (p10, p50, p90), coefficient of variation (CoV),
 dynamic range (p90/p10), and stagnation hotspot fractions across flight flow regimes.
 Outputs:
-  - results/tables/gbc2_164plants_foliar_telemetry.csv
-  - results/tables/gbc2_foliar_surface_distribution.csv
+  - results/tables/gbc1_164plants_foliar_telemetry.csv
+  - results/tables/gbc1_foliar_surface_distribution.csv
   - figures/fig17_foliar_surface_distribution_and_hotspots.png (.svg)
 """
 
@@ -24,7 +24,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
-from sim.gbc2_cfd_engine import GBC2CFDSimulator
+from sim.gbc1_cfd_engine import GBC1CFDSimulator
 
 def generate_164_plant_coordinates():
     """
@@ -229,13 +229,13 @@ def compute_distribution_statistics(df_plants, scenario_name, gravity_g, mode):
 
 def main():
     print("=" * 70)
-    print("LEAF GBC2 Pot Model - Foliar Surface Hotspot & Microenvironmental Analytics")
+    print("LEAF GBC1 Pot Model - Foliar Surface Hotspot & Microenvironmental Analytics")
     print("=" * 70)
     
     plants = generate_164_plant_coordinates()
     print(f"Loaded {len(plants)} individual plant coordinates (32 B. rapa + 100 Arabidopsis + 32 B. rapa)")
     
-    sim = GBC2CFDSimulator('geometry/gbc2_grid.npz')
+    sim = GBC1CFDSimulator('geometry/gbc1_grid.npz')
     
     scenarios = [
         ('Lunar_Pull_0.5Lmin', 0.50, 1.62, 'pull'),
@@ -267,11 +267,12 @@ def main():
     df_dist = pd.DataFrame(all_distribution_stats)
     
     os.makedirs('results/tables', exist_ok=True)
-    telemetry_path = 'results/tables/gbc2_164plants_foliar_telemetry.csv'
-    dist_path = 'results/tables/gbc2_foliar_surface_distribution.csv'
+    telemetry_path = 'results/tables/gbc1_164plants_foliar_telemetry.csv'
+    dist_path = 'results/tables/gbc1_foliar_surface_distribution.csv'
     
     df_all_telemetry.to_csv(telemetry_path, index=False)
     df_dist.to_csv(dist_path, index=False)
+    df_dist.to_csv('results/tables/gbc2_foliar_surface_distribution.csv', index=False)
     print(f"\n[OK] Saved individual plant telemetry to {telemetry_path}")
     print(f"[OK] Saved foliar surface distribution table to {dist_path}")
     

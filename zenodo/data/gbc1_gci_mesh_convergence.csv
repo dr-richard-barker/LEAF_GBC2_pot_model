@@ -1,0 +1,22 @@
+regime,flow_mode,gravity_g,quantity_key,quantity_label,dx_fine_mm,dx_med_mm,dx_coarse_mm,r21,r32,phi_fine,phi_med,phi_coarse,apparent_order_p,monotone_convergence,phi_extrapolated,ea_fine_pct,e_ext_pct,gci_fine_pct,gci_med_pct,asymptotic_ratio
+lunar_pull,pull,1.62,delta_P_Pa,Chamber Pressure Drop (Pa),0.75,1.0,1.5,1.3333,1.5,0.1135,0.0423,0.033,1.0,False,0.3273,62.77,65.31,235.38,54.67,0.174
+lunar_pull,pull,1.62,flow_uniformity_gamma,Ventilation Uniformity Index gamma (-),0.75,1.0,1.5,1.3333,1.5,0.9013,0.9248,0.9348,1.0,False,0.8309,2.61,8.48,9.77,2.71,0.208
+lunar_pull,pull,1.62,g_bl_mean_mol_m2_s,Canopy Mean Boundary Layer Conductance (mol/m2/s),0.75,1.0,1.5,1.3333,1.5,0.0417,0.0417,0.0418,3.425,True,0.0417,0.01,0.0,0.0,0.01,1.0
+lunar_pull,pull,1.62,delta_bl_mean_mm,Boundary Layer Thickness delta_bl (mm),0.75,1.0,1.5,1.3333,1.5,15.8263,15.8256,15.8218,3.575,True,15.8268,0.0,0.0,0.0,0.01,1.0
+lunar_pull,pull,1.62,dC_CO2_mean_ppm,Canopy CO2 Draw-down Delta_C (ppm),0.75,1.0,1.5,1.3333,1.5,2.0148,2.2836,3.3855,2.994,True,1.818,13.34,10.82,12.21,25.49,0.882
+lunar_pull,pull,1.62,dC_H2O_mean_mmol,Canopy Humidity Accumulation Delta_q (mmol/mol),0.75,1.0,1.5,1.3333,1.5,3.8419,4.3265,6.3533,3.049,True,3.4967,12.61,9.87,11.23,23.97,0.888
+lunar_pull,pull,1.62,U_mean_headspace_cm_s,Mean Headspace Air Speed (cm/s),0.75,1.0,1.5,1.3333,1.5,0.1046,0.0528,0.2168,1.0,False,0.26,49.51,59.76,185.65,775.91,3.135
+earth_pull,pull,9.81,delta_P_Pa,Chamber Pressure Drop (Pa),0.75,1.0,1.5,1.3333,1.5,0.1135,0.0423,0.033,1.0,False,0.3273,62.77,65.31,235.38,54.67,0.174
+earth_pull,pull,9.81,flow_uniformity_gamma,Ventilation Uniformity Index gamma (-),0.75,1.0,1.5,1.3333,1.5,0.901,0.9246,0.9342,1.0,False,0.8304,2.61,8.51,9.8,2.59,0.198
+earth_pull,pull,9.81,g_bl_mean_mol_m2_s,Canopy Mean Boundary Layer Conductance (mol/m2/s),0.75,1.0,1.5,1.3333,1.5,0.0655,0.0655,0.0656,3.391,True,0.0655,0.02,0.01,0.01,0.04,1.0
+earth_pull,pull,9.81,delta_bl_mean_mm,Boundary Layer Thickness delta_bl (mm),0.75,1.0,1.5,1.3333,1.5,10.0837,10.0819,10.073,3.545,True,10.0847,0.02,0.01,0.01,0.03,1.0
+earth_pull,pull,9.81,dC_CO2_mean_ppm,Canopy CO2 Draw-down Delta_C (ppm),0.75,1.0,1.5,1.3333,1.5,2.0122,2.2783,3.3652,2.985,True,1.8167,13.22,10.77,12.15,25.33,0.883
+earth_pull,pull,9.81,dC_H2O_mean_mmol,Canopy Humidity Accumulation Delta_q (mmol/mol),0.75,1.0,1.5,1.3333,1.5,3.8378,4.318,6.3208,3.041,True,3.4944,12.51,9.83,11.18,23.84,0.889
+earth_pull,pull,9.81,U_mean_headspace_cm_s,Mean Headspace Air Speed (cm/s),0.75,1.0,1.5,1.3333,1.5,0.1348,0.0888,0.2909,1.0,False,0.2728,34.14,50.6,128.02,569.46,3.336
+lunar_push,push,1.62,delta_P_Pa,Chamber Pressure Drop (Pa),0.75,1.0,1.5,1.3333,1.5,0.0911,0.0264,0.0705,1.0,False,0.285,70.99,68.05,266.21,416.93,1.175
+lunar_push,push,1.62,flow_uniformity_gamma,Ventilation Uniformity Index gamma (-),0.75,1.0,1.5,1.3333,1.5,0.9011,0.9248,0.9348,1.0,False,0.8301,2.63,8.56,9.85,2.71,0.206
+lunar_push,push,1.62,g_bl_mean_mol_m2_s,Canopy Mean Boundary Layer Conductance (mol/m2/s),0.75,1.0,1.5,1.3333,1.5,0.0417,0.0417,0.0418,3.421,True,0.0417,0.01,0.0,0.0,0.01,1.0
+lunar_push,push,1.62,delta_bl_mean_mm,Boundary Layer Thickness delta_bl (mm),0.75,1.0,1.5,1.3333,1.5,15.8263,15.8256,15.8218,3.572,True,15.8268,0.0,0.0,0.0,0.01,1.0
+lunar_push,push,1.62,dC_CO2_mean_ppm,Canopy CO2 Draw-down Delta_C (ppm),0.75,1.0,1.5,1.3333,1.5,2.0148,2.2836,3.3855,2.994,True,1.818,13.34,10.82,12.21,25.49,0.882
+lunar_push,push,1.62,dC_H2O_mean_mmol,Canopy Humidity Accumulation Delta_q (mmol/mol),0.75,1.0,1.5,1.3333,1.5,3.8419,4.3265,6.3533,3.049,True,3.4967,12.61,9.87,11.23,23.97,0.888
+lunar_push,push,1.62,U_mean_headspace_cm_s,Mean Headspace Air Speed (cm/s),0.75,1.0,1.5,1.3333,1.5,0.1406,0.0746,0.268,1.0,False,0.3387,46.97,58.49,176.13,648.52,2.762

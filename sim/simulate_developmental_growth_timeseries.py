@@ -1,5 +1,5 @@
 """
-14-Day Developmental Growth Time-Series CFD & Biophysical Model for LEAF GBC2.
+14-Day Developmental Growth Time-Series CFD & Biophysical Model for LEAF GBC1.
 
 Models Day 0 (Seed Imbibition) through Day 14 (Harvest Canopy Closure) for:
   - Chambers 1 & 3: 32 Brassica rapa seeds per chamber (fast-growing erect canopy, h -> 11.4 mm, A -> 64.0 cm2)
@@ -21,8 +21,8 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from sim.gbc2_cfd_engine import GBC2CFDSimulator
-from sim.advanced_analytics import GBC2AdvancedAnalytics
+from sim.gbc1_cfd_engine import GBC1CFDSimulator
+from sim.advanced_analytics import GBC1AdvancedAnalytics
 
 
 def run_developmental_timeseries():
@@ -33,8 +33,8 @@ def run_developmental_timeseries():
     print("Running 14-Day Developmental Growth Time-Series Model (Day 0-14)")
     print("=================================================================")
 
-    sim = GBC2CFDSimulator()
-    analytics = GBC2AdvancedAnalytics()
+    sim = GBC1CFDSimulator()
+    analytics = GBC1AdvancedAnalytics()
 
     # Floor footprints (cm2)
     A_floor_brapa_cm2 = 6.783   # per chamber (Ch 1 and Ch 3)
@@ -235,7 +235,7 @@ def run_developmental_timeseries():
             })
 
     df = pd.DataFrame(records)
-    out_tsv = 'results/tables/gbc2_developmental_growth_timeseries.tsv'
+    out_tsv = 'results/tables/gbc1_developmental_growth_timeseries.tsv'
     df.to_csv(out_tsv, sep='\t', index=False)
     print(f"Saved developmental growth time-series table to {out_tsv} ({len(df)} rows)")
 
@@ -363,7 +363,7 @@ def run_developmental_timeseries():
     ax_d.set_title('D. Root-Driven Porosity Compression ε(t) & Harvest RNAlater ΔP', fontsize=12.5, fontweight='bold', pad=10)
 
     fig.suptitle(
-        'LEAF GBC2 14-Day Developmental Growth Time-Series: Seed Imbibition to Harvest Canopy Closure\n'
+        'LEAF GBC1 14-Day Developmental Growth Time-Series: Seed Imbibition to Harvest Canopy Closure\n'
         '32 Brassica rapa (Chambers 1 & 3) vs. 100 Arabidopsis thaliana (Chamber 2) under Earth 1g & Lunar 0.166g',
         fontsize=14.5, fontweight='bold', y=0.98
     )

@@ -1,5 +1,5 @@
 """
-Diurnal (Day/Night) Photoperiod Inversion CFD Simulation for LEAF GBC2 Plant Growth Chamber.
+Diurnal (Day/Night) Photoperiod Inversion CFD Simulation for LEAF GBC1 Plant Growth Chamber.
 
 Models:
 1. Day Phase (Photoperiod):
@@ -25,19 +25,19 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from sim.gbc2_cfd_engine import GBC2CFDSimulator
-from sim.advanced_analytics import GBC2AdvancedAnalytics
+from sim.gbc1_cfd_engine import GBC1CFDSimulator
+from sim.advanced_analytics import GBC1AdvancedAnalytics
 
 def run_diurnal_simulation():
     os.makedirs('results/tables', exist_ok=True)
     os.makedirs('figures', exist_ok=True)
     
     print("=================================================================")
-    print("Simulating Diurnal (Day/Night) Photoperiod Inversion for LEAF GBC2")
+    print("Simulating Diurnal (Day/Night) Photoperiod Inversion for LEAF GBC1")
     print("=================================================================")
     
-    sim = GBC2CFDSimulator()
-    analytics = GBC2AdvancedAnalytics()
+    sim = GBC1CFDSimulator()
+    analytics = GBC1AdvancedAnalytics()
     
     # Canopy masks
     nz_mid1 = int(sim.Nz * 0.33)
@@ -181,7 +181,7 @@ def run_diurnal_simulation():
         })
         
     df_diurnal = pd.DataFrame(results)
-    df_diurnal.to_csv('results/tables/gbc2_diurnal_day_night_results.tsv', sep='\t', index=False)
+    df_diurnal.to_csv('results/tables/gbc1_diurnal_day_night_results.tsv', sep='\t', index=False)
     print("\nDiurnal Simulation Summary:")
     print(df_diurnal[['scenario', 'diurnal_phase', 'flow_rate_L_min', 'dCO2_chamber1_ppm', 'dCO2_chamber2_ppm', 'dCO2_substrate_ppm', 'Ri_Richardson_number']])
     

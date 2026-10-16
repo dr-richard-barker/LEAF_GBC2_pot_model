@@ -4,11 +4,11 @@ Synthesizes microenvironmental, aerodynamic, and gas-exchange performance across
   1. NASA BRIC (Biological Research in Canisters, 60 mm sealed Petri dishes)
   2. NASA CARA (Characterizing Arabidopsis Root Attractions, 120 mm taped plates)
   3. NASA VEGGIE (Vegetable Production System, open cabin forced convection)
-  4. NASA LEAF GBC2 (Growth Chamber 2 Pot Assembly, M09024F/M09025F 3-chamber active digital twin)
+  4. NASA LEAF GBC1 (Growth Chamber 1 Pot Assembly, M09024F/M09025F 3-chamber active digital twin)
 
-Ingests empirical and numerical benchmarks from LunarLeaf-CFD and GBC2 CFD engine.
+Ingests empirical and numerical benchmarks from LunarLeaf-CFD and GBC1 CFD engine.
 Generates:
-  - results/tables/gbc2_spaceflight_hardware_comprehensive_benchmark.csv
+  - results/tables/gbc1_spaceflight_hardware_comprehensive_benchmark.csv
   - figures/fig18_spaceflight_hardware_comprehensive_benchmark.png (.svg)
 """
 
@@ -89,7 +89,7 @@ def build_hardware_benchmark_dataset():
             'aerodynamic_control': 'Variable fan duty cycle (bulk chamber push)'
         },
         {
-            'hardware': 'LEAF GBC2 Pot (Model Lunar LEAF)',
+            'hardware': 'LEAF GBC1 Pot (Model Lunar LEAF)',
             'flight_heritage': 'Artemis III / Lunar Surface Architecture',
             'enclosure_type': 'Precision CNC Acrylic 3-Chamber Pot Assembly',
             'culture_volume_cm3': 64.6,       # Total CAD internal volume
@@ -120,9 +120,9 @@ def generate_figure_18(df_hw):
     c_bric = '#64748b'  # Slate grey
     c_cara = '#d97706'  # Amber
     c_veggie = '#2563eb'# Royal blue
-    c_gbc2 = '#10b981'  # Emerald green
-    hw_colors = [c_bric, c_cara, c_veggie, c_gbc2]
-    hw_short = ['BRIC\n(Sealed)', 'CARA\n(Taped)', 'VEGGIE\n(ISS Cabin)', 'LEAF GBC2\n(Digital Twin)']
+    c_gbc1 = '#10b981'  # Emerald green
+    hw_colors = [c_bric, c_cara, c_veggie, c_gbc1]
+    hw_short = ['BRIC\n(Sealed)', 'CARA\n(Taped)', 'VEGGIE\n(ISS Cabin)', 'LEAF GBC1\n(Digital Twin)']
     
     # Panel A: Air Exchange Rate (ACH) vs Headspace Volume
     ax_a = fig.add_subplot(gs[0, 0])
@@ -191,7 +191,7 @@ def generate_figure_18(df_hw):
         ['BRIC (60mm)', 'Hermetic Sealed', '0.0', 'Post-flight Septum', 'None (100% Fogging)'],
         ['CARA (120mm)', 'Microporous Tape', '1.76', 'Manual / Cassette', 'High (Rim Meniscus)'],
         ['VEGGIE', 'Cabin Forced Push', '17.8', 'Manual Harvest Only', 'Moderate (Pillows)'],
-        ['LEAF GBC2', 'Active Pull Suction', '554.5', 'Sub-second (1.20s)', 'Active Pull (<62% RH)']
+        ['LEAF GBC1', 'Active Pull Suction', '554.5', 'Sub-second (1.20s)', 'Active Pull (<62% RH)']
     ]
     
     table = ax_d.table(cellText=table_data, loc='center', cellLoc='center')
@@ -207,7 +207,7 @@ def generate_figure_18(df_hw):
             cell.set_facecolor('#0f172a')
             cell.get_text().set_color('white')
             cell.get_text().set_weight('bold')
-        elif row == 4: # LEAF GBC2 highlight
+        elif row == 4: # LEAF GBC1 highlight
             cell.set_facecolor('#ecfdf5')
             cell.get_text().set_color('#065f46')
             cell.get_text().set_weight('bold')
@@ -228,14 +228,15 @@ def generate_figure_18(df_hw):
 
 def main():
     print("=" * 70)
-    print("LEAF GBC2 Pot Model - Spaceflight Hardware Benchmark Synthesis")
+    print("LEAF GBC1 Pot Model - Spaceflight Hardware Benchmark Synthesis")
     print("=" * 70)
     
     df_hw = build_hardware_benchmark_dataset()
     
     os.makedirs('results/tables', exist_ok=True)
-    csv_path = 'results/tables/gbc2_spaceflight_hardware_comprehensive_benchmark.csv'
+    csv_path = 'results/tables/gbc1_spaceflight_hardware_comprehensive_benchmark.csv'
     df_hw.to_csv(csv_path, index=False)
+    df_hw.to_csv('results/tables/gbc2_spaceflight_hardware_comprehensive_benchmark.csv', index=False)
     print(f"[OK] Successfully saved benchmark dataset to {csv_path}")
     
     print("\n=== SPACEFLIGHT HARDWARE BENCHMARK SUMMARY ===")

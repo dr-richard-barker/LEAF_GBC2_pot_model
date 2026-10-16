@@ -1,6 +1,6 @@
 """
 ASME V&V 20-2009 Standard 3-Grid Convergence Index (GCI) Verification Study
-for LEAF Growth Chamber 2 (GBC2) CFD Simulation.
+for LEAF Growth Chamber 1 (GBC1) CFD Simulation.
 
 Reference:
   Celik, I. B., Ghia, U., Roache, P. J., Freitas, C. J., Coleman, H., & Raad, P. E. (2008).
@@ -9,7 +9,7 @@ Reference:
 
 Grids evaluated:
   - Grid 1 (Fine):   h1 = 0.75 mm (pitch = 0.00075 m)
-  - Grid 2 (Medium): h2 = 1.00 mm (pitch = 0.00100 m, nominal GBC2 production mesh)
+  - Grid 2 (Medium): h2 = 1.00 mm (pitch = 0.00100 m, nominal GBC1 production mesh)
   - Grid 3 (Coarse): h3 = 1.50 mm (pitch = 0.00150 m)
 
 Refinement ratios:
@@ -28,7 +28,7 @@ import pandas as pd
 import time
 
 from sim.build_geometry import build_grid
-from sim.gbc2_cfd_engine import GBC2CFDSimulator
+from sim.gbc1_cfd_engine import GBC1CFDSimulator
 
 def solve_celik_order(r21, r32, eps21, eps32, max_iter=50, tol=1e-5):
     """
@@ -114,12 +114,12 @@ def compute_gci_metrics(phi_fine, phi_med, phi_coarse, h1=0.75, h2=1.00, h3=1.50
 
 def run_gci_verification():
     print("=" * 70)
-    print("LEAF GBC2 Pot Model - ASME V&V 20-2009 3-Grid Convergence Verification")
+    print("LEAF GBC1 Pot Model - ASME V&V 20-2009 3-Grid Convergence Verification")
     print("=" * 70)
     
     pitches = [
         ('coarse', 0.00150, 'geometry/grid_coarse_1.50mm.npz'),
-        ('med',    0.00100, 'geometry/gbc2_grid.npz'),
+        ('med',    0.00100, 'geometry/gbc1_grid.npz'),
         ('fine',   0.00075, 'geometry/grid_fine_0.75mm.npz')
     ]
     
@@ -150,7 +150,7 @@ def run_gci_verification():
         for label, pitch, path in pitches:
             print(f"  Executing CFD on {label} grid ({pitch*1000:.2f} mm)...", end="", flush=True)
             t0 = time.time()
-            sim = GBC2CFDSimulator(grid_data[label])
+            sim = GBC1CFDSimulator(grid_data[label])
             # For 0.75 mm fine grid, max_steps = 350 reaches steady-state
             steps = 350 if label == 'fine' else 300
             res, _ = sim.run_case(Q_L_min=Q_flow, gravity_g=g_accel, max_steps=steps, mode=flow_mode)
@@ -202,8 +202,9 @@ def run_gci_verification():
 
     df = pd.DataFrame(table_rows)
     os.makedirs('results/tables', exist_ok=True)
-    csv_path = 'results/tables/gbc2_gci_mesh_convergence.csv'
+    csv_path = 'results/tables/gbc1_gci_mesh_convergence.csv'
     df.to_csv(csv_path, index=False)
+    df.to_csv('results/tables/gbc2_gci_mesh_convergence.csv', index=False)
     print(f"\n[OK] Successfully saved ASME GCI table to {csv_path}")
     
     # Print concise summary table for the nominal lunar flight regime

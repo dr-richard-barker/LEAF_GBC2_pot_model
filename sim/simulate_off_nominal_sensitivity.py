@@ -1,5 +1,5 @@
 """
-Off-Nominal Mission Sensitivity & Fault-Tolerance Sweeps for LEAF GBC2 Plant Growth Chamber.
+Off-Nominal Mission Sensitivity & Fault-Tolerance Sweeps for LEAF GBC1 Plant Growth Chamber.
 
 Evaluates three critical spacecraft / lunar lander off-nominal operational stressors:
   1. Elevated Spacecraft Cabin CO2 (420 to 5,000 ppm):
@@ -22,8 +22,8 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from sim.gbc2_cfd_engine import GBC2CFDSimulator
-from sim.advanced_analytics import GBC2AdvancedAnalytics
+from sim.gbc1_cfd_engine import GBC1CFDSimulator
+from sim.advanced_analytics import GBC1AdvancedAnalytics
 
 
 def compute_fvcb_with_stomatal_feedback(g_bl, dC_CO2_ppm, C_ambient, species='brapa'):
@@ -85,7 +85,7 @@ def run_off_nominal_sweeps():
     print("Running Off-Nominal Mission Sensitivity & Fault-Tolerance Sweeps")
     print("=================================================================")
 
-    sim = GBC2CFDSimulator()
+    sim = GBC1CFDSimulator()
 
     # Baseline CFD runs
     res_earth_050, _ = sim.run_case(Q_L_min=0.50, gravity_g=9.81, max_steps=260)
@@ -231,7 +231,7 @@ def run_off_nominal_sweeps():
         })
 
     df_sens = pd.DataFrame(records)
-    out_tsv = 'results/tables/gbc2_off_nominal_sensitivity.tsv'
+    out_tsv = 'results/tables/gbc1_off_nominal_sensitivity.tsv'
     df_sens.to_csv(out_tsv, sep='\t', index=False)
     print(f"Saved off-nominal sensitivity results to {out_tsv} ({len(df_sens)} rows)")
 
@@ -356,7 +356,7 @@ def run_off_nominal_sweeps():
     ax_d.set_title('D. Mission Fault-Tolerance Boundaries & Outage Grace Window', fontsize=12.3, fontweight='bold', pad=10)
 
     fig.suptitle(
-        'LEAF GBC2 Off-Nominal Mission Sensitivity & Fault-Tolerance Sweeps\n'
+        'LEAF GBC1 Off-Nominal Mission Sensitivity & Fault-Tolerance Sweeps\n'
         'Spacecraft Cabin CO₂ Enrichment (420–5,000 ppm), Root Porosity Compaction, and Pump Brownout Resilience',
         fontsize=14.5, fontweight='bold', y=0.98
     )

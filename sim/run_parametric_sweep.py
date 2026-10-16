@@ -1,5 +1,5 @@
 """
-Parametric Sweep Runner for LEAF GBC2 Pot CFD Model with Enhanced Publication Figures.
+Parametric Sweep Runner for LEAF GBC1 Pot CFD Model with Enhanced Publication Figures.
 """
 import os
 import json
@@ -9,14 +9,14 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from sim.gbc2_cfd_engine import GBC2CFDSimulator
+from sim.gbc1_cfd_engine import GBC1CFDSimulator
 
 def run_sweep():
     os.makedirs('results/tables', exist_ok=True)
     os.makedirs('results/figures', exist_ok=True)
     os.makedirs('figures', exist_ok=True)
     
-    sim = GBC2CFDSimulator()
+    sim = GBC1CFDSimulator()
     
     gravities = [
         ('1g_Earth', 9.81),
@@ -30,7 +30,7 @@ def run_sweep():
     field_snapshots = {}
     
     print("=================================================================")
-    print(f"Starting LEAF GBC2 Parametric CFD Sweep: {len(gravities)} gravities x {len(pump_speeds)} speeds")
+    print(f"Starting LEAF GBC1 Parametric CFD Sweep: {len(gravities)} gravities x {len(pump_speeds)} speeds")
     print("=================================================================")
     
     for g_label, g_val in gravities:
@@ -71,7 +71,7 @@ def run_sweep():
                 }
 
     df = pd.DataFrame(records)
-    table_path = 'results/tables/gbc2_cfd_sweep_results.tsv'
+    table_path = 'results/tables/gbc1_cfd_sweep_results.tsv'
     df.to_csv(table_path, sep='\t', index=False)
     print(f"\nSaved full sweep results table to: {table_path}")
     
@@ -79,7 +79,7 @@ def run_sweep():
     covar_df = df[['scenario', 'gravity_condition', 'gravity_m_s2', 'pump_flow_L_min',
                    'inlet_velocity_m_s', 'g_bl_mol_m2_s', 'delta_bl_mm', 'dC_CO2_mean_ppm',
                    'stagnant_volume_pct', 'flow_uniformity_gamma']].copy()
-    covar_path = 'results/tables/gbc2_covariates_for_omics.tsv'
+    covar_path = 'results/tables/gbc1_covariates_for_omics.tsv'
     covar_df.to_csv(covar_path, sep='\t', index=False)
     print(f"Saved omics covariates table to: {covar_path}")
 

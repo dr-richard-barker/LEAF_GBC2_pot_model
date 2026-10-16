@@ -1,5 +1,5 @@
 """
-Zenodo Open-Science Dataset Packager for LEAF GBC2 'Model Lunar LEAF' 5-Day Spaceflight Experiment.
+Zenodo Open-Science Dataset Packager for LEAF GBC1 'Model Lunar LEAF' 5-Day Spaceflight Experiment.
 Complies with FAIR data principles and Frictionless Data standards.
 """
 
@@ -29,10 +29,10 @@ def export_zenodo_package():
         'results/tables/zenodo_push_vs_pull_aerodynamics.csv',
         'results/tables/zenodo_gravity_temp_response_surface.csv',
         'results/tables/zenodo_water_activation_foam_nytex.csv',
-        'results/tables/gbc2_gci_mesh_convergence.csv',
-        'results/tables/gbc2_foliar_surface_distribution.csv',
-        'results/tables/gbc2_164plants_foliar_telemetry.csv',
-        'results/tables/gbc2_spaceflight_hardware_comprehensive_benchmark.csv'
+        'results/tables/gbc1_gci_mesh_convergence.csv',
+        'results/tables/gbc1_foliar_surface_distribution.csv',
+        'results/tables/gbc1_164plants_foliar_telemetry.csv',
+        'results/tables/gbc1_spaceflight_hardware_comprehensive_benchmark.csv'
     ]
     
     for f in csv_files:
@@ -77,9 +77,9 @@ def export_zenodo_package():
             
     # 4. Generate Frictionless Data Package Descriptor (datapackage.json)
     datapackage = {
-        "name": "leaf-gbc2-model-lunar-leaf-5day-simulation",
-        "title": "LEAF GBC2 'Model Lunar LEAF' 5-Day Spaceflight Simulation Dataset",
-        "description": "Comprehensive 5-day (120-hour) computational multi-physics dataset for the LEAF GBC2 spaceflight plant growth chamber. Encompasses subsurface water activation in porous foam, Nytex mesh root exclusion, push vs pull aerodynamic CFD, developmental ontogeny, mixed-convection gravity (0g-1g), temperature sweeps (18-30 C), and optical lid condensation defense.",
+        "name": "leaf-gbc1-model-lunar-leaf-5day-simulation",
+        "title": "LEAF GBC1 'Model Lunar LEAF' 5-Day Spaceflight Simulation Dataset",
+        "description": "Comprehensive 5-day (120-hour) computational multi-physics dataset for the LEAF GBC1 spaceflight plant growth chamber. Encompasses subsurface water activation in porous foam, Nytex mesh root exclusion, push vs pull aerodynamic CFD, developmental ontogeny, mixed-convection gravity (0g-1g), temperature sweeps (18-30 C), and optical lid condensation defense.",
         "version": "1.0.0",
         "homepage": "https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/",
         "license": "CC-BY-4.0",
@@ -91,7 +91,7 @@ def export_zenodo_package():
             "plant-growth-chamber",
             "porous-media",
             "ontogeny",
-            "leaf-gbc2",
+            "leaf-gbc1",
             "artemis"
         ],
         "resources": [
@@ -128,36 +128,36 @@ def export_zenodo_package():
                 "description": "Vertical moisture saturation profiles in the 7.0 mm porous foam cassette and Nytex mesh Young-Laplace bubble point curve."
             },
             {
-                "name": "gbc2_gci_mesh_convergence",
-                "path": "data/gbc2_gci_mesh_convergence.csv",
+                "name": "gbc1_gci_mesh_convergence",
+                "path": "data/gbc1_gci_mesh_convergence.csv",
                 "format": "csv",
                 "mediatype": "text/csv",
                 "encoding": "utf-8",
                 "description": "ASME V&V 20-2009 standard 3-grid convergence index verification study across 1.50, 1.00, and 0.75 mm pitches."
             },
             {
-                "name": "gbc2_foliar_surface_distribution",
-                "path": "data/gbc2_foliar_surface_distribution.csv",
+                "name": "gbc1_foliar_surface_distribution",
+                "path": "data/gbc1_foliar_surface_distribution.csv",
                 "format": "csv",
                 "mediatype": "text/csv",
                 "encoding": "utf-8",
                 "description": "Canopy microclimate percentiles (p10, p50, p90), spatial CoV, and dynamic range across flight regimes."
             },
             {
-                "name": "gbc2_164plants_foliar_telemetry",
-                "path": "data/gbc2_164plants_foliar_telemetry.csv",
+                "name": "gbc1_164plants_foliar_telemetry",
+                "path": "data/gbc1_164plants_foliar_telemetry.csv",
                 "format": "csv",
                 "mediatype": "text/csv",
                 "encoding": "utf-8",
                 "description": "Individual scalar microenvironment telemetry for all 164 plants (32 B. rapa + 100 Arabidopsis + 32 B. rapa)."
             },
             {
-                "name": "gbc2_spaceflight_hardware_comprehensive_benchmark",
-                "path": "data/gbc2_spaceflight_hardware_comprehensive_benchmark.csv",
+                "name": "gbc1_spaceflight_hardware_comprehensive_benchmark",
+                "path": "data/gbc1_spaceflight_hardware_comprehensive_benchmark.csv",
                 "format": "csv",
                 "mediatype": "text/csv",
                 "encoding": "utf-8",
-                "description": "Multi-system spaceflight hardware comparative benchmark across NASA BRIC, CARA, VEGGIE, and LEAF GBC2."
+                "description": "Multi-system spaceflight hardware comparative benchmark across NASA BRIC, CARA, VEGGIE, and LEAF GBC1."
             }
         ]
     }
@@ -166,17 +166,17 @@ def export_zenodo_package():
         json.dump(datapackage, f, indent=2)
         
     # 5. Generate Zenodo README.md Data Dictionary
-    readme_content = """# LEAF GBC2 "Model Lunar LEAF" 5-Day Spaceflight Simulation Dataset
+    readme_content = """# LEAF GBC1 "Model Lunar LEAF" 5-Day Spaceflight Simulation Dataset
 
-[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.leaf--gbc2--lunar-blue)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.leaf--gbc1--lunar-blue)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
-This archive contains the open-science research data, CFD metrics, and developmental biophysical time series for the **Model Lunar LEAF** 5-day (120-hour) spaceflight simulation conducted in the **LEAF GBC2** plant growth hardware (`M09024F-MDL-5` pot and `M09025F-MDL-2` lid assembly).
+This archive contains the open-science research data, CFD metrics, and developmental biophysical time series for the **Model Lunar LEAF** 5-day (120-hour) spaceflight simulation conducted in the **LEAF GBC1** plant growth hardware (`M09024F-MDL-5` pot and `M09025F-MDL-2` lid assembly).
 
 ## Repository & Interactive Portal
 - **Interactive Research Summary Portal**: https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/
 - **Standalone 3D WebGL Digital Twin**: https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html
-- **Full Manuscript & Equations**: `MANUSCRIPT_LEAF_GBC2_CFD.md`
+- **Full Manuscript & Equations**: `MANUSCRIPT_LEAF_GBC1_CFD.md`
 
 ---
 
@@ -248,7 +248,7 @@ Vertical saturation and aeration profile across the 7.0 mm porous foam cassette 
 ---
 
 ## Citation & Reproducibility
-Data generated with the LEAF GBC2 computational suite (`sim/simulate_model_lunar_leaf_5day.py`).
+Data generated with the LEAF GBC1 computational suite (`sim/simulate_model_lunar_leaf_5day.py`).
 License: Creative Commons Attribution 4.0 International (CC-BY 4.0).
 """
     with open(os.path.join(zenodo_dir, 'README.md'), 'w') as f:

@@ -1,6 +1,6 @@
 """
 Comprehensive Water Flow, Unsaturated Capillarity, and Evapotranspiration / Condensation Model
-for the LEAF GBC2 Lunar Plant Growth Chamber.
+for the LEAF GBC1 Lunar Plant Growth Chamber.
 
 Addresses:
   1. Porous Substrate Unsaturated Flow & Capillary Retention (Richards Equation & van Genuchten)
@@ -162,7 +162,7 @@ def compute_transpiration_and_vapor(Q_L_min, T_chamber_C=22.0, RH_in_pct=60.0, P
     T_cabin = 21.0
     # Thermal model of lid:
     # q_lid = (k_acrylic / d_lid) * (T_lid - T_cabin) = h_in * (T_chamber - T_lid) + q_rad_net
-    # For GBC2: T_lid is typically 0.4 to 0.8C below T_chamber due to heat sinking to the structural rim
+    # For GBC1: T_lid is typically 0.4 to 0.8C below T_chamber due to heat sinking to the structural rim
     T_lid_inner = T_chamber_C - (0.65 - 0.15 * np.exp(-Q_L_min / 0.30))
 
     # Condensation Safety Margin
@@ -258,7 +258,7 @@ def compute_two_phase_perfusion_kinetics():
 
 def run_water_and_humidity_analysis():
     print("=" * 80)
-    print("LEAF GBC2: Water Flow, Unsaturated Capillarity & Humidity Modeling")
+    print("LEAF GBC1: Water Flow, Unsaturated Capillarity & Humidity Modeling")
     print("=" * 80)
 
     # 1. Capillary retention profiles
@@ -362,7 +362,7 @@ def run_water_and_humidity_analysis():
         })
 
     df_out = pd.DataFrame(rows)
-    tsv_path = 'results/tables/gbc2_water_and_humidity_transport.tsv'
+    tsv_path = 'results/tables/gbc1_water_and_humidity_transport.tsv'
     df_out.to_csv(tsv_path, sep='\t', index=False)
     print(f"Saved quantitative tabular dataset to {tsv_path} ({len(df_out)} rows)")
 
@@ -501,7 +501,7 @@ def generate_figure_11(cap_data, Q_sweep, day_res, humid_res, night_res, perf_da
     ax_d.set_title('D. Two-Phase RNAlater Liquid Invasion & Gas Purging Kinetics (10 mL/min)', fontsize=12.0, fontweight='bold', pad=12)
 
     fig.suptitle(
-        'LEAF GBC2 Water Flow, Unsaturated Capillarity & Optical Lid Condensation Defense\n'
+        'LEAF GBC1 Water Flow, Unsaturated Capillarity & Optical Lid Condensation Defense\n'
         'van Genuchten Capillary Retention, Multi-Species Evapotranspiration, and Two-Phase Gas Venting',
         fontsize=14.2, fontweight='bold', y=0.98
     )

@@ -1,11 +1,11 @@
 """
-Advanced Analytics Module for LEAF GBC2 Plant Pot CFD Model.
+Advanced Analytics Module for LEAF GBC1 Plant Pot CFD Model.
 Incorporates cutting-edge methodologies from NASA OSDR meta-analysis
 and chamber verification principles:
 1. Mean Age of Air & Sandberg residence time conservation identity
 2. Farquhar-von Caemmerer-Berry (FvCB) biochemical photosynthesis & carbon fixation feedback
 3. Chamber-resolved spatial canopy metrics (Chamber 1, 2, 3 CoV & disparity)
-4. Spaceflight hardware comparative benchmarking (GBC2 vs BRIC, CARA, Veggie, EMCS)
+4. Spaceflight hardware comparative benchmarking (GBC1 vs BRIC, CARA, Veggie, EMCS)
 5. Multi-omics pathway perturbation predictions (Auxin, ABA, Photosynthesis, Stress)
 """
 
@@ -17,11 +17,11 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from sim.gbc2_cfd_engine import GBC2CFDSimulator
+from sim.gbc1_cfd_engine import GBC1CFDSimulator
 
-class GBC2AdvancedAnalytics:
-    def __init__(self, grid_file='geometry/gbc2_grid.npz'):
-        self.sim = GBC2CFDSimulator(grid_file=grid_file)
+class GBC1AdvancedAnalytics:
+    def __init__(self, grid_file='geometry/gbc1_grid.npz'):
+        self.sim = GBC1CFDSimulator(grid_file=grid_file)
         self.dx = self.sim.dx
         self.Nx, self.Ny, self.Nz = self.sim.Nx, self.sim.Ny, self.sim.Nz
         
@@ -190,3 +190,7 @@ class GBC2AdvancedAnalytics:
             'heat_shock_chaperones': float(-1.1 * rel_diff)
         }
         return pathways
+
+
+# Backward-compatibility alias
+GBC2AdvancedAnalytics = GBC1AdvancedAnalytics

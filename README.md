@@ -1,10 +1,10 @@
-# LEAF GBC2 Lunar Plant Growth Chamber — 3D CFD & Multi-Species Biophysics Model
+# LEAF GBC1 Lunar Plant Growth Chamber — 3D CFD & Multi-Species Biophysics Model
 
 [![3D Digital Twin](https://img.shields.io/badge/Interactive-3D_Digital_Twin-27ae60?style=for-the-badge)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html)
 [![GitHub Pages Portal](https://img.shields.io/badge/Live_Portal-GitHub_Pages-2980b9?style=for-the-badge)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/)
-[![Technical Manuscript](https://img.shields.io/badge/Manuscript-Full_Text_Report-8e44ad?style=for-the-badge)](./MANUSCRIPT_LEAF_GBC2_CFD.md)
+[![Technical Manuscript](https://img.shields.io/badge/Manuscript-Full_Text_Report-8e44ad?style=for-the-badge)](./MANUSCRIPT_LEAF_GBC1_CFD.md)
 
-Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developmental canopy ontogeny, diurnal photoperiod inversion, off-nominal spacecraft fault-tolerance, and harvest-phase RNAlater fixative perfusion modeling for the **LEAF GBC2 spaceflight plant growth pot (`M09024F-MDL-5.STEP`) and lid (`M09025F-MDL-2.STEP`) assembly** under **Earth (1.0g, 9.81 m/s²)** and **Lunar (0.166g, 1.62 m/s²)** gravity regimes.
+Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developmental canopy ontogeny, diurnal photoperiod inversion, off-nominal spacecraft fault-tolerance, and harvest-phase RNAlater fixative perfusion modeling for the **LEAF GBC1 spaceflight plant growth pot (`M09024F-MDL-5.STEP`) and lid (`M09025F-MDL-2.STEP`) assembly** under **Earth (1.0g, 9.81 m/s²)** and **Lunar (0.166g, 1.62 m/s²)** gravity regimes.
 
 ---
 
@@ -12,7 +12,7 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 
 - **Live GitHub Pages Research Portal**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/) ([`index.html`](./index.html))
 - **Live Interactive 3D Chamber Digital Twin & CFD Simulator**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html) ([`viewer_3d.html`](./viewer_3d.html))
-- **Full Technical Manuscript (Methods, Results & Figure Legends)**: [`MANUSCRIPT_LEAF_GBC2_CFD.md`](./MANUSCRIPT_LEAF_GBC2_CFD.md)
+- **Full Technical Manuscript (Methods, Results & Figure Legends)**: [`MANUSCRIPT_LEAF_GBC1_CFD.md`](./MANUSCRIPT_LEAF_GBC1_CFD.md)
 - **Zenodo Open Science Dataset Package**: [`zenodo/`](./zenodo/) ([`datapackage.json`](./zenodo/datapackage.json) · [`README.md`](./zenodo/README.md))
 - **Orthographic Blueprint (ABAI QC Annotated)**: [`figures/fig_orthographic_projection_annotated.png`](./figures/fig_orthographic_projection_annotated.png) | [`.svg`](./figures/fig_orthographic_projection_annotated.svg)
 - **Mated CAD Assembly Cross-Sections**: [`figures/assembly_cross_sections_annotated.png`](./figures/assembly_cross_sections_annotated.png) | [`exact`](./figures/assembly_cross_sections_exact.png)
@@ -115,7 +115,7 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 | **Figure 2** | 2D/3D velocity vector fields & scalar distributions comparing Earth 1.0g vs. Lunar 0.166g | [PNG](figures/fig2_velocity_fields_earth_vs_lunar.png) · [SVG](figures/fig2_velocity_fields_earth_vs_lunar.svg) |
 | **Figure 3** | Lunar compensatory pump sizing curve & regime classification (Ri, Pe, Gr/Re²) | [PNG](figures/fig3_lunar_compensatory_pump_curve.png) · [SVG](figures/fig3_lunar_compensatory_pump_curve.svg) |
 | **Figure 4** | 3D spatial Mean Age of Air (θ), chamber uniformity, and Sandberg identity verification | [PNG](figures/fig4_mean_age_of_air_and_chamber_uniformity.png) · [SVG](figures/fig4_mean_age_of_air_and_chamber_uniformity.svg) |
-| **Figure 5** | Flight hardware benchmark comparing LEAF GBC2 against NASA BRIC, CARA, and Veggie | [PNG](figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.png) · [SVG](figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.svg) |
+| **Figure 5** | Flight hardware benchmark comparing LEAF GBC1 against NASA BRIC, CARA, and Veggie | [PNG](figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.png) · [SVG](figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.svg) |
 | **Figure 6** | Predicted transcriptomic stress & phytohormone signaling phenotypes (Auxin, ABA, Ethylene) | [PNG](figures/fig6_predicted_hormone_carbon_phenotypes.png) · [SVG](figures/fig6_predicted_hormone_carbon_phenotypes.svg) |
 | **Figure 7** | Transient RNAlater perfusion front progression & multi-species asymmetric gas exchange | [PNG](figures/fig7_rnalater_perfusion_and_species_dynamics.png) · [SVG](figures/fig7_rnalater_perfusion_and_species_dynamics.svg) |
 | **Figure 8** | Diurnal day/night photoperiod inversion, respiratory CO₂ pooling, and nocturnal setback envelope | [PNG](figures/fig8_diurnal_day_night_photoperiod_inversion.png) · [SVG](figures/fig8_diurnal_day_night_photoperiod_inversion.svg) |
@@ -136,15 +136,15 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 LEAF_GBC2_pot_model/
 ├── index.html                           # GitHub Pages Interactive Research Summary Portal (Dark/Light Theme)
 ├── viewer_3d.html                       # Interactive 3D WebGL Digital Twin (Three.js & OrbitControls)
-├── MANUSCRIPT_LEAF_GBC2_CFD.md          # Complete Technical Manuscript (Methods, Results, Legends)
+├── MANUSCRIPT_LEAF_GBC1_CFD.md          # Complete Technical Manuscript (Methods, Results, Legends)
 ├── README.md                            # Project documentation & summary
 ├── requirements.txt                     # Python environment dependencies
 ├── cad/
-│   ├── pot.step                         # Native STEP CAD for GBC2 Pot Body (M09024F-MDL-5)
-│   └── lid.step                         # Native STEP CAD for GBC2 Lid Assembly (M09025F-MDL-2)
+│   ├── pot.step                         # Native STEP CAD for GBC1 Pot Body (M09024F-MDL-5)
+│   └── lid.step                         # Native STEP CAD for GBC1 Lid Assembly (M09025F-MDL-2)
 ├── geometry/
-│   ├── gbc2_assembly.stl                # Mated 3D assembly mesh
-│   └── gbc2_grid.npz                    # 3D voxelized domain (60x48x80) with species & substrate tags
+│   ├── gbc1_assembly.stl                # Mated 3D assembly mesh
+│   └── gbc1_grid.npz                    # 3D voxelized domain (60x48x80) with species & substrate tags
 ├── zenodo/                              # Open-Science Archival Package
 │   ├── datapackage.json                 # Frictionless Data Package Schema
 │   ├── README.md                        # Dataset Data Dictionary & Methodology
@@ -153,7 +153,7 @@ LEAF_GBC2_pot_model/
 │   └── figures/                         # Vector SVGs and high-res PNGs
 ├── sim/
 │   ├── build_geometry.py                # CAD mating & 3D voxelization pipeline
-│   ├── gbc2_cfd_engine.py               # 3D Navier-Stokes, Brinkman-Darcy & FvCB solver (push & pull)
+│   ├── gbc1_cfd_engine.py               # 3D Navier-Stokes, Brinkman-Darcy & FvCB solver (push & pull)
 │   ├── advanced_analytics.py            # Mean Age of Air, Sandberg conservation & hormone indices
 │   ├── generate_orthographic_projections.py  # 3-view orthographic projection generator
 │   ├── generate_assembly_cross_sections.py   # Mated CAD cross-section generator

@@ -1,5 +1,5 @@
 """
-Build and tag the 3D computational domain for LEAF GBC2 pot.
+Build and tag the 3D computational domain for LEAF GBC1 pot.
 Tags voxels as:
   0: SOLID_WALL (acrylic pot body and lid)
   1: AIR_HEADSPACE (open chamber / plant shoot growth zone)
@@ -14,7 +14,7 @@ import trimesh
 import numpy as np
 from scipy import ndimage
 
-def build_grid(pitch=0.001, save_path='geometry/gbc2_grid.npz'): # 1.0 mm pitch by default (fast & robust)
+def build_grid(pitch=0.001, save_path='geometry/gbc1_grid.npz'): # 1.0 mm pitch by default (fast & robust)
     print(f"Loading CAD assembly with pitch = {pitch*1000:.2f} mm...")
     lid = trimesh.load('cad/lid.step').geometry['M09025F-MDL-2']
     pot = trimesh.load('cad/pot.step').geometry['M09024F-MDL-5']

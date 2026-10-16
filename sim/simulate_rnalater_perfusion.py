@@ -1,6 +1,6 @@
 """
 Simulation of Transient RNAlater Perfusion and Asymmetric Multi-Species Gas Exchange
-for the LEAF GBC2 Plant Growth Chamber.
+for the LEAF GBC1 Plant Growth Chamber.
 
 Features:
 1. Liquid RNAlater Injection via Port 3 Dipping Nozzle:
@@ -24,8 +24,8 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from sim.gbc2_cfd_engine import GBC2CFDSimulator
-from sim.advanced_analytics import GBC2AdvancedAnalytics
+from sim.gbc1_cfd_engine import GBC1CFDSimulator
+from sim.advanced_analytics import GBC1AdvancedAnalytics
 
 def run_rnalater_and_species_simulation():
     os.makedirs('results/tables', exist_ok=True)
@@ -86,7 +86,7 @@ def run_rnalater_and_species_simulation():
         })
         
     df_perfusion = pd.DataFrame(perfusion_results)
-    df_perfusion.to_csv('results/tables/gbc2_rnalater_perfusion_kinetics.tsv', sep='\t', index=False)
+    df_perfusion.to_csv('results/tables/gbc1_rnalater_perfusion_kinetics.tsv', sep='\t', index=False)
     print("RNAlater kinetics computed:")
     print(df_perfusion[['injection_rate_ml_min', 'root_zone_saturation_time_min', 'total_immersion_time_min', 'total_injection_pressure_kPa']])
     
@@ -128,11 +128,11 @@ def run_rnalater_and_species_simulation():
     # 3. Asymmetric Canopy Gas Exchange Simulation
     # -------------------------------------------------------------------------
     # Load grid & run asymmetric solver
-    sim = GBC2CFDSimulator()
+    sim = GBC1CFDSimulator()
     # Asymmetric biological source terms:
     # B. rapa in Ch 1 (Z < -9 mm) & Ch 3 (Z > +9 mm): High foliar activity
     # A. thaliana in Ch 2 (-9 mm <= Z <= +9 mm): Rosette, moderate activity
-    analytics = GBC2AdvancedAnalytics()
+    analytics = GBC1AdvancedAnalytics()
     
     # Simulate Earth 1g and Lunar 0.166g at nominal flow (Q = 0.50 L/min)
     species_cases = [
@@ -222,7 +222,7 @@ def run_rnalater_and_species_simulation():
         })
         
     df_species = pd.DataFrame(species_data)
-    df_species.to_csv('results/tables/gbc2_asymmetric_canopy_species_results.tsv', sep='\t', index=False)
+    df_species.to_csv('results/tables/gbc1_asymmetric_canopy_species_results.tsv', sep='\t', index=False)
     print("\nAsymmetric species gas exchange results:")
     print(df_species[['condition', 'ch1_A_net_umol_m2_s', 'ch2_A_net_umol_m2_s', 'ch3_A_net_umol_m2_s']])
     

@@ -1,14 +1,14 @@
-# LEAF GBC2 "Model Lunar LEAF" 5-Day Spaceflight Simulation Dataset
+# LEAF GBC1 "Model Lunar LEAF" 5-Day Spaceflight Simulation Dataset
 
-[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.leaf--gbc2--lunar-blue)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.leaf--gbc1--lunar-blue)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
-This archive contains the open-science research data, CFD metrics, and developmental biophysical time series for the **Model Lunar LEAF** 5-day (120-hour) spaceflight simulation conducted in the **LEAF GBC2** plant growth hardware (`M09024F-MDL-5` pot and `M09025F-MDL-2` lid assembly).
+This archive contains the open-science research data, CFD metrics, and developmental biophysical time series for the **Model Lunar LEAF** 5-day (120-hour) spaceflight simulation conducted in the **LEAF GBC1** plant growth hardware (`M09024F-MDL-5` pot and `M09025F-MDL-2` lid assembly).
 
 ## Repository & Interactive Portal
 - **Interactive Research Summary Portal**: https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/
 - **Standalone 3D WebGL Digital Twin**: https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html
-- **Full Manuscript & Equations**: `MANUSCRIPT_LEAF_GBC2_CFD.md`
+- **Full Manuscript & Equations**: `MANUSCRIPT_LEAF_GBC1_CFD.md`
 
 ---
 
@@ -80,5 +80,5 @@ Vertical saturation and aeration profile across the 7.0 mm porous foam cassette 
 ---
 
 ## Citation & Reproducibility
-Data generated with the LEAF GBC2 computational suite (`sim/simulate_model_lunar_leaf_5day.py`).
+Data generated with the LEAF GBC1 computational suite (`sim/simulate_model_lunar_leaf_5day.py`).
 License: Creative Commons Attribution 4.0 International (CC-BY 4.0).

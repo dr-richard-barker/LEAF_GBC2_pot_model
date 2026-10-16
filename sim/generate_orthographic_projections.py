@@ -1,6 +1,6 @@
 """
 Generate Publication-Grade Orthographic Projections with Complete Annotations
-for the LEAF GBC2 Plant Growth Chamber.
+for the LEAF GBC1 Plant Growth Chamber.
 Includes:
 - Top Plan View (Z-X Plane, Looking Down -Y)
 - Side Elevation / Transverse Cutaway (X-Y Plane at Z = 0)

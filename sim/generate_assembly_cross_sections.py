@@ -1,5 +1,5 @@
 """
-Generate CAD Mated Assembly Cross-Sections for LEAF GBC2 Plant Growth Chamber.
+Generate CAD Mated Assembly Cross-Sections for LEAF GBC1 Plant Growth Chamber.
 Extracts true 3D cross-section contours directly from native STEP files
 without unaligned 2D local projection distortions.
 

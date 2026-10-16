@@ -1,6 +1,6 @@
 """
 Execute Advanced CFD Analytics, OSDR Benchmarking, and Omics Predictions
-for LEAF GBC2 Plant Growth Chamber.
+for LEAF GBC1 Plant Growth Chamber.
 """
 
 import os
@@ -13,15 +13,15 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from sim.gbc2_cfd_engine import GBC2CFDSimulator
-from sim.advanced_analytics import GBC2AdvancedAnalytics
+from sim.gbc1_cfd_engine import GBC1CFDSimulator
+from sim.advanced_analytics import GBC1AdvancedAnalytics
 
 def run_advanced_pipeline():
     os.makedirs('results/tables', exist_ok=True)
     os.makedirs('results/figures', exist_ok=True)
     os.makedirs('figures', exist_ok=True)
     
-    analytics = GBC2AdvancedAnalytics()
+    analytics = GBC1AdvancedAnalytics()
     sim = analytics.sim
     
     gravities = [
@@ -112,7 +112,7 @@ def run_advanced_pipeline():
                 }
 
     df_adv = pd.DataFrame(records)
-    adv_path = 'results/tables/gbc2_advanced_analytics.tsv'
+    adv_path = 'results/tables/gbc1_advanced_analytics.tsv'
     df_adv.to_csv(adv_path, sep='\t', index=False)
     print(f"\nSaved advanced analytics table to: {adv_path}")
 
@@ -130,19 +130,19 @@ def run_advanced_pipeline():
         {'hardware': 'Veggie', 'condition': 'Microgravity (0g)', 'ventilation': 'Forced fan (~2.8 cm/s)',
          'carbon_12h_pct_earth': 99.3, 'g_bl_mol_m2_s': 0.291, 'delta_bl_mm': 2.29, 'dC_CO2_ppm': 7.8,
          'enclosure_co2_depletion_min': 999.0, 'notes': 'Open-cabin ventilation with fans'},
-        {'hardware': 'LEAF GBC2', 'condition': 'Lunar (0.166g, Q=0.10 L/min)', 'ventilation': 'Low Pump (u=0.21 m/s)',
+        {'hardware': 'LEAF GBC1', 'condition': 'Lunar (0.166g, Q=0.10 L/min)', 'ventilation': 'Low Pump (u=0.21 m/s)',
          'carbon_12h_pct_earth': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.10', 'carbon_12h_pct_earth'].values[0]),
          'g_bl_mol_m2_s': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.10', 'g_bl_mean_mol_m2_s'].values[0]),
          'delta_bl_mm': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.10', 'delta_bl_mm'].values[0]),
          'dC_CO2_ppm': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.10', 'dC_CO2_mean_ppm'].values[0]),
          'enclosure_co2_depletion_min': 999.0, 'notes': 'Lunar convection penalty regime'},
-        {'hardware': 'LEAF GBC2', 'condition': 'Lunar (0.166g, Q=0.50 L/min)', 'ventilation': 'Nominal Pump (u=1.05 m/s)',
+        {'hardware': 'LEAF GBC1', 'condition': 'Lunar (0.166g, Q=0.50 L/min)', 'ventilation': 'Nominal Pump (u=1.05 m/s)',
          'carbon_12h_pct_earth': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.50', 'carbon_12h_pct_earth'].values[0]),
          'g_bl_mol_m2_s': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.50', 'g_bl_mean_mol_m2_s'].values[0]),
          'delta_bl_mm': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.50', 'delta_bl_mm'].values[0]),
          'dC_CO2_ppm': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.50', 'dC_CO2_mean_ppm'].values[0]),
          'enclosure_co2_depletion_min': 999.0, 'notes': 'Forced-convection threshold reached'},
-        {'hardware': 'LEAF GBC2', 'condition': 'Lunar (0.166g, Q=1.00 L/min)', 'ventilation': 'Optimal Pump (u=2.10 m/s)',
+        {'hardware': 'LEAF GBC1', 'condition': 'Lunar (0.166g, Q=1.00 L/min)', 'ventilation': 'Optimal Pump (u=2.10 m/s)',
          'carbon_12h_pct_earth': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q1.00', 'carbon_12h_pct_earth'].values[0]),
          'g_bl_mol_m2_s': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q1.00', 'g_bl_mean_mol_m2_s'].values[0]),
          'delta_bl_mm': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q1.00', 'delta_bl_mm'].values[0]),
@@ -150,7 +150,7 @@ def run_advanced_pipeline():
          'enclosure_co2_depletion_min': 999.0, 'notes': 'Optimal gas exchange; zero gravity penalty'}
     ]
     df_hw = pd.DataFrame(hw_benchmarks)
-    hw_path = 'results/tables/gbc2_hardware_benchmark_comparison.tsv'
+    hw_path = 'results/tables/gbc1_hardware_benchmark_comparison.tsv'
     df_hw.to_csv(hw_path, sep='\t', index=False)
     print(f"Saved flight hardware benchmark table to: {hw_path}")
 
@@ -219,12 +219,12 @@ def run_advanced_pipeline():
     print("Saved Figure 4: figures/fig4_mean_age_of_air_and_chamber_uniformity.png and .svg")
 
     # -------------------------------------------------------------
-    # FIGURE 5: Spaceflight Hardware Benchmark (GBC2 vs NASA OSDR)
+    # FIGURE 5: Spaceflight Hardware Benchmark (GBC1 vs NASA OSDR)
     # -------------------------------------------------------------
     fig, axes = plt.subplots(2, 2, figsize=(14, 11))
     
     # Data for bar comparisons
-    hw_labels = ['BRIC (µg)', 'CARA (µg)', 'Veggie (µg)', 'GBC2 (0.1 L/min)', 'GBC2 (0.5 L/min)', 'GBC2 (1.0 L/min)']
+    hw_labels = ['BRIC (µg)', 'CARA (µg)', 'Veggie (µg)', 'GBC1 (0.1 L/min)', 'GBC1 (0.5 L/min)', 'GBC1 (1.0 L/min)']
     c_fix = [1.0, 50.0, 99.3,
              float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.10', 'carbon_12h_pct_earth'].values[0]),
              float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.50', 'carbon_12h_pct_earth'].values[0]),
@@ -284,6 +284,8 @@ def run_advanced_pipeline():
     ax.grid(axis='y', alpha=0.3)
     
     plt.tight_layout()
+    plt.savefig('figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.png', dpi=200)
+    plt.savefig('figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.svg')
     plt.savefig('figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.png', dpi=200)
     plt.savefig('figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.svg')
     print("Saved Figure 5: figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.png and .svg")

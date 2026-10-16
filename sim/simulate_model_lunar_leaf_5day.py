@@ -1,6 +1,6 @@
 """
 Model Lunar LEAF: 5-Day Spaceflight Simulation & Multi-Physics Computational Engine.
-LEAF GBC2 Plant Growth Chamber (M09024F-MDL-5 Pot + M09025F-MDL-2 Lid).
+LEAF GBC1 Plant Growth Chamber (M09024F-MDL-5 Pot + M09025F-MDL-2 Lid).
 
 Modules:
   1. Initial Water Injection & Porous Foam Saturation with Nytex Mesh Barrier.
@@ -798,7 +798,7 @@ def generate_publication_figure_suite(data_foam, df_push_pull, df_ontogeny, df_e
 
 def main():
     print("============================================================================")
-    print("LEAF GBC2: 'Model Lunar LEAF' 5-Day Spaceflight Simulation & Analytics Suite")
+    print("LEAF GBC1: 'Model Lunar LEAF' 5-Day Spaceflight Simulation & Analytics Suite")
     print("============================================================================")
     
     # 1. Water Activation & Nytex Mesh Barrier
