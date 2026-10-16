@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LEAF GBC2 Interactive 3D Chamber & CFD Digital Twin</title>
+  <link rel="icon" type="image/png" href="assets/moon-64.png" />
+  <link rel="apple-touch-icon" href="assets/moon.png" />
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <!-- Three.js and OrbitControls: Local bundle with CDN fallback -->
   <script src="js/three.min.js"></script>
@@ -20,33 +22,33 @@
   </script>
   <style>
     :root {
-      --cose-bg: #0f172a;
-      --cose-panel-bg: rgba(15, 23, 42, 0.94);
-      --cose-panel-border: rgba(51, 65, 85, 0.85);
-      --cose-text-primary: #f8fafc;
-      --cose-text-secondary: #94a3b8;
-      --cose-brand-primary: #3B6EA5;
-      --cose-brand-accent: #3FB6A8;
-      --cose-card-bg: rgba(30, 41, 59, 0.75);
-      --cose-subcard-bg: rgba(15, 23, 42, 0.6);
+      --theme-bg: #0f172a;
+      --theme-panel-bg: rgba(15, 23, 42, 0.94);
+      --theme-panel-border: rgba(51, 65, 85, 0.85);
+      --theme-text-primary: #f8fafc;
+      --theme-text-secondary: #94a3b8;
+      --theme-brand-primary: #3B6EA5;
+      --theme-brand-accent: #3FB6A8;
+      --theme-card-bg: rgba(30, 41, 59, 0.75);
+      --theme-subcard-bg: rgba(15, 23, 42, 0.6);
       color-scheme: dark;
     }
     html.light, html[data-theme="light"] {
-      --cose-bg: #f8fafc;
-      --cose-panel-bg: rgba(255, 255, 255, 0.96);
-      --cose-panel-border: #e2e8f0;
-      --cose-text-primary: #0f172a;
-      --cose-text-secondary: #475569;
-      --cose-brand-primary: #3B6EA5;
-      --cose-brand-accent: #3FB6A8;
-      --cose-card-bg: #ffffff;
-      --cose-subcard-bg: #f1f5f9;
+      --theme-bg: #f8fafc;
+      --theme-panel-bg: rgba(255, 255, 255, 0.96);
+      --theme-panel-border: #e2e8f0;
+      --theme-text-primary: #0f172a;
+      --theme-text-secondary: #475569;
+      --theme-brand-primary: #3B6EA5;
+      --theme-brand-accent: #3FB6A8;
+      --theme-card-bg: #ffffff;
+      --theme-subcard-bg: #f1f5f9;
       color-scheme: light;
     }
     body {
       margin: 0;
-      background-color: var(--cose-bg);
-      color: var(--cose-text-primary);
+      background-color: var(--theme-bg);
+      color: var(--theme-text-primary);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       overflow-x: hidden;
       transition: background-color 0.25s ease, color 0.25s ease;
@@ -70,25 +72,25 @@
     html[data-theme="light"] .custom-scrollbar::-webkit-scrollbar-thumb {
       background: #cbd5e1;
     }
-    /* CoSE Theme Toggle Button */
-    .cose-theme-btn {
+    /* Theme Toggle Button */
+    .theme-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       width: 34px;
       height: 34px;
       border-radius: 8px;
-      border: 1px solid var(--cose-panel-border);
-      background: var(--cose-card-bg);
-      color: var(--cose-text-primary);
+      border: 1px solid var(--theme-panel-border);
+      background: var(--theme-card-bg);
+      color: var(--theme-text-primary);
       cursor: pointer;
       transition: all 0.2s ease;
     }
-    .cose-theme-btn:hover {
-      border-color: var(--cose-brand-accent);
+    .theme-btn:hover {
+      border-color: var(--theme-brand-accent);
       transform: translateY(-1px);
     }
-    .cose-theme-btn svg {
+    .theme-btn svg {
       width: 17px;
       height: 17px;
       stroke: currentColor;
@@ -99,7 +101,7 @@
     }
 
     /* =========================================================================
-       CoSE Light Theme Component Overrides for 3D Viewer
+       Light Theme Component Overrides for 3D Viewer
        ========================================================================= */
     html.light header, html[data-theme="light"] header {
       background-color: rgba(255, 255, 255, 0.94) !important;
@@ -290,8 +292,8 @@
       <span class="px-2.5 py-1 rounded-md bg-blue-500/20 text-blue-300 dark:text-blue-300 light:text-blue-600 border border-blue-500/30 font-medium">
         Lunar 0.166g / Earth 1.0g
       </span>
-      <!-- CoSE Theme Toggle Button -->
-      <button id="themeToggleBtn" class="cose-theme-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Theme">
+      <!-- Theme Toggle Button -->
+      <button id="themeToggleBtn" class="theme-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Theme">
         <!-- Sun icon (shown in dark mode) -->
         <svg id="sunIcon" class="block dark:block" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="5"></circle>
@@ -678,7 +680,7 @@
     let potEdgeMaterial = null;
 
     // -------------------------------------------------------------
-    // Theme Management (CoSE Design System Sync)
+    // Theme Management (Light/Dark Theme Sync)
     // -------------------------------------------------------------
     const themeToggleBtn = document.getElementById('themeToggleBtn');
     const sunIcon = document.getElementById('sunIcon');
@@ -729,14 +731,14 @@
         const nextTheme = isLight ? 'dark' : 'light';
         applyTheme(nextTheme);
         if (window.parent && window.parent !== window) {
-          window.parent.postMessage({ type: 'cose-theme-change', theme: nextTheme }, '*');
+          window.parent.postMessage({ type: 'theme-change', theme: nextTheme }, '*');
         }
       });
     }
 
     // Listen to parent frame message and storage events for synchronized theme switching
     window.addEventListener('message', (e) => {
-      if (e.data && e.data.type === 'cose-theme-change') {
+      if (e.data && e.data.type === 'theme-change' && e.data.theme) {
         applyTheme(e.data.theme);
       }
     });

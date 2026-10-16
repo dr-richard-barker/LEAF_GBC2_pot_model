@@ -134,7 +134,7 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 
 ```text
 LEAF_GBC2_pot_model/
-├── index.html                           # GitHub Pages Interactive Research Summary Portal (CoSE Theme)
+├── index.html                           # GitHub Pages Interactive Research Summary Portal (Dark/Light Theme)
 ├── viewer_3d.html                       # Interactive 3D WebGL Digital Twin (Three.js & OrbitControls)
 ├── MANUSCRIPT_LEAF_GBC2_CFD.md          # Complete Technical Manuscript (Methods, Results, Legends)
 ├── README.md                            # Project documentation & summary
