@@ -183,13 +183,14 @@
         </div>
       </div>
 
-      <!-- Flow Mode Selector & Continuous Flow Slider (Bottom Floating Panel) -->
-      <div class="absolute bottom-3 left-3 right-3 sm:right-auto sm:max-w-md z-10 bg-slate-900/95 dark:bg-slate-900/95 light:bg-white/95 backdrop-blur border border-slate-700/80 dark:border-slate-700/80 light:border-slate-300 rounded-xl p-3 shadow-2xl">
+      <!-- Flow Mode Selector, Direction, Ontogeny Scrubber & Continuous Flow Slider (Bottom Floating Panel) -->
+      <div class="absolute bottom-3 left-3 right-3 sm:right-auto sm:max-w-lg z-10 bg-slate-900/95 dark:bg-slate-900/95 light:bg-white/95 backdrop-blur border border-slate-700/80 dark:border-slate-700/80 light:border-slate-300 rounded-xl p-3 shadow-2xl">
+        <!-- Mode Badges -->
         <div class="flex items-center justify-between mb-2">
-          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Simulated Fluid Operating Mode</span>
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Fluid Operating Mode</span>
           <span id="activeModeLabel" class="text-xs font-mono font-bold text-sky-400">Earth 1g (0.50 L/min)</span>
         </div>
-        <div class="grid grid-cols-4 gap-1.5 mb-3">
+        <div class="grid grid-cols-4 gap-1.5 mb-2.5">
           <button id="modeEarth" class="px-2 py-1.5 text-[11px] font-medium rounded-lg border border-sky-500 bg-sky-500/25 text-sky-200 text-center transition">
             Earth 1g<br><span class="text-[10px] text-sky-300">0.50 L/min</span>
           </button>
@@ -202,6 +203,38 @@
           <button id="modeRNA" class="px-2 py-1.5 text-[11px] font-medium rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:border-purple-500 hover:bg-purple-500/15 text-center transition">
             RNAlater<br><span class="text-[10px] text-purple-400">10 mL/min</span>
           </button>
+        </div>
+
+        <!-- Push vs. Pull Aerodynamic Direction Toggle -->
+        <div class="pt-2 border-t border-slate-800 dark:border-slate-800 light:border-slate-200 mb-2">
+          <div class="flex items-center justify-between text-xs mb-1.5">
+            <span class="font-medium text-slate-300 dark:text-slate-300 light:text-slate-700">Aerodynamic Flow Direction:</span>
+            <span id="gaugePLabel" class="font-mono font-bold text-sky-400 text-xs">+2.8 Pa (Push Containment)</span>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5">
+            <button id="dirPushBtn" class="py-1 px-2 text-[11px] font-bold rounded-lg border border-sky-500 bg-sky-500/25 text-sky-200 text-center transition">
+              ➔ Push Mode (Port 1 Jet)
+            </button>
+            <button id="dirPullBtn" class="py-1 px-2 text-[11px] font-bold rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-emerald-500 hover:text-emerald-300 text-center transition">
+              ➔ Pull Mode (Port 2 Suction)
+            </button>
+          </div>
+        </div>
+
+        <!-- 5-Day Developmental Ontogeny Scrubber -->
+        <div class="pt-2 border-t border-slate-800 dark:border-slate-800 light:border-slate-200 mb-2">
+          <div class="flex justify-between items-center text-xs mb-1">
+            <span class="font-medium text-slate-300 dark:text-slate-300 light:text-slate-700">Mission Growth Ontogeny (0-5 Days):</span>
+            <span id="dayLabel" class="font-mono font-bold text-emerald-400 text-xs">Day 5.0 (Full Seedling Lawn)</span>
+          </div>
+          <input type="range" id="daySlider" min="0.0" max="5.0" step="0.1" value="5.0"
+                 class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+          <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
+            <span>Day 0 (Seeds)</span>
+            <span>Day 1 (Radicle)</span>
+            <span>Day 2 (Cotyledon)</span>
+            <span>Day 5 (Seedlings)</span>
+          </div>
         </div>
 
         <!-- Continuous Flow Rate Slider -->
@@ -242,7 +275,7 @@
               <span class="text-xs font-bold text-emerald-400">CHAMBER 1 (32 Seeds)</span>
               <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-medium">Brassica rapa</span>
             </div>
-            <p class="text-[11px] text-slate-300 dark:text-slate-300 light:text-slate-600 mt-1">Tall canopy (h = 11.4 mm, Y = 14.6–26 mm) · 8×4 lattice · Area: ~64 cm²</p>
+            <p class="text-[11px] text-slate-300 dark:text-slate-300 light:text-slate-600 mt-1" id="c1_desc">Tall canopy (h = 11.4 mm, Y = 14.6–26 mm) · 8×4 lattice · Area: ~64 cm²</p>
             <div class="mt-1.5 grid grid-cols-2 gap-1.5 text-[11px] text-slate-400 bg-slate-950/60 dark:bg-slate-950/60 light:bg-white p-1.5 rounded">
               <div>A_net: <span class="text-emerald-400 font-mono font-bold" id="c1_A">13.41</span> μmol/m²s</div>
               <div>ΔCO₂: <span class="text-sky-400 font-mono" id="c1_co2">-3.14</span> ppm</div>
@@ -255,7 +288,7 @@
               <span class="text-xs font-bold text-sky-400">CHAMBER 2 (100 Seeds)</span>
               <span class="text-[10px] px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 font-medium">Arabidopsis thaliana</span>
             </div>
-            <p class="text-[11px] text-slate-300 dark:text-slate-300 light:text-slate-600 mt-1">Rosette lawn (h = 4.9 mm, 10×10 grid) · 14.2 mm open plenum above (Y = 19.5–33.7 mm)</p>
+            <p class="text-[11px] text-slate-300 dark:text-slate-300 light:text-slate-600 mt-1" id="c2_desc">Rosette lawn (h = 4.9 mm, 10×10 grid) · 14.2 mm open plenum above (Y = 19.5–33.7 mm)</p>
             <div class="mt-1.5 grid grid-cols-2 gap-1.5 text-[11px] text-slate-400 bg-slate-950/60 dark:bg-slate-950/60 light:bg-white p-1.5 rounded">
               <div>A_net: <span class="text-sky-400 font-mono font-bold" id="c2_A">9.52</span> μmol/m²s</div>
               <div>ΔCO₂: <span class="text-sky-400 font-mono" id="c2_co2">-1.09</span> ppm</div>
@@ -268,7 +301,7 @@
               <span class="text-xs font-bold text-emerald-400">CHAMBER 3 (32 Seeds)</span>
               <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-medium">Brassica rapa</span>
             </div>
-            <p class="text-[11px] text-slate-300 dark:text-slate-300 light:text-slate-600 mt-1">Tall canopy (h = 11.4 mm, 8×4 lattice) · Contains Port 3 Dipping Injection Nozzle</p>
+            <p class="text-[11px] text-slate-300 dark:text-slate-300 light:text-slate-600 mt-1" id="c3_desc">Tall canopy (h = 11.4 mm, 8×4 lattice) · Contains Port 3 Dipping Injection Nozzle</p>
             <div class="mt-1.5 grid grid-cols-2 gap-1.5 text-[11px] text-slate-400 bg-slate-950/60 dark:bg-slate-950/60 light:bg-white p-1.5 rounded">
               <div>A_net: <span class="text-emerald-400 font-mono font-bold" id="c3_A">13.43</span> μmol/m²s</div>
               <div>ΔCO₂: <span class="text-sky-400 font-mono" id="c3_co2">-3.12</span> ppm</div>
@@ -277,38 +310,38 @@
         </div>
       </div>
 
-      <!-- Section 2: Porous Media Capillarity & Substrate Telemetry -->
+      <!-- Section 2: Porous Foam & Nytex Mesh Barrier Capillarity -->
       <div class="p-4 border-b border-slate-800 dark:border-slate-800 light:border-slate-200">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center justify-between">
-          <span>Porous Substrate Capillarity</span>
+          <span>Porous Foam &amp; Nytex Mesh</span>
           <span class="text-amber-400 font-semibold">3-Part Cassettes</span>
         </h2>
         <div class="bg-slate-900/80 dark:bg-slate-900/80 light:bg-slate-50 p-2.5 rounded-lg border border-slate-800 dark:border-slate-800 light:border-slate-200 text-xs space-y-1.5">
           <div class="flex justify-between">
-            <span class="text-slate-400">Cassette Height:</span>
+            <span class="text-slate-400">Foam Cassette Height:</span>
             <span class="font-mono text-slate-200 dark:text-slate-200 light:text-slate-800">7.0 mm (Y = 7.62–14.62 mm)</span>
           </div>
           <div class="flex justify-between">
-            <span class="text-slate-400">Lunar Water Content θ_w:</span>
-            <span class="font-mono text-emerald-400 font-bold" id="val_theta_w">0.314 m³/m³</span>
+            <span class="text-slate-400">Water Activation Volume:</span>
+            <span class="font-mono text-emerald-400 font-bold" id="val_act_vol">7.39 mL (100% Saturation)</span>
           </div>
           <div class="flex justify-between">
-            <span class="text-slate-400">Air-Filled Porosity ε_air:</span>
-            <span class="font-mono text-sky-400 font-bold" id="val_eps_air">0.266 m³/m³ (Safe &gt; 0.15)</span>
+            <span class="text-slate-400">Nytex Mesh Root Barrier:</span>
+            <span class="font-mono text-sky-400 font-bold">35 µm monofilament (8.04 kPa)</span>
           </div>
           <div class="flex justify-between">
-            <span class="text-slate-400">O₂ Effective Diffusivity:</span>
-            <span class="font-mono text-purple-300" id="val_deff">7.35 × 10⁻⁷ m²/s</span>
+            <span class="text-slate-400">Root Exclusion Margin:</span>
+            <span class="font-mono text-emerald-400 font-bold">100% (35 µm &lt;&lt; 90–320 µm)</span>
           </div>
           <div class="text-[10px] text-emerald-400 font-medium pt-1 border-t border-slate-800">
-            ✓ Lower Aeration Wells (Y = 0–7.62 mm) prevent water stagnation
+            ✓ Capillary wick maintains seedbed moisture without free droplet detachment
           </div>
         </div>
       </div>
 
       <!-- Section 3: Live CFD, Aerodynamics & Condensation Margin -->
       <div class="p-4 border-b border-slate-800 dark:border-slate-800 light:border-slate-200">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">CFD & Condensation Telemetry</h2>
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">CFD &amp; Condensation Telemetry</h2>
         <div class="grid grid-cols-2 gap-2 text-xs">
           <div class="bg-slate-900/80 dark:bg-slate-900/80 light:bg-slate-50 p-2 rounded-lg border border-slate-800">
             <div class="text-slate-400 text-[10px]">Chamber Residence Time τ</div>
@@ -333,17 +366,63 @@
         </div>
       </div>
 
-      <!-- Section 4: 3D Render Layer Toggles -->
+      <!-- Section 4: Environmental Gravity & Temperature Controls -->
+      <div class="p-4 border-b border-slate-800 dark:border-slate-800 light:border-slate-200">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Environmental Multi-Physics</h2>
+        
+        <!-- Gravity Slider -->
+        <div class="mb-3">
+          <div class="flex justify-between items-center text-xs mb-1">
+            <span class="text-slate-300 dark:text-slate-300 light:text-slate-700">Gravity Level:</span>
+            <span id="gravLabel" class="font-mono font-bold text-sky-400">Earth 1.00g (9.81 m/s²)</span>
+          </div>
+          <input type="range" id="gravSlider" min="0.0" max="1.0" step="0.01" value="1.0"
+                 class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sky-500">
+          <div class="flex justify-between text-[10px] text-slate-400 mt-0.5 font-mono">
+            <span>0g (µg)</span>
+            <span>0.166g (Moon)</span>
+            <span>0.38g (Mars)</span>
+            <span>1.0g (Earth)</span>
+          </div>
+        </div>
+
+        <!-- Temperature Slider -->
+        <div class="mb-2">
+          <div class="flex justify-between items-center text-xs mb-1">
+            <span class="text-slate-300 dark:text-slate-300 light:text-slate-700">Chamber Air Temperature:</span>
+            <span id="tempLabel" class="font-mono font-bold text-emerald-400">22.0 °C</span>
+          </div>
+          <input type="range" id="tempSlider" min="18.0" max="30.0" step="0.5" value="22.0"
+                 class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+          <div class="flex justify-between text-[10px] text-slate-400 mt-0.5 font-mono">
+            <span>18 °C (Cool)</span>
+            <span>22 °C (Nominal)</span>
+            <span>26 °C</span>
+            <span>30 °C (Warm)</span>
+          </div>
+        </div>
+
+        <div class="text-[11px] text-slate-400 bg-slate-900/60 dark:bg-slate-900/60 light:bg-slate-100 p-2 rounded flex justify-between mt-2">
+          <span>Richardson Regime:</span>
+          <span id="riLabel" class="font-mono font-bold text-sky-400">Ri = 0.04 (Forced Convection)</span>
+        </div>
+      </div>
+
+      <!-- Section 5: 3D Render Layer Toggles -->
       <div class="p-4 flex-1">
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">3D Render Component Toggles</h2>
         <div class="space-y-1.5 text-xs">
           <label class="flex items-center gap-2 cursor-pointer text-slate-300 dark:text-slate-300 light:text-slate-700">
             <input type="checkbox" id="chkHousing" checked class="rounded bg-slate-800 border-slate-700 text-emerald-500">
-            <span>Pot Housing & Acrylic Optical Lid</span>
+            <span>Pot Housing &amp; Acrylic Optical Lid</span>
           </label>
           <label class="flex items-center gap-2 cursor-pointer text-slate-300 dark:text-slate-300 light:text-slate-700">
             <input type="checkbox" id="chkSubstrate" checked class="rounded bg-slate-800 border-slate-700 text-emerald-500">
-            <span>3-Part Porous Substrates (Y = 7.62–14.62 mm)</span>
+            <span>3-Part Porous Foam Blocks (Y = 7.62–14.62 mm)</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-slate-300 dark:text-slate-300 light:text-slate-700">
+            <input type="checkbox" id="chkNytex" checked class="rounded bg-slate-800 border-slate-700 text-emerald-500">
+            <span>Nytex Mesh Root Barrier (35 µm monofilament)</span>
           </label>
           <label class="flex items-center gap-2 cursor-pointer text-slate-300 dark:text-slate-300 light:text-slate-700">
             <input type="checkbox" id="chkPlants" checked class="rounded bg-slate-800 border-slate-700 text-emerald-500">
@@ -359,7 +438,7 @@
           </label>
           <label class="flex items-center gap-2 cursor-pointer text-slate-300 dark:text-slate-300 light:text-slate-700">
             <input type="checkbox" id="chkAeration" checked class="rounded bg-slate-800 border-slate-700 text-emerald-500">
-            <span>Lower Aeration & Drainage Wells (Y = 0–7.62 mm)</span>
+            <span>Lower Aeration &amp; Drainage Wells (Y = 0–7.62 mm)</span>
           </label>
         </div>
       </div>
@@ -491,6 +570,7 @@
     const groups = {
       housing: new THREE.Group(),
       substrate: new THREE.Group(),
+      nytex: new THREE.Group(),
       plants: new THREE.Group(),
       streamlines: new THREE.Group(),
       nozzle: new THREE.Group(),
@@ -583,6 +663,36 @@
       groups.substrate.add(sEdge);
     });
 
+    // 3b. Nytex Monofilament Mesh Root Barrier (35 µm pore size, 8.04 kPa bubble point)
+    // Positioned immediately over the top face of the porous foam at Y = 14.62–14.77 mm
+    // Excludes plant roots from entering foam pores while providing uniform capillary moisture transport
+    const nytexMat = new THREE.MeshStandardMaterial({
+      color: 0x38bdf8,
+      transparent: true,
+      opacity: 0.65,
+      roughness: 0.3,
+      metalness: 0.1,
+      wireframe: true
+    });
+    const nytexSolidMat = new THREE.MeshStandardMaterial({
+      color: 0x0284c7,
+      transparent: true,
+      opacity: 0.35,
+      roughness: 0.6,
+      metalness: 0.05
+    });
+
+    subConfigs.forEach(cfg => {
+      const nGeo = new THREE.BoxGeometry(32.3, 0.15, cfg.zLen);
+      const nMesh = new THREE.Mesh(nGeo, nytexSolidMat);
+      nMesh.position.set(5.15, 14.695, cfg.zCenter);
+      groups.nytex.add(nMesh);
+
+      const nWire = new THREE.Mesh(nGeo, nytexMat);
+      nWire.position.copy(nMesh.position);
+      groups.nytex.add(nWire);
+    });
+
     // 4. Fluid Ports & Dipping Injection Nozzle
     // Port 1 (Air In, Z = -21.6), Port 2 (Exhaust, Z = 0), Port 3 (Water/RNA, Z = +21.6)
     const portGeo = new THREE.CylinderGeometry(1.6, 1.6, 7.0, 16);
@@ -612,16 +722,24 @@
     tipMesh.position.set(-15.49, 9.5, 21.59);
     groups.nozzle.add(tipMesh);
 
-    // 5. Individual Plant Models (164 Total Seeds)
-    // Instanced/Compound Meshes for High Performance & Detail
+    // 5. Individual Plant Models (164 Total Seeds across 3 Chambers)
+    // Instanced/Compound Meshes with full 5-day developmental ontogeny scaling
     const stemMat = new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.6 });
     const leafMat = new THREE.MeshStandardMaterial({ color: 0x34d399, roughness: 0.4, side: THREE.DoubleSide });
     const arabLeafMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.5, side: THREE.DoubleSide });
+    const seedMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.85 });
 
-    // Helper: Build a Brassica rapa plant (h = 11.4 mm, reaching Y = 26.0 mm)
+    const plantInstances = [];
+
+    // Helper: Build a Brassica rapa plant (mature h = 11.4 mm, reaching Y = 26.0 mm)
     function createBrapaPlant(x, z) {
       const pGroup = new THREE.Group();
-      pGroup.position.set(x, 14.62, z);
+      pGroup.position.set(x, 14.77, z);
+
+      // Seed / radicle base
+      const seed = new THREE.Mesh(new THREE.SphereGeometry(0.45, 6, 6), seedMat);
+      seed.position.y = 0.22;
+      pGroup.add(seed);
 
       // Main Stem (Cylinder: h = 8.5 mm)
       const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.45, 8.5, 6), stemMat);
@@ -629,6 +747,7 @@
       pGroup.add(stem);
 
       // Leaves (4 broad leaves angled outward)
+      const leaves = [];
       for (let i = 0; i < 4; i++) {
         const leaf = new THREE.Mesh(new THREE.ConeGeometry(1.6, 3.8, 5), leafMat);
         const angle = (i * Math.PI) / 2 + Math.PI / 4;
@@ -637,14 +756,31 @@
         leaf.rotation.z = -Math.cos(angle) * 0.8;
         leaf.scale.set(1.2, 0.25, 1.0);
         pGroup.add(leaf);
+        leaves.push(leaf);
       }
+
+      plantInstances.push({
+        group: pGroup,
+        species: 'brapa',
+        stem: stem,
+        leaves: leaves,
+        seed: seed,
+        baseH: 11.4,
+        x: x,
+        z: z
+      });
       return pGroup;
     }
 
-    // Helper: Build an Arabidopsis thaliana rosette (h = 4.9 mm, reaching Y = 19.5 mm)
+    // Helper: Build an Arabidopsis thaliana rosette (mature h = 4.9 mm, reaching Y = 19.5 mm)
     function createArabidopsisPlant(x, z) {
       const pGroup = new THREE.Group();
-      pGroup.position.set(x, 14.62, z);
+      pGroup.position.set(x, 14.77, z);
+
+      // Miniature seed dot
+      const seed = new THREE.Mesh(new THREE.SphereGeometry(0.25, 5, 5), seedMat);
+      seed.position.y = 0.15;
+      pGroup.add(seed);
 
       // Miniature center core
       const core = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.25, 2.0, 5), stemMat);
@@ -652,6 +788,7 @@
       pGroup.add(core);
 
       // Rosette Leaves (5 small radiating flat oval leaves close to ground)
+      const leaves = [];
       for (let i = 0; i < 5; i++) {
         const leaf = new THREE.Mesh(new THREE.ConeGeometry(0.85, 1.8, 5), arabLeafMat);
         const angle = (i * 2 * Math.PI) / 5;
@@ -660,7 +797,19 @@
         leaf.rotation.z = -Math.cos(angle) * 1.1;
         leaf.scale.set(1.0, 0.15, 0.7);
         pGroup.add(leaf);
+        leaves.push(leaf);
       }
+
+      plantInstances.push({
+        group: pGroup,
+        species: 'arabidopsis',
+        stem: core,
+        leaves: leaves,
+        seed: seed,
+        baseH: 4.9,
+        x: x,
+        z: z
+      });
       return pGroup;
     }
 
@@ -734,54 +883,212 @@
     groups.liquid.add(liquidMesh);
 
     // -------------------------------------------------------------
-    // Dynamic Fluid & Biophysics Simulation State
+    // Dynamic Multi-Physics & Biophysics Simulation State
     // -------------------------------------------------------------
     let currentFlowQ = 0.50; // L/min
+    let currentFlowDir = 'push'; // 'push' or 'pull'
+    let currentDay = 5.0; // 0.0 to 5.0 days
+    let currentGravity = 1.0; // 0.0 to 1.0 g
+    let currentTemp = 22.0; // 18.0 to 30.0 °C
     let currentMode = 'earth';
     let autoRotate = false;
     let liquidFillLevel = 0.0; // 0 to 1
+
+    // Ontogeny Height Formulations (5-Day Developmental Timeline)
+    function getBrapaHeight(tHours) {
+      if (tHours < 18.0) return 0.50; // Dormant/imbibing seed (0.5 mm)
+      // Logistic sigmoidal vegetative growth reaching 11.26 mm at 120h
+      return 0.50 + 10.76 / (1.0 + Math.exp(-0.075 * (tHours - 62.0)));
+    }
+
+    function getArabidopsisHeight(tHours) {
+      if (tHours < 22.0) return 0.30; // Dormant/imbibing seed (0.3 mm)
+      // Compact rosette expansion reaching 4.75 mm at 120h
+      return 0.30 + 4.45 / (1.0 + Math.exp(-0.080 * (tHours - 66.0)));
+    }
+
+    // 5-Day Developmental Ontogeny Update
+    function updateOntogeny(day) {
+      currentDay = day;
+      const tHours = day * 24.0;
+      const hBrapa = getBrapaHeight(tHours);
+      const hArab = getArabidopsisHeight(tHours);
+
+      // Scale factors normalized to Day 5 full seedling canopy (11.4 mm / 4.9 mm)
+      const sBrapaH = Math.max(0.04, hBrapa / 11.4);
+      const sBrapaW = Math.max(0.08, Math.min(1.0, 0.12 + 0.88 * Math.pow(day / 5.0, 1.4)));
+
+      const sArabH = Math.max(0.05, hArab / 4.9);
+      const sArabW = Math.max(0.10, Math.min(1.0, 0.15 + 0.85 * Math.pow(day / 5.0, 1.3)));
+
+      plantInstances.forEach(inst => {
+        if (inst.species === 'brapa') {
+          inst.group.scale.set(sBrapaW, sBrapaH, sBrapaW);
+          inst.stem.visible = (tHours >= 16.0);
+          inst.leaves.forEach(l => l.visible = (tHours >= 24.0));
+        } else {
+          inst.group.scale.set(sArabW, sArabH, sArabW);
+          inst.stem.visible = (tHours >= 20.0);
+          inst.leaves.forEach(l => l.visible = (tHours >= 28.0));
+        }
+      });
+
+      // Update Ontogeny Label
+      const dayLabel = document.getElementById('dayLabel');
+      let statusText = 'Full Seedling Canopy';
+      if (day === 0) statusText = 'Water Activation / Imbibition';
+      else if (day < 1.0) statusText = 'Germination & Radicle';
+      else if (day < 2.0) statusText = 'Cotyledon Emergence';
+      else if (day < 3.0) statusText = 'Autotrophic Crossover';
+      else if (day < 4.5) statusText = 'Canopy Expansion';
+      dayLabel.innerText = 'Day ' + day.toFixed(1) + ' (' + tHours.toFixed(0) + 'h): ' + statusText;
+
+      // Update Chamber Spec Descriptions
+      const c1Desc = document.getElementById('c1_desc');
+      const c2Desc = document.getElementById('c2_desc');
+      const c3Desc = document.getElementById('c3_desc');
+      if (c1Desc) c1Desc.innerText = 'Tall canopy (h = ' + hBrapa.toFixed(1) + ' mm, Y = 14.8–' + (14.8 + hBrapa).toFixed(1) + ' mm) · 8×4 lattice · 32 plants';
+      if (c2Desc) {
+        const clearPlenum = Math.max(0, 33.67 - 14.77 - hArab);
+        c2Desc.innerText = 'Rosette lawn (h = ' + hArab.toFixed(1) + ' mm) · ' + clearPlenum.toFixed(1) + ' mm open plenum above (Y = ' + (14.8 + hArab).toFixed(1) + '–33.7 mm)';
+      }
+      if (c3Desc) c3Desc.innerText = 'Tall canopy (h = ' + hBrapa.toFixed(1) + ' mm, 8×4 lattice) · Contains Port 3 Dipping Injection Nozzle';
+
+      updateBiophysicsTelemetry(currentFlowQ);
+    }
+
+    // Aerodynamic Direction Toggle (Push vs Pull)
+    function setFlowDirection(dir) {
+      currentFlowDir = dir;
+      const pushBtn = document.getElementById('dirPushBtn');
+      const pullBtn = document.getElementById('dirPullBtn');
+
+      if (dir === 'push') {
+        pushBtn.className = 'py-1 px-2 text-[11px] font-bold rounded-lg border border-sky-500 bg-sky-500/25 text-sky-200 text-center transition';
+        pullBtn.className = 'py-1 px-2 text-[11px] font-bold rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-emerald-500 hover:text-emerald-300 text-center transition';
+      } else {
+        pullBtn.className = 'py-1 px-2 text-[11px] font-bold rounded-lg border border-emerald-500 bg-emerald-500/25 text-emerald-200 text-center transition';
+        pushBtn.className = 'py-1 px-2 text-[11px] font-bold rounded-lg border border-slate-700 bg-slate-800 text-slate-400 hover:border-sky-500 hover:text-sky-300 text-center transition';
+      }
+
+      updateBiophysicsTelemetry(currentFlowQ);
+    }
+
+    // Environmental Gravity Update
+    function updateGravity(g) {
+      currentGravity = g;
+      const gravLabel = document.getElementById('gravLabel');
+      let gName = 'Earth';
+      if (g < 0.03) gName = 'Microgravity (0g)';
+      else if (g < 0.25) gName = 'Lunar (0.166g)';
+      else if (g < 0.50) gName = 'Martian (0.38g)';
+      else gName = 'Earth (1.00g)';
+
+      gravLabel.innerText = gName + ' ' + g.toFixed(2) + 'g (' + (g * 9.81).toFixed(2) + ' m/s²)';
+      updateBiophysicsTelemetry(currentFlowQ);
+    }
+
+    // Environmental Temperature Update
+    function updateTemperature(T) {
+      currentTemp = T;
+      const tempLabel = document.getElementById('tempLabel');
+      tempLabel.innerText = T.toFixed(1) + ' °C';
+      updateBiophysicsTelemetry(currentFlowQ);
+    }
 
     function updateBiophysicsTelemetry(Q) {
       currentFlowQ = Q;
       document.getElementById('sliderValue').innerText = Q.toFixed(2) + ' L/min';
 
-      // 1. Flush time tau = V / Q
-      const V_L = 0.0647; // 64.7 cm^3
+      // 1. Flush time tau = V / Q (V = 64.7 mL)
+      const V_L = 0.0647;
       const tau = (V_L / (Q / 60.0));
       document.getElementById('val_tau').innerText = tau.toFixed(2) + ' s';
 
-      // 2. Boundary layer resistance rb ~ 125 * Q^-0.5
-      const rb = 125.0 * Math.pow(Math.max(Q, 0.05), -0.5);
+      // 2. Canopy Drag and Chamber Differential Gauge Pressure
+      const canopyDragScale = 1.0 + 0.35 * (currentDay / 5.0);
+      let gaugeP = 0.0;
+      const gaugePLabel = document.getElementById('gaugePLabel');
+
+      if (currentFlowDir === 'push') {
+        gaugeP = 2.82 * Math.pow(Q / 0.50, 1.85) * canopyDragScale;
+        gaugePLabel.innerText = '+' + gaugeP.toFixed(1) + ' Pa (Push Overpressure)';
+        gaugePLabel.className = 'font-mono font-bold text-sky-400 text-xs';
+      } else {
+        gaugeP = -2.35 * Math.pow(Q / 0.50, 1.85) * canopyDragScale;
+        gaugePLabel.innerText = gaugeP.toFixed(1) + ' Pa (Suction / Safe Bio-Containment)';
+        gaugePLabel.className = 'font-mono font-bold text-emerald-400 text-xs';
+      }
+
+      // 3. Richardson Number Ri = Gr / Re^2 (Natural vs. Forced Convection)
+      const beta = 1.0 / (currentTemp + 273.15);
+      const deltaT = Math.abs(currentTemp - 20.0) + 1.2;
+      const L_char = 0.015; // 15 mm characteristic length
+      const v_char = Math.max(0.005, 0.045 * (Q / 0.50));
+      const g_accel = currentGravity * 9.81;
+      const ri = (g_accel * beta * deltaT * L_char) / Math.pow(v_char, 2);
+
+      const riLabel = document.getElementById('riLabel');
+      let regimeStr = 'Forced Convection';
+      if (ri < 0.1) regimeStr = 'Forced Convection (Ventilation Dominant)';
+      else if (ri < 1.0) regimeStr = 'Mixed Convection (Transitional)';
+      else regimeStr = 'Free Convection (Buoyancy Dominant)';
+      riLabel.innerText = 'Ri = ' + ri.toFixed(4) + ' (' + regimeStr + ')';
+
+      // 4. Boundary layer resistance rb ~ 125 * Q^-0.5 with microgravity buoyancy correction
+      const gFactor = Math.pow(Math.max(0.08, currentGravity), 0.10);
+      const rb = (125.0 / gFactor) * Math.pow(Math.max(Q, 0.05), -0.5);
       document.getElementById('val_rb').innerText = rb.toFixed(1) + ' s/m';
 
-      // 3. Canopy Assimilation A_net (FvCB scaling)
+      // 5. Canopy Net Assimilation A_net across developmental timeline
+      // Transitions from respiration (-0.8 umol/m2s) at Day 1 to autotrophy (+13.4) at Day 5
       const gb_rel = Math.sqrt(Q / 0.50);
-      const c1_A = Math.min(14.8, 13.41 * (0.75 + 0.25 * gb_rel));
-      const c2_A = Math.min(10.5, 9.52 * (0.78 + 0.22 * gb_rel));
-      const c3_A = Math.min(14.8, 13.43 * (0.75 + 0.25 * gb_rel));
+      let ontogenyScale = 0.0;
+      if (currentDay < 1.0) {
+        ontogenyScale = -0.06; // Imbibition respiration
+      } else if (currentDay < 2.0) {
+        ontogenyScale = -0.08 * (2.0 - currentDay); // Peak germination respiration
+      } else {
+        ontogenyScale = Math.min(1.0, (currentDay - 2.0) / 3.0); // Autotrophic photosynthesis
+      }
+
+      const c1_A = ontogenyScale < 0 ? (ontogenyScale * 10.0) : Math.min(14.8, 13.41 * ontogenyScale * (0.75 + 0.25 * gb_rel));
+      const c2_A = ontogenyScale < 0 ? (ontogenyScale * 7.5) : Math.min(10.5, 9.52 * ontogenyScale * (0.78 + 0.22 * gb_rel));
+      const c3_A = ontogenyScale < 0 ? (ontogenyScale * 10.0) : Math.min(14.8, 13.43 * ontogenyScale * (0.75 + 0.25 * gb_rel));
+
       document.getElementById('c1_A').innerText = c1_A.toFixed(2);
       document.getElementById('c2_A').innerText = c2_A.toFixed(2);
       document.getElementById('c3_A').innerText = c3_A.toFixed(2);
 
-      // CO2 Drawdown
-      document.getElementById('c1_co2').innerText = (-3.14 * (0.50 / Math.max(Q, 0.1))).toFixed(2);
-      document.getElementById('c2_co2').innerText = (-1.09 * (0.50 / Math.max(Q, 0.1))).toFixed(2);
-      document.getElementById('c3_co2').innerText = (-3.12 * (0.50 / Math.max(Q, 0.1))).toFixed(2);
+      // CO2 Drawdown (negative means depletion, positive means respiration enrichment)
+      const co2Mult = (0.50 / Math.max(Q, 0.1));
+      document.getElementById('c1_co2').innerText = (-c1_A * 0.234 * co2Mult).toFixed(2);
+      document.getElementById('c2_co2').innerText = (-c2_A * 0.114 * co2Mult).toFixed(2);
+      document.getElementById('c3_co2').innerText = (-c3_A * 0.233 * co2Mult).toFixed(2);
 
-      // 4. Optical Lid Condensation Margin
-      // At low Q (< 0.15), RH builds up, T_dew rises, dT_margin becomes negative (condensation)
-      const rh = Math.min(99.0, 60.0 + 15.5 / Math.max(Q, 0.08));
-      const t_dew = 14.0 + (rh - 60.0) * 0.21;
-      const t_lid = 21.6 - (0.65 - 0.15 * Math.exp(-Q / 0.30));
+      // 6. Optical Lid Condensation Margin ΔT = T_lid - T_dew
+      // Transpiration increases with Day^2 as leaf canopy develops
+      const canopyTranspFactor = Math.pow(currentDay / 5.0, 1.8);
+      const rh_evap = 58.0 + 12.0 / Math.max(Q, 0.10);
+      const rh_transp = 18.0 * canopyTranspFactor / Math.max(Q, 0.12);
+      const rh = Math.min(99.0, Math.max(45.0, rh_evap + rh_transp));
+
+      // Magnus-Tetens dew point approximation
+      const a = 17.27, b = 237.7;
+      const alpha = ((a * currentTemp) / (b + currentTemp)) + Math.log(rh / 100.0);
+      const t_dew = (b * alpha) / (a - alpha);
+
+      // Optical lid heats slightly due to ambient chamber illumination / air heat exchange
+      const t_lid = currentTemp - (0.65 - 0.18 * Math.exp(-Q / 0.35));
       const margin = t_lid - t_dew;
 
-      document.getElementById('val_tdew').innerText = t_dew.toFixed(2) + ' °C';
+      document.getElementById('val_tdew').innerText = t_dew.toFixed(2) + ' °C (RH ' + rh.toFixed(0) + '%)';
       const marginEl = document.getElementById('val_margin');
-      if (margin > 0) {
+      if (margin > 0.0) {
         marginEl.innerText = '+' + margin.toFixed(2) + ' °C (Clear)';
         marginEl.className = 'text-xs font-mono font-bold text-emerald-400 mt-0.5';
       } else {
-        marginEl.innerText = margin.toFixed(2) + ' °C (FOGGING)';
+        marginEl.innerText = margin.toFixed(2) + ' °C (CONDENSATION RISK)';
         marginEl.className = 'text-xs font-mono font-bold text-rose-500 mt-0.5 animate-pulse';
       }
     }
@@ -825,24 +1132,21 @@
             particlePositions[i * 3 + 2] = pz;
 
             colorPurple.toArray(particleColors, i * 3);
-          } else {
-            // Aerodynamic "Dip-and-Converge" Flow
-            // Stage 1 (t = 0 to 0.35): Enters Port 1, flows through Chamber 1 skimming canopy (Y = 28 to 26)
-            // Stage 2 (t = 0.35 to 0.70): Dips down into Chamber 2 plenum above Arabidopsis (Y = 22 to 24, Z -> 0)
-            // Stage 3 (t = 0.70 to 1.0): Converges toward Port 2 exhaust [-15.5, 33.7, 0.0]
+          } else if (currentFlowDir === 'push') {
+            // Push Mode: Port 1 forced jet -> Chamber 1 skimming -> dipping into Chamber 2 plenum -> exhaust Port 2
             let px, py, pz;
             let c = colorBlue;
 
             if (t < 0.35) {
               const u = t / 0.35;
               px = -15.49 + u * (20.0 + p.lateralOffset);
-              py = 33.67 - u * 6.5; // skimming over tall B. rapa (h = 11.4 mm)
+              py = 33.67 - u * 6.5; // skimming over tall B. rapa canopy
               pz = -21.59 + u * 12.0;
               c = colorCyan;
             } else if (t < 0.70) {
               const u = (t - 0.35) / 0.35;
               px = 4.5 + (1.0 - u) * p.lateralOffset;
-              py = 27.17 - u * 5.5; // dipping into open plenum above rosette lawn (Y = 19.5 - 24 mm)
+              py = 27.17 - u * 5.5; // dipping into open plenum above rosette lawn
               pz = -9.59 + u * 10.0;
               c = colorEmerald;
             } else {
@@ -856,7 +1160,37 @@
             particlePositions[i * 3] = px;
             particlePositions[i * 3 + 1] = py;
             particlePositions[i * 3 + 2] = pz;
+            c.toArray(particleColors, i * 3);
+          } else {
+            // Pull Mode: Active suction sink at Port 2 [-15.5, 33.7, 0.0]
+            // Air enters gently from Port 1 and chamber perimeter, smoothly converging into Port 2
+            let px, py, pz;
+            let c = colorEmerald;
 
+            if (t < 0.45) {
+              const u = t / 0.45;
+              // Convergence towards central plenum
+              px = -12.0 + u * (16.0 + p.lateralOffset * 0.5);
+              py = 30.0 - u * 5.0;
+              pz = -21.59 + u * 18.0;
+              c = colorCyan;
+            } else if (t < 0.80) {
+              const u = (t - 0.45) / 0.35;
+              px = 4.0 - u * 10.0;
+              py = 25.0 + u * 4.0;
+              pz = -3.59 + u * 3.5;
+              c = colorEmerald;
+            } else {
+              const u = (t - 0.80) / 0.20;
+              px = -6.0 - u * 9.49;
+              py = 29.0 + u * 4.67;
+              pz = -0.09 - u * 0.0;
+              c = colorBlue;
+            }
+
+            particlePositions[i * 3] = px;
+            particlePositions[i * 3 + 1] = py;
+            particlePositions[i * 3 + 2] = pz;
             c.toArray(particleColors, i * 3);
           }
         }
@@ -899,13 +1233,35 @@
     }
 
     // -------------------------------------------------------------
-    // UI Controls & Mode Buttons
+    // UI Controls & Mode Buttons Wiring
     // -------------------------------------------------------------
     const slider = document.getElementById('flowSlider');
     slider.addEventListener('input', (e) => {
       updateBiophysicsTelemetry(parseFloat(e.target.value));
     });
 
+    // Aerodynamic Push vs Pull Buttons
+    document.getElementById('dirPushBtn').onclick = () => setFlowDirection('push');
+    document.getElementById('dirPullBtn').onclick = () => setFlowDirection('pull');
+
+    // 5-Day Developmental Ontogeny Slider
+    const daySlider = document.getElementById('daySlider');
+    daySlider.addEventListener('input', (e) => {
+      updateOntogeny(parseFloat(e.target.value));
+    });
+
+    // Gravity and Temperature Sliders
+    const gravSlider = document.getElementById('gravSlider');
+    gravSlider.addEventListener('input', (e) => {
+      updateGravity(parseFloat(e.target.value));
+    });
+
+    const tempSlider = document.getElementById('tempSlider');
+    tempSlider.addEventListener('input', (e) => {
+      updateTemperature(parseFloat(e.target.value));
+    });
+
+    // Mission Operational Presets
     const modeEarthBtn = document.getElementById('modeEarth');
     const modeLunarBtn = document.getElementById('modeLunarComp');
     const modeBrownoutBtn = document.getElementById('modeBrownout');
@@ -992,13 +1348,15 @@
     // Component Visibility Toggles
     document.getElementById('chkHousing').onchange = (e) => groups.housing.visible = e.target.checked;
     document.getElementById('chkSubstrate').onchange = (e) => groups.substrate.visible = e.target.checked;
+    document.getElementById('chkNytex').onchange = (e) => groups.nytex.visible = e.target.checked;
     document.getElementById('chkPlants').onchange = (e) => groups.plants.visible = e.target.checked;
     document.getElementById('chkStreamlines').onchange = (e) => groups.streamlines.visible = e.target.checked;
     document.getElementById('chkNozzle').onchange = (e) => groups.nozzle.visible = e.target.checked;
     document.getElementById('chkAeration').onchange = (e) => groups.aeration.visible = e.target.checked;
 
-    // Initial Telemetry Call
-    updateBiophysicsTelemetry(0.50);
+    // Initial Ontogeny & Biophysics Setup Call
+    updateOntogeny(5.0);
+    setFlowDirection('push');
   </script>
 </body>
 </html>

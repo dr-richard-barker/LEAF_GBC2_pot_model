@@ -13,9 +13,10 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 - **Live GitHub Pages Research Portal**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/) ([`index.html`](./index.html))
 - **Live Interactive 3D Chamber Digital Twin & CFD Simulator**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html) ([`viewer_3d.html`](./viewer_3d.html))
 - **Full Technical Manuscript (Methods, Results & Figure Legends)**: [`MANUSCRIPT_LEAF_GBC2_CFD.md`](./MANUSCRIPT_LEAF_GBC2_CFD.md)
+- **Zenodo Open Science Dataset Package**: [`zenodo/`](./zenodo/) ([`datapackage.json`](./zenodo/datapackage.json) · [`README.md`](./zenodo/README.md))
 - **Orthographic Blueprint (ABAI QC Annotated)**: [`figures/fig_orthographic_projection_annotated.png`](./figures/fig_orthographic_projection_annotated.png) | [`.svg`](./figures/fig_orthographic_projection_annotated.svg)
 - **Mated CAD Assembly Cross-Sections**: [`figures/assembly_cross_sections_annotated.png`](./figures/assembly_cross_sections_annotated.png) | [`exact`](./figures/assembly_cross_sections_exact.png)
-- **Quantitative Telemetry Tables**: [`results/tables/`](./results/tables/)
+- **Quantitative Telemetry Tables (TSV & Zenodo CSV)**: [`results/tables/`](./results/tables/)
 
 ---
 
@@ -96,6 +97,12 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 - **Optical Lid Condensation Margin (Δ_T_margin)**: Transpiration across 164 plants injects 4.4 mL/day of moisture. Nominal flow (_Q_ = 0.50 L/min) maintains inner lid temperature above dew point (Δ_T_margin = +0.83 °C daytime, +2.15 °C at 0.85 L/min), preventing camera window fogging unless ventilation drops below _Q_crit ≈ 0.08 L/min.
 - **Two-Phase RNAlater Venting**: Injection at 10 mL/min via Port 3 dipping nozzle (_Y_ = 9.5 mm) operates at Ca = 1.78 × 10⁻³ and Bo_lunar = 6.31 × 10⁻⁵ ≪ 1. Root substrate wets in 26.4 s, with 100% displaced air vented via Port 2 at Δ_P_vent < 0.01 kPa with zero trapped bubbles.
 
+### 3.8 Model Lunar LEAF: 5-Day Experiment, Nytex Root Barrier & Push vs. Pull Aerodynamics
+- **Water Activation & 35 µm Nytex Barrier**: Injected water volume of **7.39 mL** achieves 100% saturation in the 3 partitioned foam blocks (porosity $\phi = 0.70$). Wrapped around the foam top is a 35 µm monofilament nylon (Nytex) screen with an **8.04 kPa Laplace bubble point**, which maintains continuous capillary wicking while providing a **100% exclusion margin** against primary plant radicles (90–320 µm), preventing pore clogging.
+- **Push vs. Pull Aerodynamic Direction**: Push mode creates positive chamber gauge pressure (+1.2 to +14.5 Pa) with inlet jet impingement; Pull mode generates negative gauge pressure (-1.0 to -11.8 Pa), creating **safe aerodynamic bio-containment** for crewed cabins with smooth streamline convergence ($\gamma > 0.95$).
+- **5-Day Developmental Ontogeny**: Tracks seed germination within 24h, autotrophic crossover at Hour 48, and mature 5-day canopies (*B. rapa*: 11.26 mm; *Arabidopsis*: 4.75 mm) with cumulative transpiration of **4.19 mL** across 164 plants.
+- **Environmental Multi-Physics Sweeps**: Gravity (0–1g) and temperature (18–30 °C) bivariate sweeps prove forced convection dominance ($\text{Ri} \le 0.04$) and positive optical lid condensation safety margins ($\Delta T_{\text{margin}} = +0.83\text{ to }+2.45\ ^\circ\text{C}$).
+
 ---
 
 ## 4. Simulation Figure Suite
@@ -115,6 +122,11 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 | **Figure 9** | 14-day developmental growth time-series: logistic canopy ontogeny, channelling, cumulative C, & root compaction | [PNG](figures/fig9_developmental_growth_timeseries.png) · [SVG](figures/fig9_developmental_growth_timeseries.svg) |
 | **Figure 10** | Off-nominal spacecraft sensitivity sweeps: cabin CO₂ (420–5,000 ppm), root compaction, & pump brownout | [PNG](figures/fig10_off_nominal_sensitivity_sweeps.png) · [SVG](figures/fig10_off_nominal_sensitivity_sweeps.svg) |
 | **Figure 11** | Porous substrate unsaturated capillarity, evapotranspiration, optical lid condensation defense, & two-phase venting | [PNG](figures/fig11_water_capillarity_evapotranspiration_condensation.png) · [SVG](figures/fig11_water_capillarity_evapotranspiration_condensation.svg) |
+| **Figure 12** | Water activation in 3-part porous foam cassettes ($\phi = 0.70$) & Nytex 35 µm mesh bubble point ($8.04\ \text{kPa}$) root exclusion | [PNG](figures/fig12_water_activation_foam_and_nytex.png) · [SVG](figures/fig12_water_activation_foam_and_nytex.svg) |
+| **Figure 13** | Aerodynamic regimes: forced push overpressure ($+1.2\text{ to }+14.5\ \text{Pa}$) vs. pull suction bio-containment ($-1.0\text{ to }-11.8\ \text{Pa}$) | [PNG](figures/fig13_aerodynamic_push_vs_pull_regimes.png) · [SVG](figures/fig13_aerodynamic_push_vs_pull_regimes.svg) |
+| **Figure 14** | Model Lunar LEAF 5-day developmental ontogeny (0–120h), autotrophic transition (48h), & cumulative transpiration (4.19 mL) | [PNG](figures/fig14_model_lunar_leaf_5day_ontogeny.png) · [SVG](figures/fig14_model_lunar_leaf_5day_ontogeny.svg) |
+| **Figure 15** | Environmental multi-physics response surfaces: gravity ($0\text{--}1g$) vs. temperature ($18\text{--}30\ ^\circ\text{C}$), proving forced convection dominance | [PNG](figures/fig15_gravity_temperature_response_surfaces.png) · [SVG](figures/fig15_gravity_temperature_response_surfaces.svg) |
+| **Figure 16** | Dynamic boundary layer humidity accumulation, dew point trajectories, & optical lid anti-condensation envelope | [PNG](figures/fig16_optical_lid_condensation_envelope.png) · [SVG](figures/fig16_optical_lid_condensation_envelope.svg) |
 
 ---
 
@@ -133,9 +145,15 @@ LEAF_GBC2_pot_model/
 ├── geometry/
 │   ├── gbc2_assembly.stl                # Mated 3D assembly mesh
 │   └── gbc2_grid.npz                    # 3D voxelized domain (60x48x80) with species & substrate tags
+├── zenodo/                              # Open-Science Archival Package
+│   ├── datapackage.json                 # Frictionless Data Package Schema
+│   ├── README.md                        # Dataset Data Dictionary & Methodology
+│   ├── checksums.txt                    # SHA-256 cryptographic verification hashes
+│   ├── data/                            # 4 CSV datasets
+│   └── figures/                         # Vector SVGs and high-res PNGs
 ├── sim/
 │   ├── build_geometry.py                # CAD mating & 3D voxelization pipeline
-│   ├── gbc2_cfd_engine.py               # 3D Navier-Stokes, Brinkman-Darcy & FvCB solver
+│   ├── gbc2_cfd_engine.py               # 3D Navier-Stokes, Brinkman-Darcy & FvCB solver (push & pull)
 │   ├── advanced_analytics.py            # Mean Age of Air, Sandberg conservation & hormone indices
 │   ├── generate_orthographic_projections.py  # 3-view orthographic projection generator
 │   ├── generate_assembly_cross_sections.py   # Mated CAD cross-section generator
@@ -145,10 +163,12 @@ LEAF_GBC2_pot_model/
 │   ├── simulate_diurnal_cycle.py        # Day/night photoperiod inversion (Fig 8)
 │   ├── simulate_developmental_growth_timeseries.py # 14-day developmental growth trajectory (Fig 9)
 │   ├── simulate_off_nominal_sensitivity.py         # Off-nominal mission sensitivity sweeps (Fig 10)
-│   └── simulate_water_capillarity_and_humidity.py  # Capillary retention & lid condensation (Fig 11)
+│   ├── simulate_water_capillarity_and_humidity.py  # Capillary retention & lid condensation (Fig 11)
+│   ├── simulate_model_lunar_leaf_5day.py           # Model Lunar LEAF 5-day master simulation (Figs 12-16)
+│   └── export_zenodo_dataset.py                    # Zenodo open-science packager & checksum validator
 ├── figures/                             # All publication figures (.png and .svg)
 └── results/
-    └── tables/                          # All quantitative simulation tables (.tsv)
+    └── tables/                          # Quantitative simulation tables (.tsv and .csv)
 ```
 
 ### Running the Full Simulation & Visualization Pipeline
@@ -165,12 +185,19 @@ python3 -m venv .venv
 .venv/bin/python sim/generate_orthographic_projections.py
 .venv/bin/python sim/generate_assembly_cross_sections.py
 
-# 4. Run CFD & Biophysics Simulation Suites (Figures 1-10 & TSV tables)
+# 4. Run CFD & Biophysics Simulation Suites (Figures 1-11 & TSV tables)
 .venv/bin/python sim/run_parametric_sweep.py
 .venv/bin/python sim/run_advanced_pipeline.py
 .venv/bin/python sim/simulate_rnalater_perfusion.py
 .venv/bin/python sim/simulate_diurnal_cycle.py
 .venv/bin/python sim/simulate_developmental_growth_timeseries.py
 .venv/bin/python sim/simulate_off_nominal_sensitivity.py
+.venv/bin/python sim/simulate_water_capillarity_and_humidity.py
+
+# 5. Run Model Lunar LEAF 5-Day Master Simulation Suite (Figures 12-16 & Zenodo CSVs)
+.venv/bin/python sim/simulate_model_lunar_leaf_5day.py
+
+# 6. Package and Verify Zenodo Open-Science Dataset Archive
+.venv/bin/python sim/export_zenodo_dataset.py
 ```
 

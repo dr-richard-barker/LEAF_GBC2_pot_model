@@ -66,7 +66,7 @@ class GBC2CFDSimulator:
         
         self.n_fluid = np.sum(self.is_fluid)
 
-    def run_case(self, Q_L_min=0.5, gravity_g=9.81, max_steps=400):
+    def run_case(self, Q_L_min=0.5, gravity_g=9.81, max_steps=400, mode='push', canopy_drag_scale=1.0):
         # Port 1 inlet area
         A_port = np.pi * (0.0015875 ** 2) # ~7.917e-6 m2
         Q_m3_s = (Q_L_min * 1e-3) / 60.0
@@ -90,8 +90,8 @@ class GBC2CFDSimulator:
         # Canopy aerodynamic resistance (Cd * a * U_eff):
         # B. rapa (32 plants, tall foliage): a = 828 m2/m3, Cd = 0.20 -> 8.28 s^-1
         # Arabidopsis (100 plants, low rosette): a = 630 m2/m3, Cd = 0.15 -> 4.72 s^-1
-        drag_rate[self.is_canopy_ch1 | self.is_canopy_ch3] = 0.20 * 828.0 * 0.05
-        drag_rate[self.is_canopy_ch2] = 0.15 * 630.0 * 0.05
+        drag_rate[self.is_canopy_ch1 | self.is_canopy_ch3] = 0.20 * 828.0 * 0.05 * canopy_drag_scale
+        drag_rate[self.is_canopy_ch2] = 0.15 * 630.0 * 0.05 * canopy_drag_scale
         drag_denom = 1.0 + dt * drag_rate
         
         for step in range(max_steps):
@@ -99,9 +99,14 @@ class GBC2CFDSimulator:
             v[self.is_solid] = 0.0
             w[self.is_solid] = 0.0
             
-            v[self.is_inlet] = -U_in
-            u[self.is_inlet] = 0.0
-            w[self.is_inlet] = 0.0
+            if mode == 'push':
+                v[self.is_inlet] = -U_in
+                u[self.is_inlet] = 0.0
+                w[self.is_inlet] = 0.0
+            else: # pull mode (suction upward at Port 2 outlet)
+                v[self.is_outlet] = U_in
+                u[self.is_outlet] = 0.0
+                w[self.is_outlet] = 0.0
             
             # Advection
             dudx = np.where(u > 0, (u - np.roll(u, 1, 0))/self.dx, (np.roll(u, -1, 0) - u)/self.dx)
@@ -143,9 +148,14 @@ class GBC2CFDSimulator:
             u_star[self.is_solid] = 0.0
             v_star[self.is_solid] = 0.0
             w_star[self.is_solid] = 0.0
-            v_star[self.is_inlet] = -U_in
-            u_star[self.is_inlet] = 0.0
-            w_star[self.is_inlet] = 0.0
+            if mode == 'push':
+                v_star[self.is_inlet] = -U_in
+                u_star[self.is_inlet] = 0.0
+                w_star[self.is_inlet] = 0.0
+            else:
+                v_star[self.is_outlet] = U_in
+                u_star[self.is_outlet] = 0.0
+                w_star[self.is_outlet] = 0.0
             
             # Pressure Poisson
             div = ((np.roll(u_star, -1, 0) - np.roll(u_star, 1, 0)) +
@@ -158,7 +168,10 @@ class GBC2CFDSimulator:
                 p_lap = (np.roll(p, 1, 0) + np.roll(p, -1, 0) +
                          np.roll(p, 1, 1) + np.roll(p, -1, 1) +
                          np.roll(p, 1, 2) + np.roll(p, -1, 2) - (self.dx ** 2) * rhs) / 6.0
-                p_lap[self.is_outlet] = 0.0
+                if mode == 'push':
+                    p_lap[self.is_outlet] = 0.0
+                else:
+                    p_lap[self.is_inlet] = 0.0
                 p = 0.8 * p + 0.2 * p_lap
                 p[self.is_solid] = 0.0
                 
@@ -174,9 +187,14 @@ class GBC2CFDSimulator:
             u[self.is_solid] = 0.0
             v[self.is_solid] = 0.0
             w[self.is_solid] = 0.0
-            v[self.is_inlet] = -U_in
-            u[self.is_inlet] = 0.0
-            w[self.is_inlet] = 0.0
+            if mode == 'push':
+                v[self.is_inlet] = -U_in
+                u[self.is_inlet] = 0.0
+                w[self.is_inlet] = 0.0
+            else:
+                v[self.is_outlet] = U_in
+                u[self.is_outlet] = 0.0
+                w[self.is_outlet] = 0.0
             
             # Species
             T_dev[self.is_canopy] = self.dT_leaf
@@ -264,10 +282,12 @@ class GBC2CFDSimulator:
         u_porous_mean = float(np.mean(u_mag[self.is_porous]) * 100)
         p_inlet_mean = float(np.mean(p[self.is_inlet]))
         p_outlet_mean = float(np.mean(p[self.is_outlet]))
-        delta_p = float(max(p_inlet_mean - p_outlet_mean, 0.0))
+        delta_p = float(abs(p_inlet_mean - p_outlet_mean))
+        p_gauge_mean = float(np.mean(p[self.is_headspace]))
         
         results = {
             'Q_L_min': float(Q_L_min),
+            'mode': mode,
             'gravity_g': float(gravity_g),
             'gravity_label': '1g_Earth' if gravity_g > 5.0 else ('Lunar' if gravity_g > 0.5 else 'microgravity'),
             'U_inlet_m_s': float(U_in),
@@ -276,6 +296,7 @@ class GBC2CFDSimulator:
             'U_porous_cm_s': u_porous_mean,
             'stagnant_volume_pct': float(stagnant_fraction * 100),
             'delta_P_Pa': delta_p,
+            'p_gauge_mean_Pa': p_gauge_mean,
             'flow_uniformity_gamma': gamma,
             'dC_CO2_mean_ppm': dC_CO2_mean,
             'dC_H2O_mean_mmol': dC_H2O_mean,

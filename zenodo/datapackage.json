@@ -1,0 +1,53 @@
+{
+  "name": "leaf-gbc2-model-lunar-leaf-5day-simulation",
+  "title": "LEAF GBC2 'Model Lunar LEAF' 5-Day Spaceflight Simulation Dataset",
+  "description": "Comprehensive 5-day (120-hour) computational multi-physics dataset for the LEAF GBC2 spaceflight plant growth chamber. Encompasses subsurface water activation in porous foam, Nytex mesh root exclusion, push vs pull aerodynamic CFD, developmental ontogeny, mixed-convection gravity (0g-1g), temperature sweeps (18-30 C), and optical lid condensation defense.",
+  "version": "1.0.0",
+  "homepage": "https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/",
+  "license": "CC-BY-4.0",
+  "keywords": [
+    "space-biology",
+    "computational-fluid-dynamics",
+    "microgravity",
+    "lunar-gravity",
+    "plant-growth-chamber",
+    "porous-media",
+    "ontogeny",
+    "leaf-gbc2",
+    "artemis"
+  ],
+  "resources": [
+    {
+      "name": "5day_hourly_telemetry",
+      "path": "data/zenodo_5day_hourly_telemetry.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Hourly 120-hour multi-species state matrix covering canopy height, leaf area, drag factor, CO2 exchange, transpiration, and condensation margin."
+    },
+    {
+      "name": "push_vs_pull_aerodynamics",
+      "path": "data/zenodo_push_vs_pull_aerodynamics.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Comparative aerodynamic metrics across 10 pump speeds for Push (positive gauge) vs Pull (suction negative gauge) flow regimes."
+    },
+    {
+      "name": "gravity_temp_response_surface",
+      "path": "data/zenodo_gravity_temp_response_surface.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Full factorial response surface spanning 4 gravity levels (0g, 0.166g, 0.38g, 1.0g), 5 air temperatures (18-30 C), and 5 ventilation rates."
+    },
+    {
+      "name": "water_activation_foam_nytex",
+      "path": "data/zenodo_water_activation_foam_nytex.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Vertical moisture saturation profiles in the 7.0 mm porous foam cassette and Nytex mesh Young-Laplace bubble point curve."
+    }
+  ]
+}
