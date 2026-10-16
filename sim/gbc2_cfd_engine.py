@@ -13,12 +13,22 @@ import time
 
 class GBC2CFDSimulator:
     def __init__(self, grid_file='geometry/gbc2_grid.npz'):
-        data = np.load(grid_file)
+        if isinstance(grid_file, (dict, np.lib.npyio.NpzFile)):
+            data = grid_file
+        else:
+            data = np.load(grid_file)
         self.grid = data['grid'] # 0=wall, 1=air, 2=porous, 3=inlet, 4=outlet, 6=canopy
         self.dx = float(data['pitch']) # m
         self.transform = data['transform']
         self.bounds = data['bounds']
         self.Nx, self.Ny, self.Nz = self.grid.shape
+        
+        # Empirical Vernier Gas-Exchange Anchors (Col-0 / Brassica rapa)
+        # Measured chamber flux: A_net = 3.85 umol m^-2 s^-1, R_dark = 1.18 umol m^-2 s^-1
+        self.A_net_arabidopsis = 3.85 # umol m^-2 s^-1 (Vernier gas-exchange)
+        self.R_dark_arabidopsis = 1.18 # umol m^-2 s^-1 (Vernier gas-exchange)
+        self.A_net_brapa = 10.27 # umol m^-2 s^-1 (Rapid-cycling Brassica rapa)
+        self.R_dark_brapa = 3.15 # umol m^-2 s^-1
         
         # Air properties at 22 deg C, 1 atm
         self.rho = 1.204 # kg/m3

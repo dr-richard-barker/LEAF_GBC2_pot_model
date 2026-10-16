@@ -28,14 +28,18 @@ def export_zenodo_package():
         'results/tables/zenodo_5day_hourly_telemetry.csv',
         'results/tables/zenodo_push_vs_pull_aerodynamics.csv',
         'results/tables/zenodo_gravity_temp_response_surface.csv',
-        'results/tables/zenodo_water_activation_foam_nytex.csv'
+        'results/tables/zenodo_water_activation_foam_nytex.csv',
+        'results/tables/gbc2_gci_mesh_convergence.csv',
+        'results/tables/gbc2_foliar_surface_distribution.csv',
+        'results/tables/gbc2_164plants_foliar_telemetry.csv',
+        'results/tables/gbc2_spaceflight_hardware_comprehensive_benchmark.csv'
     ]
     
     for f in csv_files:
         if os.path.exists(f):
             shutil.copy2(f, os.path.join(zenodo_dir, 'data', os.path.basename(f)))
             
-    # 2. Copy Figures 12-16
+    # 2. Copy Figures 12-18
     fig_files = [
         'figures/fig12_water_activation_foam_and_nytex.png',
         'figures/fig12_water_activation_foam_and_nytex.svg',
@@ -46,7 +50,11 @@ def export_zenodo_package():
         'figures/fig15_gravity_temperature_response_surfaces.png',
         'figures/fig15_gravity_temperature_response_surfaces.svg',
         'figures/fig16_optical_lid_condensation_envelope.png',
-        'figures/fig16_optical_lid_condensation_envelope.svg'
+        'figures/fig16_optical_lid_condensation_envelope.svg',
+        'figures/fig17_foliar_surface_distribution_and_hotspots.png',
+        'figures/fig17_foliar_surface_distribution_and_hotspots.svg',
+        'figures/fig18_spaceflight_hardware_comprehensive_benchmark.png',
+        'figures/fig18_spaceflight_hardware_comprehensive_benchmark.svg'
     ]
     
     for f in fig_files:
@@ -118,6 +126,38 @@ def export_zenodo_package():
                 "mediatype": "text/csv",
                 "encoding": "utf-8",
                 "description": "Vertical moisture saturation profiles in the 7.0 mm porous foam cassette and Nytex mesh Young-Laplace bubble point curve."
+            },
+            {
+                "name": "gbc2_gci_mesh_convergence",
+                "path": "data/gbc2_gci_mesh_convergence.csv",
+                "format": "csv",
+                "mediatype": "text/csv",
+                "encoding": "utf-8",
+                "description": "ASME V&V 20-2009 standard 3-grid convergence index verification study across 1.50, 1.00, and 0.75 mm pitches."
+            },
+            {
+                "name": "gbc2_foliar_surface_distribution",
+                "path": "data/gbc2_foliar_surface_distribution.csv",
+                "format": "csv",
+                "mediatype": "text/csv",
+                "encoding": "utf-8",
+                "description": "Canopy microclimate percentiles (p10, p50, p90), spatial CoV, and dynamic range across flight regimes."
+            },
+            {
+                "name": "gbc2_164plants_foliar_telemetry",
+                "path": "data/gbc2_164plants_foliar_telemetry.csv",
+                "format": "csv",
+                "mediatype": "text/csv",
+                "encoding": "utf-8",
+                "description": "Individual scalar microenvironment telemetry for all 164 plants (32 B. rapa + 100 Arabidopsis + 32 B. rapa)."
+            },
+            {
+                "name": "gbc2_spaceflight_hardware_comprehensive_benchmark",
+                "path": "data/gbc2_spaceflight_hardware_comprehensive_benchmark.csv",
+                "format": "csv",
+                "mediatype": "text/csv",
+                "encoding": "utf-8",
+                "description": "Multi-system spaceflight hardware comparative benchmark across NASA BRIC, CARA, VEGGIE, and LEAF GBC2."
             }
         ]
     }

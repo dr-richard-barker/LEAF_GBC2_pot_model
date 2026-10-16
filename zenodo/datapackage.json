@@ -48,6 +48,38 @@
       "mediatype": "text/csv",
       "encoding": "utf-8",
       "description": "Vertical moisture saturation profiles in the 7.0 mm porous foam cassette and Nytex mesh Young-Laplace bubble point curve."
+    },
+    {
+      "name": "gbc2_gci_mesh_convergence",
+      "path": "data/gbc2_gci_mesh_convergence.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "ASME V&V 20-2009 standard 3-grid convergence index verification study across 1.50, 1.00, and 0.75 mm pitches."
+    },
+    {
+      "name": "gbc2_foliar_surface_distribution",
+      "path": "data/gbc2_foliar_surface_distribution.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Canopy microclimate percentiles (p10, p50, p90), spatial CoV, and dynamic range across flight regimes."
+    },
+    {
+      "name": "gbc2_164plants_foliar_telemetry",
+      "path": "data/gbc2_164plants_foliar_telemetry.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Individual scalar microenvironment telemetry for all 164 plants (32 B. rapa + 100 Arabidopsis + 32 B. rapa)."
+    },
+    {
+      "name": "gbc2_spaceflight_hardware_comprehensive_benchmark",
+      "path": "data/gbc2_spaceflight_hardware_comprehensive_benchmark.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Multi-system spaceflight hardware comparative benchmark across NASA BRIC, CARA, VEGGIE, and LEAF GBC2."
     }
   ]
 }

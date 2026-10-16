@@ -14,7 +14,7 @@ import trimesh
 import numpy as np
 from scipy import ndimage
 
-def build_grid(pitch=0.001): # 1.0 mm pitch by default (fast & robust)
+def build_grid(pitch=0.001, save_path='geometry/gbc2_grid.npz'): # 1.0 mm pitch by default (fast & robust)
     print(f"Loading CAD assembly with pitch = {pitch*1000:.2f} mm...")
     lid = trimesh.load('cad/lid.step').geometry['M09025F-MDL-2']
     pot = trimesh.load('cad/pot.step').geometry['M09024F-MDL-5']
@@ -175,13 +175,14 @@ def build_grid(pitch=0.001): # 1.0 mm pitch by default (fast & robust)
     print(f"Total internal volume: {vol_air + vol_porous:.2f} cm3")
 
     # Save domain
-    os.makedirs('geometry', exist_ok=True)
-    np.savez_compressed('geometry/gbc2_grid.npz',
-                       grid=grid,
-                       pitch=pitch,
-                       transform=vox.transform,
-                       bounds=vox.bounds)
-    print("Saved geometry/gbc2_grid.npz successfully!")
+    if save_path:
+        os.makedirs(os.path.dirname(save_path) or '.', exist_ok=True)
+        np.savez_compressed(save_path,
+                           grid=grid,
+                           pitch=pitch,
+                           transform=vox.transform,
+                           bounds=vox.bounds)
+        print(f"Saved {save_path} successfully!")
     return grid, pitch, vox.transform
 
 if __name__ == '__main__':

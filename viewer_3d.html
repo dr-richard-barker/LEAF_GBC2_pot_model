@@ -181,6 +181,48 @@
             Reset View
           </button>
         </div>
+      <!-- Live Virtual 3D Sensor Probe HUD (Top-Left Docked) -->
+      <div id="sensorProbeHUD" class="absolute top-14 left-3 z-20 bg-slate-900/95 dark:bg-slate-900/95 light:bg-white/95 backdrop-blur border border-emerald-500/40 rounded-xl p-3 shadow-2xl max-w-xs w-72 text-xs transition-all">
+        <div class="flex items-center justify-between border-b border-slate-800 dark:border-slate-800 light:border-slate-200 pb-1.5 mb-2">
+          <span class="font-bold text-emerald-400 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            Virtual Foliar Sensor
+          </span>
+          <button id="btnToggleProbe" class="text-slate-400 hover:text-white px-1.5 py-0.5 rounded text-[11px] font-mono" title="Minimize/Expand">_</button>
+        </div>
+        <div id="probeBody" class="space-y-1.5">
+          <div class="flex justify-between items-center text-[11px]">
+            <span class="text-slate-400">Target Plant:</span>
+            <span id="probePlantId" class="font-semibold text-white dark:text-white light:text-slate-900">Arabidopsis #50 (Ch 2)</span>
+          </div>
+          <div class="flex justify-between items-center text-[10px] text-slate-400 font-mono">
+            <span>Pos (X,Y,Z):</span>
+            <span id="probeCoords">-0.9, 16.5, 0.0 mm</span>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5 pt-1">
+            <div class="bg-slate-950/60 dark:bg-slate-950/60 light:bg-slate-100 p-1.5 rounded">
+              <div class="text-[10px] text-slate-400">Air Speed u</div>
+              <div id="probeAirSpeed" class="font-mono font-bold text-sky-400">0.08 cm/s</div>
+            </div>
+            <div class="bg-slate-950/60 dark:bg-slate-950/60 light:bg-slate-100 p-1.5 rounded">
+              <div class="text-[10px] text-slate-400">Conductance g_bl</div>
+              <div id="probeGbl" class="font-mono font-bold text-emerald-400">0.048 mol/m²s</div>
+            </div>
+            <div class="bg-slate-950/60 dark:bg-slate-950/60 light:bg-slate-100 p-1.5 rounded">
+              <div class="text-[10px] text-slate-400">Boundary Layer δ</div>
+              <div id="probeDelta" class="font-mono font-bold text-amber-400">14.8 mm</div>
+            </div>
+            <div class="bg-slate-950/60 dark:bg-slate-950/60 light:bg-slate-100 p-1.5 rounded">
+              <div class="text-[10px] text-slate-400">Foliar ΔCO₂</div>
+              <div id="probeCO2" class="font-mono font-bold text-rose-400">-0.94 ppm</div>
+            </div>
+          </div>
+          <div class="pt-1.5 border-t border-slate-800 dark:border-slate-800 light:border-slate-200 flex items-center justify-between text-[11px]">
+            <span class="text-slate-400">Microenvironment:</span>
+            <span id="probeStatus" class="font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/30">Optimal Aeration</span>
+          </div>
+          <p class="text-[10px] text-slate-400 italic mt-1">💡 Click any plant in 3D to probe live microclimate.</p>
+        </div>
       </div>
 
       <!-- Flow Mode Selector, Direction, Ontogeny Scrubber & Continuous Flow Slider (Bottom Floating Panel) -->
@@ -440,6 +482,14 @@
             <input type="checkbox" id="chkAeration" checked class="rounded bg-slate-800 border-slate-700 text-emerald-500">
             <span>Lower Aeration &amp; Drainage Wells (Y = 0–7.62 mm)</span>
           </label>
+          <label class="flex items-center gap-2 cursor-pointer text-slate-300 dark:text-slate-300 light:text-slate-700 pt-1.5 border-t border-slate-800 dark:border-slate-800 light:border-slate-200">
+            <input type="checkbox" id="chkHeatmap" class="rounded bg-slate-800 border-slate-700 text-emerald-500">
+            <span class="font-semibold text-emerald-400">🔥 Foliar Conductance Heatmap (Viridis)</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-slate-300 dark:text-slate-300 light:text-slate-700">
+            <input type="checkbox" id="chkPetriDish" class="rounded bg-slate-800 border-slate-700 text-emerald-500">
+            <span class="font-semibold text-amber-400">🧫 Compare Sealed Petri Dish (60mm BRIC)</span>
+          </label>
         </div>
       </div>
     </aside>
@@ -575,7 +625,9 @@
       streamlines: new THREE.Group(),
       nozzle: new THREE.Group(),
       aeration: new THREE.Group(),
-      liquid: new THREE.Group()
+      liquid: new THREE.Group(),
+      probe: new THREE.Group(),
+      petriDish: new THREE.Group()
     };
     Object.values(groups).forEach(g => scene.add(g));
 
@@ -732,7 +784,7 @@
     const plantInstances = [];
 
     // Helper: Build a Brassica rapa plant (mature h = 11.4 mm, reaching Y = 26.0 mm)
-    function createBrapaPlant(x, z) {
+    function createBrapaPlant(x, z, pid, chamber) {
       const pGroup = new THREE.Group();
       pGroup.position.set(x, 14.77, z);
 
@@ -746,10 +798,13 @@
       stem.position.y = 4.25;
       pGroup.add(stem);
 
+      // Unique leaf material instance per plant for independent heatmap coloring
+      const curLeafMat = leafMat.clone();
+
       // Leaves (4 broad leaves angled outward)
       const leaves = [];
       for (let i = 0; i < 4; i++) {
-        const leaf = new THREE.Mesh(new THREE.ConeGeometry(1.6, 3.8, 5), leafMat);
+        const leaf = new THREE.Mesh(new THREE.ConeGeometry(1.6, 3.8, 5), curLeafMat);
         const angle = (i * Math.PI) / 2 + Math.PI / 4;
         leaf.position.set(Math.cos(angle) * 1.8, 7.5 + (i % 2) * 1.5, Math.sin(angle) * 1.8);
         leaf.rotation.x = Math.sin(angle) * 0.8;
@@ -759,21 +814,26 @@
         leaves.push(leaf);
       }
 
-      plantInstances.push({
+      const inst = {
         group: pGroup,
         species: 'brapa',
         stem: stem,
         leaves: leaves,
+        leafMat: curLeafMat,
         seed: seed,
         baseH: 11.4,
         x: x,
-        z: z
-      });
+        z: z,
+        plantId: pid,
+        chamber: chamber
+      };
+      pGroup.userData = inst;
+      plantInstances.push(inst);
       return pGroup;
     }
 
     // Helper: Build an Arabidopsis thaliana rosette (mature h = 4.9 mm, reaching Y = 19.5 mm)
-    function createArabidopsisPlant(x, z) {
+    function createArabidopsisPlant(x, z, pid, chamber) {
       const pGroup = new THREE.Group();
       pGroup.position.set(x, 14.77, z);
 
@@ -787,10 +847,13 @@
       core.position.y = 1.0;
       pGroup.add(core);
 
+      // Unique leaf material instance per plant
+      const curArabLeafMat = arabLeafMat.clone();
+
       // Rosette Leaves (5 small radiating flat oval leaves close to ground)
       const leaves = [];
       for (let i = 0; i < 5; i++) {
-        const leaf = new THREE.Mesh(new THREE.ConeGeometry(0.85, 1.8, 5), arabLeafMat);
+        const leaf = new THREE.Mesh(new THREE.ConeGeometry(0.85, 1.8, 5), curArabLeafMat);
         const angle = (i * 2 * Math.PI) / 5;
         leaf.position.set(Math.cos(angle) * 1.0, 1.2 + (i % 2) * 0.4, Math.sin(angle) * 1.0);
         leaf.rotation.x = Math.sin(angle) * 1.1;
@@ -800,25 +863,31 @@
         leaves.push(leaf);
       }
 
-      plantInstances.push({
+      const inst = {
         group: pGroup,
         species: 'arabidopsis',
         stem: core,
         leaves: leaves,
+        leafMat: curArabLeafMat,
         seed: seed,
         baseH: 4.9,
         x: x,
-        z: z
-      });
+        z: z,
+        plantId: pid,
+        chamber: chamber
+      };
+      pGroup.userData = inst;
+      plantInstances.push(inst);
       return pGroup;
     }
 
-    // Chamber 1: 32 Brassica rapa (8 x 4 lattice in X in [-8, 18], Z in [-29, -11])
+    let pidCounter = 1;
+    // Chamber 1: 32 Brassica rapa (8 x 4 lattice in X in [-8, 18], Z in [-28.5, -12.0])
     for (let ix = 0; ix < 8; ix++) {
       for (let iz = 0; iz < 4; iz++) {
         const px = -8.0 + (ix / 7.0) * 26.0;
         const pz = -28.5 + (iz / 3.0) * 16.5;
-        groups.plants.add(createBrapaPlant(px, pz));
+        groups.plants.add(createBrapaPlant(px, pz, pidCounter++, 1));
       }
     }
 
@@ -827,18 +896,100 @@
       for (let iz = 0; iz < 10; iz++) {
         const px = -8.0 + (ix / 9.0) * 26.0;
         const pz = -6.0 + (iz / 9.0) * 12.0;
-        groups.plants.add(createArabidopsisPlant(px, pz));
+        groups.plants.add(createArabidopsisPlant(px, pz, pidCounter++, 2));
       }
     }
 
-    // Chamber 3: 32 Brassica rapa (8 x 4 lattice in X in [-8, 18], Z in [11, 29])
+    // Chamber 3: 32 Brassica rapa (8 x 4 lattice in X in [-8, 18], Z in [11.5, 28.0])
     for (let ix = 0; ix < 8; ix++) {
       for (let iz = 0; iz < 4; iz++) {
         const px = -8.0 + (ix / 7.0) * 26.0;
         const pz = 11.5 + (iz / 3.0) * 16.5;
-        groups.plants.add(createBrapaPlant(px, pz));
+        groups.plants.add(createBrapaPlant(px, pz, pidCounter++, 3));
       }
     }
+
+    // --- 3D Virtual Sensor Probe Marker ---
+    const probeRingGeo = new THREE.RingGeometry(1.2, 1.8, 32);
+    probeRingGeo.rotateX(Math.PI / 2);
+    const probeRingMat = new THREE.MeshBasicMaterial({ color: 0x10b981, side: THREE.DoubleSide });
+    const probeRing = new THREE.Mesh(probeRingGeo, probeRingMat);
+
+    const probeNeedleGeo = new THREE.CylinderGeometry(0.12, 0.12, 6.0, 8);
+    const probeNeedleMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7 });
+    const probeNeedle = new THREE.Mesh(probeNeedleGeo, probeNeedleMat);
+    probeNeedle.position.y = 3.0;
+
+    const probeBeaconGeo = new THREE.SphereGeometry(0.6, 12, 12);
+    const probeBeaconMat = new THREE.MeshStandardMaterial({ color: 0x34d399, emissive: 0x10b981 });
+    const probeBeacon = new THREE.Mesh(probeBeaconGeo, probeBeaconMat);
+    probeBeacon.position.y = 6.2;
+
+    const probeLight = new THREE.PointLight(0x10b981, 1.2, 25);
+    probeLight.position.y = 4.0;
+
+    const probeMarker = new THREE.Group();
+    probeMarker.add(probeRing);
+    probeMarker.add(probeNeedle);
+    probeMarker.add(probeBeacon);
+    probeMarker.add(probeLight);
+    groups.probe.add(probeMarker);
+
+    // Default select central plant #82
+    probeMarker.position.set(-0.2, 19.5, 0.0);
+
+    // --- 60 mm BRIC Petri Dish Model (for visual hardware benchmark comparison) ---
+    // Placed alongside GBC2 pot at Z = +55 mm
+    const dishOffsetZ = 55.0;
+    const dishRadius = 26.6; // 53.2 mm diameter
+    const dishHeight = 13.0;
+    const agarHeight = 5.6;
+
+    // Agar bed
+    const agarGeo = new THREE.CylinderGeometry(dishRadius, dishRadius, agarHeight, 32);
+    const agarMat = new THREE.MeshStandardMaterial({
+      color: 0xfef08a,
+      roughness: 0.3,
+      transparent: true,
+      opacity: 0.65
+    });
+    const agarMesh = new THREE.Mesh(agarGeo, agarMat);
+    agarMesh.position.set(0, 14.77 - agarHeight / 2, dishOffsetZ);
+    groups.petriDish.add(agarMesh);
+
+    // Glass/Plastic dish walls
+    const dishGeo = new THREE.CylinderGeometry(dishRadius + 0.5, dishRadius + 0.5, dishHeight, 32, 1, true);
+    const dishMat = new THREE.MeshPhysicalMaterial({
+      color: 0x94a3b8,
+      transparent: true,
+      opacity: 0.35,
+      roughness: 0.1,
+      transmission: 0.8
+    });
+    const dishWall = new THREE.Mesh(dishGeo, dishMat);
+    dishWall.position.set(0, 14.77 - agarHeight + dishHeight / 2, dishOffsetZ);
+    groups.petriDish.add(dishWall);
+
+    // Fogged Lid with condensation droplets
+    const lidDishGeo = new THREE.CylinderGeometry(dishRadius + 0.8, dishRadius + 0.8, 1.2, 32);
+    const lidDishMat = new THREE.MeshStandardMaterial({
+      color: 0xe2e8f0,
+      transparent: true,
+      opacity: 0.7,
+      roughness: 0.9 // high roughness represents 100% condensation fogging
+    });
+    const lidDishMesh = new THREE.Mesh(lidDishGeo, lidDishMat);
+    lidDishMesh.position.set(0, 14.77 - agarHeight + dishHeight + 0.6, dishOffsetZ);
+    groups.petriDish.add(lidDishMesh);
+
+    // Label ring
+    const dishLabelGeo = new THREE.RingGeometry(dishRadius - 1, dishRadius, 32);
+    dishLabelGeo.rotateX(Math.PI / 2);
+    const dishRing = new THREE.Mesh(dishLabelGeo, new THREE.MeshBasicMaterial({ color: 0xf59e0b, side: THREE.DoubleSide }));
+    dishRing.position.set(0, 14.77 - agarHeight + dishHeight + 1.5, dishOffsetZ);
+    groups.petriDish.add(dishRing);
+
+    groups.petriDish.visible = false;
 
     // 6. Dynamic 3D Streamlines & Velocity Particle System
     const NUM_PARTICLES = 250;
@@ -1091,6 +1242,10 @@
         marginEl.innerText = margin.toFixed(2) + ' °C (CONDENSATION RISK)';
         marginEl.className = 'text-xs font-mono font-bold text-rose-500 mt-0.5 animate-pulse';
       }
+
+      // Refresh Virtual Sensor Probe HUD and Foliar Heatmap if active
+      if (typeof refreshProbedTelemetry === 'function') refreshProbedTelemetry();
+      if (typeof updateFoliarHeatmap === 'function' && isHeatmapActive) updateFoliarHeatmap();
     }
 
     // -------------------------------------------------------------
@@ -1209,6 +1364,14 @@
       } else {
         liquidFillLevel = 0.0;
         liquidMesh.material.opacity = 0.0;
+      }
+
+      // Animate 3D Probe Marker Pulse
+      if (probeMarker && probeMarker.visible) {
+        const timePulse = Date.now() * 0.003;
+        const pulse = 1.0 + 0.15 * Math.sin(timePulse * 3);
+        probeRing.scale.set(pulse, pulse, pulse);
+        probeBeacon.position.y = 6.2 + 0.3 * Math.sin(timePulse * 4);
       }
 
       renderer.render(scene, camera);
@@ -1354,9 +1517,224 @@
     document.getElementById('chkNozzle').onchange = (e) => groups.nozzle.visible = e.target.checked;
     document.getElementById('chkAeration').onchange = (e) => groups.aeration.visible = e.target.checked;
 
+    // -------------------------------------------------------------
+    // Virtual Sensor Probe & Raycaster Click-to-Probe System
+    // -------------------------------------------------------------
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    function calculatePlantTelemetry(p) {
+      const qScale = currentFlowQ / 0.50;
+      let baseU = (p.species === 'brapa') ? 0.020 : 0.008; // cm/s
+      if (currentFlowDir === 'pull') {
+        if (p.chamber === 2) baseU *= 1.35;
+      } else {
+        if (p.chamber === 1) baseU *= 1.45;
+      }
+      
+      const uLocal_cm_s = baseU * qScale * (0.85 + 0.15 * currentGravity);
+      const uLocal_m_s = uLocal_cm_s * 1e-2;
+      
+      const L = (p.species === 'brapa') ? 0.020 : 0.008; // m
+      const beta_T = 1.0 / (273.15 + currentTemp);
+      const nu = 1.51e-5;
+      const D_CO2 = 1.60e-5;
+      const V_mol = 0.0245;
+      
+      const Gr = (currentGravity * 9.81 * beta_T * 1.5 * Math.pow(L, 3)) / Math.pow(nu, 2);
+      const delta_nat_m = (Gr > 1.0) ? 3.5 * L * Math.pow(Gr, -0.25) : 0.015;
+      
+      const u_eff = Math.max(uLocal_m_s, 1e-5);
+      const delta_forced_m = 4.92 * Math.sqrt(nu * L / u_eff);
+      
+      const delta_eff_m = Math.pow(Math.pow(delta_forced_m, -3) + Math.pow(delta_nat_m, -3), -1.0 / 3.0);
+      const delta_eff_mm = delta_eff_m * 1000.0;
+      const g_bl = (D_CO2 / delta_eff_m) / V_mol;
+      
+      const dayFactor = Math.min(1.0, currentDay / 5.0);
+      let baseCO2 = 0.94;
+      if (p.chamber === 1) baseCO2 = 3.14;
+      else if (p.chamber === 3) baseCO2 = 3.47;
+      
+      const dCO2_ppm = -(baseCO2 * Math.pow(0.50 / Math.max(0.1, currentFlowQ), 0.6) * dayFactor);
+      const isStagnant = (uLocal_cm_s < 0.50);
+      
+      return {
+        u_cm_s: uLocal_cm_s,
+        g_bl: g_bl,
+        delta_mm: delta_eff_mm,
+        dCO2_ppm: dCO2_ppm,
+        isStagnant: isStagnant
+      };
+    }
+
+    let currentProbedPlant = plantInstances[82] || plantInstances[0];
+
+    function selectPlant(p, hitPoint) {
+      if (!p) return;
+      currentProbedPlant = p;
+      if (hitPoint) {
+        probeMarker.position.set(p.x, hitPoint.y + 0.5, p.z);
+      } else {
+        const hCurrent = p.baseH * Math.min(1.0, currentDay / 5.0);
+        probeMarker.position.set(p.x, 14.77 + hCurrent + 1.0, p.z);
+      }
+      probeMarker.visible = true;
+
+      const m = calculatePlantTelemetry(p);
+      const pIdEl = document.getElementById('probePlantId');
+      const coordsEl = document.getElementById('probeCoords');
+      const speedEl = document.getElementById('probeAirSpeed');
+      const gblEl = document.getElementById('probeGbl');
+      const deltaEl = document.getElementById('probeDelta');
+      const co2El = document.getElementById('probeCO2');
+      const statusEl = document.getElementById('probeStatus');
+
+      const spTitle = (p.species === 'brapa') ? 'Brassica rapa' : 'Arabidopsis';
+      if (pIdEl) pIdEl.innerText = spTitle + ' #' + p.plantId + ' (Ch ' + p.chamber + ')';
+      if (coordsEl) coordsEl.innerText = p.x.toFixed(1) + ', ' + (14.8 + p.baseH).toFixed(1) + ', ' + p.z.toFixed(1) + ' mm';
+      if (speedEl) speedEl.innerText = m.u_cm_s.toFixed(2) + ' cm/s';
+      if (gblEl) gblEl.innerText = m.g_bl.toFixed(4) + ' mol/m²s';
+      if (deltaEl) deltaEl.innerText = m.delta_mm.toFixed(1) + ' mm';
+      if (co2El) co2El.innerText = m.dCO2_ppm.toFixed(2) + ' ppm';
+
+      if (statusEl) {
+        if (m.isStagnant) {
+          statusEl.innerText = 'Stagnant (Hotspot)';
+          statusEl.className = 'font-bold text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/30';
+        } else {
+          statusEl.innerText = 'Optimal Aeration';
+          statusEl.className = 'font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/30';
+        }
+      }
+    }
+
+    function refreshProbedTelemetry() {
+      if (currentProbedPlant) {
+        selectPlant(currentProbedPlant, null);
+      }
+    }
+
+    // Toggle probe panel minimize
+    const btnToggleProbe = document.getElementById('btnToggleProbe');
+    const probeBody = document.getElementById('probeBody');
+    if (btnToggleProbe && probeBody) {
+      let isCollapsed = false;
+      btnToggleProbe.onclick = () => {
+        isCollapsed = !isCollapsed;
+        probeBody.style.display = isCollapsed ? 'none' : 'block';
+        btnToggleProbe.innerText = isCollapsed ? '+' : '_';
+      };
+    }
+
+    // Raycaster Click Handler on WebGL Canvas
+    function onPointerDown(e) {
+      if (!renderer || !camera) return;
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(groups.plants.children, true);
+
+      if (intersects.length > 0) {
+        let hitObj = intersects[0].object;
+        let foundPlant = null;
+        for (let p of plantInstances) {
+          if (p.group === hitObj || p.stem === hitObj || p.seed === hitObj || (p.leaves && p.leaves.includes(hitObj))) {
+            foundPlant = p;
+            break;
+          }
+        }
+        if (foundPlant) {
+          selectPlant(foundPlant, intersects[0].point);
+          return;
+        }
+      }
+
+      // Check chamber bottom substrate
+      const subIntersects = raycaster.intersectObjects(groups.substrate.children, true);
+      if (subIntersects.length > 0) {
+        const pt = subIntersects[0].point;
+        let nearest = null;
+        let minDist = 99999;
+        for (let p of plantInstances) {
+          const d = Math.hypot(p.x - pt.x, p.z - pt.z);
+          if (d < minDist) {
+            minDist = d;
+            nearest = p;
+          }
+        }
+        if (nearest) {
+          selectPlant(nearest, new THREE.Vector3(nearest.x, nearest.group.position.y + 4.0, nearest.z));
+        }
+      }
+    }
+    renderer.domElement.addEventListener('pointerdown', onPointerDown);
+
+    // --- Foliar Conductance Viridis Heatmap ---
+    function getViridisColor(val, minVal, maxVal) {
+      let t = (val - minVal) / (maxVal - minVal + 1e-6);
+      t = Math.max(0.0, Math.min(1.0, t));
+      let r, g, b;
+      if (t < 0.25) {
+        const f = t / 0.25;
+        r = (68 + f * (59 - 68)) / 255;
+        g = (1 + f * (82 - 1)) / 255;
+        b = (84 + f * (139 - 84)) / 255;
+      } else if (t < 0.50) {
+        const f = (t - 0.25) / 0.25;
+        r = (59 + f * (33 - 59)) / 255;
+        g = (82 + f * (145 - 82)) / 255;
+        b = (139 + f * (140 - 139)) / 255;
+      } else if (t < 0.75) {
+        const f = (t - 0.50) / 0.25;
+        r = (33 + f * (94 - 33)) / 255;
+        g = (145 + f * (201 - 145)) / 255;
+        b = (140 + f * (98 - 140)) / 255;
+      } else {
+        const f = (t - 0.75) / 0.25;
+        r = (94 + f * (253 - 94)) / 255;
+        g = (201 + f * (231 - 201)) / 255;
+        b = (98 + f * (37 - 98)) / 255;
+      }
+      return new THREE.Color(r, g, b);
+    }
+
+    let isHeatmapActive = false;
+    function updateFoliarHeatmap() {
+      plantInstances.forEach(p => {
+        if (!p.leaves) return;
+        if (isHeatmapActive) {
+          const m = calculatePlantTelemetry(p);
+          const c = getViridisColor(m.g_bl, 0.030, 0.080);
+          p.leaves.forEach(l => {
+            l.material.color.copy(c);
+            l.material.roughness = 0.2;
+          });
+        } else {
+          const origCol = (p.species === 'brapa') ? 0x34d399 : 0x38bdf8;
+          p.leaves.forEach(l => {
+            l.material.color.setHex(origCol);
+            l.material.roughness = (p.species === 'brapa') ? 0.4 : 0.5;
+          });
+        }
+      });
+    }
+
+    document.getElementById('chkHeatmap').onchange = (e) => {
+      isHeatmapActive = e.target.checked;
+      updateFoliarHeatmap();
+    };
+
+    document.getElementById('chkPetriDish').onchange = (e) => {
+      groups.petriDish.visible = e.target.checked;
+    };
+
     // Initial Ontogeny & Biophysics Setup Call
     updateOntogeny(5.0);
     setFlowDirection('push');
+    selectPlant(plantInstances[82], null);
   </script>
 </body>
 </html>
