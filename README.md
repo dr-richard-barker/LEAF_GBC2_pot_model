@@ -4,7 +4,7 @@
 [![GitHub Pages Portal](https://img.shields.io/badge/Live_Portal-GitHub_Pages-2980b9?style=for-the-badge)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/)
 [![Technical Manuscript](https://img.shields.io/badge/Manuscript-Full_Text_Report-8e44ad?style=for-the-badge)](./MANUSCRIPT_LEAF_GBC2_CFD.md)
 
-Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developmental canopy ontogeny, diurnal photoperiod inversion, off-nominal spacecraft fault-tolerance, and harvest-phase RNAlater fixative perfusion modeling for the **LEAF GBC2 spaceflight plant growth pot (`M09024F-MDL-5.STEP`) and lid (`M09025F-MDL-2.STEP`) assembly** under **Earth ($1.0\,g$, $9.81\ \text{m/s}^2$)** and **Lunar ($0.166\,g$, $1.62\ \text{m/s}^2$)** gravity regimes.
+Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developmental canopy ontogeny, diurnal photoperiod inversion, off-nominal spacecraft fault-tolerance, and harvest-phase RNAlater fixative perfusion modeling for the **LEAF GBC2 spaceflight plant growth pot (`M09024F-MDL-5.STEP`) and lid (`M09025F-MDL-2.STEP`) assembly** under **Earth (1.0g, 9.81 m/s²)** and **Lunar (0.166g, 1.62 m/s²)** gravity regimes.
 
 ---
 
@@ -24,16 +24,16 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 ![Orthographic Projections Annotated](figures/fig_orthographic_projection_annotated.png)
 
 ### 1.1 Mated STEP CAD Envelope
-- **Pot Body (`cad/pot.step` / `M09024F-MDL-5`)**: $47.63\ \text{mm}$ (X width) $\times\ 33.67\ \text{mm}$ (Y height) $\times\ 67.95\ \text{mm}$ (Z length).
-- **Lid Assembly (`cad/lid.step` / `M09025F-MDL-2`)**: $45.09\ \text{mm}$ (X width) $\times\ 5.71\ \text{mm}$ (Y height) $\times\ 65.41\ \text{mm}$ (Z length), seated on the pot rim at $Y = 33.67\ \text{mm}$ ($Y \in [32.40, 38.11]\ \text{mm}$).
-- **Total Internal Fluid Volume**: $64.60\ \text{cm}^3$ (headspace air volume $= 54.05\ \text{cm}^3$; porous media bulk volume $= 10.55\ \text{cm}^3$, void volume $= 5.28\ \text{mL}$ at porosity $\epsilon = 0.50$).
-- **Lower Aeration & Drainage Wells ($Y \in [0.00, 7.62]\ \text{mm}$)**: Molded basal channels ($V_{\text{drain}} = 8.74\ \text{cm}^3$) beneath the chamber retainer ledges providing root aeration and capillary buffering.
-- **3-Part Partitioned Porous Substrate ($Y \in [7.62, 14.62]\ \text{mm}$)**: Three discrete porous media blocks ($\Delta Y = 7.00\ \text{mm}$, permeability $K = 1.0 \times 10^{-10}\ \text{m}^2$, porosity $\epsilon = 0.50$) seated inside each growth compartment and separated by solid vertical baffles ($Z \in [-9.5, -7.5]\ \text{mm}$ and $Z \in [+7.5, +9.5]\ \text{mm}$).
+- **Pot Body (`cad/pot.step` / `M09024F-MDL-5`)**: 47.63 mm (X width) × 33.67 mm (Y height) × 67.95 mm (Z length).
+- **Lid Assembly (`cad/lid.step` / `M09025F-MDL-2`)**: 45.09 mm (X width) × 5.71 mm (Y height) × 65.41 mm (Z length), seated on the pot rim at _Y_ = 33.67 mm (_Y_ = 32.40–38.11 mm).
+- **Total Internal Fluid Volume**: 64.60 cm³ (headspace air volume = 54.05 cm³; porous media bulk volume = 10.55 cm³, void volume = 5.28 mL at porosity ε = 0.50).
+- **Lower Aeration & Drainage Wells (_Y_ = 0.00–7.62 mm)**: Molded basal channels (_V_drain = 8.74 cm³) beneath the chamber retainer ledges providing root aeration and capillary buffering.
+- **3-Part Partitioned Porous Substrate (_Y_ = 7.62–14.62 mm)**: Three discrete porous media blocks (Δ_Y_ = 7.00 mm, permeability _K_ = 1.0 × 10⁻¹⁰ m², porosity ε = 0.50) seated inside each growth compartment and separated by solid vertical baffles (_Z_ = -9.5 to -7.5 mm and _Z_ = +7.5 to +9.5 mm).
 
-### 1.2 Fluid Ports ($X = -15.49\ \text{mm}$, $\varnothing 3.18\ \text{mm}$ / $1/8^{\prime\prime}$ ID)
-1. **Port 1 ($Z = -21.59\ \text{mm}$) — Forced Air Inlet**: Injects conditioned air from the pump manifold into the upper perimeter distribution channel ($Y = 28\text{--}32\ \text{mm}$).
-2. **Port 2 ($Z = 0.00\ \text{mm}$) — Central Air Exhaust**: Positioned directly above central Chamber 2 to collect converging airflow from both lateral chambers and return it to the cabin loop (also serves as the displaced gas vent during harvest fixation).
-3. **Port 3 ($Z = +21.59\ \text{mm}$) — Water & RNAlater Delivery Port**: Equipped with an internal vertical dipping nozzle ($L = 24.2\ \text{mm}$) extending down to **$Y = 9.5\ \text{mm}$ inside Substrate Block 3** to ensure bottom-up capillary wetting and eliminate foliar splash damage.
+### 1.2 Fluid Ports (_X_ = -15.49 mm, ⌀ 3.18 mm / 1/8″ ID)
+1. **Port 1 (_Z_ = -21.59 mm) — Forced Air Inlet**: Injects conditioned air from the pump manifold into the upper perimeter distribution channel (_Y_ = 28–32 mm).
+2. **Port 2 (_Z_ = 0.00 mm) — Central Air Exhaust**: Positioned directly above central Chamber 2 to collect converging airflow from both lateral chambers and return it to the cabin loop (also serves as the displaced gas vent during harvest fixation).
+3. **Port 3 (_Z_ = +21.59 mm) — Water & RNAlater Delivery Port**: Equipped with an internal vertical dipping nozzle (_L_ = 24.2 mm) extending down to **_Y_ = 9.5 mm inside Substrate Block 3** to ensure bottom-up capillary wetting and eliminate foliar splash damage.
 
 ![Mated CAD Cross Sections](figures/assembly_cross_sections_annotated.png)
 
@@ -43,58 +43,58 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 
 | Parameter | Chamber 1 (*Brassica rapa*) | Chamber 2 (*Arabidopsis thaliana*) | Chamber 3 (*Brassica rapa*) |
 | :--- | :--- | :--- | :--- |
-| **Axial Span ($Z$)** | $[-30.5, -9.5]\ \text{mm}$ | $[-7.5, +7.5]\ \text{mm}$ (Central) | $[+9.5, +30.5]\ \text{mm}$ |
-| **Seed Count & Density** | **32 seeds** ($47.2\ \text{seeds/dm}^2$) | **100 seeds** ($206.2\ \text{seeds/dm}^2$) | **32 seeds** ($47.2\ \text{seeds/dm}^2$) |
-| **Single-Plant Leaf Area** | $2.00\ \text{cm}^2$ | $0.15\ \text{cm}^2$ | $2.00\ \text{cm}^2$ |
-| **Total Chamber Foliar Area** | **$64.0\ \text{cm}^2$** ($0.0064\ \text{m}^2$) | **$15.0\ \text{cm}^2$** ($0.0015\ \text{m}^2$) | **$64.0\ \text{cm}^2$** ($0.0064\ \text{m}^2$) |
-| **Canopy Vertical Span ($Y$)** | $[15.0, 26.0]\ \text{mm}$ ($h = 11.4\ \text{mm}$) | $[15.0, 19.5]\ \text{mm}$ ($h = 4.9\ \text{mm}$) | $[15.0, 26.0]\ \text{mm}$ ($h = 11.4\ \text{mm}$) |
-| **Leaf Area Index ($\text{LAI}$)** | $9.44$ | $3.09$ | $9.44$ |
-| **Leaf Area Density ($a$)** | $828\ \text{m}^2/\text{m}^3$ | $630\ \text{m}^2/\text{m}^3$ | $828\ \text{m}^2/\text{m}^3$ |
-| **Canopy Drag Factor ($D$)** | $8.28\ \text{s}^{-1}$ | $4.72\ \text{s}^{-1}$ | $8.28\ \text{s}^{-1}$ |
-| **Characteristic Leaf Length ($L$)** | $20\ \text{mm}$ | $8\ \text{mm}$ | $20\ \text{mm}$ |
-| **Substrate Bulk / Void Volume** | $4.02\ \text{cm}^3$ / $2.01\ \text{mL}$ | $2.51\ \text{cm}^3$ / $1.26\ \text{mL}$ | $4.02\ \text{cm}^3$ / $2.01\ \text{mL}$ |
-| **Upper Headspace Plenum** | $\Delta Y = 7.7\ \text{mm}$ | **$\Delta Y = 14.2\ \text{mm}$ (Open Plenum)** | $\Delta Y = 7.7\ \text{mm}$ |
+| **Axial Span (_Z_)** | -30.5 to -9.5 mm | -7.5 to +7.5 mm (Central) | +9.5 to +30.5 mm |
+| **Seed Count & Density** | **32 seeds** (47.2 seeds/dm²) | **100 seeds** (206.2 seeds/dm²) | **32 seeds** (47.2 seeds/dm²) |
+| **Single-Plant Leaf Area** | 2.00 cm² | 0.15 cm² | 2.00 cm² |
+| **Total Chamber Foliar Area** | **64.0 cm²** (0.0064 m²) | **15.0 cm²** (0.0015 m²) | **64.0 cm²** (0.0064 m²) |
+| **Canopy Vertical Span (_Y_)** | 15.0–26.0 mm (_h_ = 11.4 mm) | 15.0–19.5 mm (_h_ = 4.9 mm) | 15.0–26.0 mm (_h_ = 11.4 mm) |
+| **Leaf Area Index (LAI)** | 9.44 | 3.09 | 9.44 |
+| **Leaf Area Density (_a_)** | 828 m²/m³ | 630 m²/m³ | 828 m²/m³ |
+| **Canopy Drag Factor (_D_)** | 8.28 s⁻¹ | 4.72 s⁻¹ | 8.28 s⁻¹ |
+| **Characteristic Leaf Length (_L_)** | 20 mm | 8 mm | 20 mm |
+| **Substrate Bulk / Void Volume** | 4.02 cm³ / 2.01 mL | 2.51 cm³ / 1.26 mL | 4.02 cm³ / 2.01 mL |
+| **Upper Headspace Plenum** | Δ_Y_ = 7.7 mm | **Δ_Y_ = 14.2 mm (Open Plenum)** | Δ_Y_ = 7.7 mm |
 
 ---
 
 ## 3. Key Simulation Findings & Flight Operational Guidelines
 
 ### 3.1 "Dip-and-Converge" Aerodynamic Channelling & Age-of-Air Uniformity
-- Forced air entering Port 1 ($Z = -21.6\ \text{mm}$) encounters tall foliage drag ($D = 8.28\ \text{s}^{-1}$) in Chamber 1, skimming across the upper manifold until reaching the step-down above the prostrate *Arabidopsis* rosette carpet in Chamber 2.
-- The **$\Delta Y = 14.2\ \text{mm}$ open central plenum** directly beneath Port 2 acts as a low-resistance convergence corridor where lateral streams from Chambers 1 and 3 dip downward, flush the *Arabidopsis* lawn, and exhaust upward through Port 2.
-- **Sandberg Conservation Verification**: At nominal flow $Q = 0.50\ \text{L/min}$, the numerical flux-weighted outlet mean age of air is $\theta_{\text{out}} = 7.27\ \text{s}$ vs. theoretical $\tau = V_{\text{fluid}}/Q = 7.75\ \text{s}$ (ratio $= 0.938$). Inter-chamber mean age uniformity is preserved within **$< 1.0\%$** (Ch 1: $6.05\ \text{s}$, Ch 2: $6.10\ \text{s}$, Ch 3: $6.06\ \text{s}$).
+- Forced air entering Port 1 (_Z_ = -21.6 mm) encounters tall foliage drag (_D_ = 8.28 s⁻¹) in Chamber 1, skimming across the upper manifold until reaching the step-down above the prostrate *Arabidopsis* rosette carpet in Chamber 2.
+- The **Δ_Y_ = 14.2 mm open central plenum** directly beneath Port 2 acts as a low-resistance convergence corridor where lateral streams from Chambers 1 and 3 dip downward, flush the *Arabidopsis* lawn, and exhaust upward through Port 2.
+- **Sandberg Conservation Verification**: At nominal flow _Q_ = 0.50 L/min, the numerical flux-weighted outlet mean age of air is θ_out = 7.27 s vs. theoretical τ = _V_fluid / _Q_ = 7.75 s (ratio = 0.938). Inter-chamber mean age uniformity is preserved within **< 1.0%** (Ch 1: 6.05 s, Ch 2: 6.10 s, Ch 3: 6.06 s).
 
-### 3.2 Asymmetric Multi-Species Gas Exchange (Earth $1.0\,g$ vs. Lunar $0.166\,g$)
+### 3.2 Asymmetric Multi-Species Gas Exchange (Earth 1.0g vs. Lunar 0.166g)
 
-| Regime | Pump Speed ($Q$) | Gravity ($g$) | *B. rapa* (Ch 1 & 3, 32 Seeds) $A_{\text{net}}$ | *B. rapa* $\Delta[CO_2]$ / $\Delta[H_2O]$ | *A. thaliana* (Ch 2, 100 Seeds) $A_{\text{net}}$ | *A. thaliana* $\Delta[CO_2]$ / $\Delta[H_2O]$ |
+| Regime | Pump Speed (_Q_) | Gravity (_g_) | *B. rapa* (Ch 1 & 3, 32 Seeds) _A_net | *B. rapa* Δ[CO₂] / Δ[H₂O] | *A. thaliana* (Ch 2, 100 Seeds) _A_net | *A. thaliana* Δ[CO₂] / Δ[H₂O] |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Earth $1.0\,g$ Baseline** | $0.50\ \text{L/min}$ | $9.81\ \text{m/s}^2$ | **$13.04\ \mu\text{mol}\ \text{m}^{-2}\text{s}^{-1}$** | $-3.76\ \text{ppm}$ / $+7.11\ \text{mmol/m}^3$ | **$10.06\ \mu\text{mol}\ \text{m}^{-2}\text{s}^{-1}$** | $-1.31\ \text{ppm}$ / $+2.40\ \text{mmol/m}^3$ |
-| **Lunar $0.166\,g$ Uncompensated** | $0.50\ \text{L/min}$ | $1.62\ \text{m/s}^2$ | **$10.63\ \mu\text{mol}\ \text{m}^{-2}\text{s}^{-1}$** ($81.5\%$) | $-3.77\ \text{ppm}$ / $+7.12\ \text{mmol/m}^3$ | **$8.43\ \mu\text{mol}\ \text{m}^{-2}\text{s}^{-1}$** ($83.8\%$) | $-1.32\ \text{ppm}$ / $+2.42\ \text{mmol/m}^3$ |
-| **Lunar $0.166\,g$ Compensated** | **$0.85\ \text{L/min}$** | $1.62\ \text{m/s}^2$ | **$10.66\ \mu\text{mol}\ \text{m}^{-2}\text{s}^{-1}$** | **$-2.35\ \text{ppm}$ / $+4.50\ \text{mmol/m}^3$** ($-37\%$) | **$8.44\ \mu\text{mol}\ \text{m}^{-2}\text{s}^{-1}$** | **$-0.85\ \text{ppm}$ / $+1.59\ \text{mmol/m}^3$** ($-37\%$) |
+| **Earth 1.0g Baseline** | 0.50 L/min | 9.81 m/s² | **13.04 μmol m⁻² s⁻¹** | -3.76 ppm / +7.11 mmol/m³ | **10.06 μmol m⁻² s⁻¹** | -1.31 ppm / +2.40 mmol/m³ |
+| **Lunar 0.166g Uncompensated** | 0.50 L/min | 1.62 m/s² | **10.63 μmol m⁻² s⁻¹** (81.5%) | -3.77 ppm / +7.12 mmol/m³ | **8.43 μmol m⁻² s⁻¹** (83.8%) | -1.32 ppm / +2.42 mmol/m³ |
+| **Lunar 0.166g Compensated** | **0.85 L/min** | 1.62 m/s² | **10.66 μmol m⁻² s⁻¹** | **-2.35 ppm / +4.50 mmol/m³** (-37%) | **8.44 μmol m⁻² s⁻¹** | **-0.85 ppm / +1.59 mmol/m³** (-37%) |
 
 ### 3.3 Diurnal Photoperiod Inversion & Lunar Nocturnal Pump Setback
-- During the **8h dark skotoperiod**, LED arrays extinguish, leaves radiatively cool ($\Delta T = -0.3\ \text{K}$), and mitochondrial dark respiration emits dense $CO_2$ ($S_{CO2} = +6.0\ \mu\text{mol}\ \text{m}^{-3}\text{s}^{-1}$).
-- Under Lunar $0.166\,g$, low-power sleep setbacks ($Q \le 0.10\ \text{L/min}$) allow dense respiratory $CO_2$ to pool in the lower wells ($\Delta[CO_2] > +10\ \text{ppm}$).
-- **Flight Rule**: Maintain a **nocturnal lunar pump floor of $Q_{\text{night}} \ge 0.60\ \text{L/min}$** ($\text{Ri} \le 0.05$) to flush respiratory $CO_2$.
+- During the **8h dark skotoperiod**, LED arrays extinguish, leaves radiatively cool (Δ_T_ = -0.3 K), and mitochondrial dark respiration emits dense CO₂ (_S_CO2 = +6.0 μmol m⁻³ s⁻¹).
+- Under Lunar 0.166g, low-power sleep setbacks (_Q_ ≤ 0.10 L/min) allow dense respiratory CO₂ to pool in the lower wells (Δ[CO₂] > +10 ppm).
+- **Flight Rule**: Maintain a **nocturnal lunar pump floor of _Q_night ≥ 0.60 L/min** (Ri ≤ 0.05) to flush respiratory CO₂.
 
 ### 3.4 Harvest-Phase RNAlater Fixative Perfusion
-- **Nominal Injection ($Q_{\text{inj}} = 10\ \text{mL/min}$)**: Root substrate saturation ($5.28\ \text{mL}$ void volume) completes in **$t_{\text{root}} = 31.7\ \text{s}$**; full chamber immersion ($64.60\ \text{mL}$) completes in **$t_{\text{flood}} = 387.6\ \text{s}$ ($6.46\ \text{min}$)** with total pressure drop **$\Delta P = 0.73\ \text{kPa}$**.
-- **Rapid Injection ($Q_{\text{inj}} = 20\ \text{mL/min}$)**: Root saturation in **$15.8\ \text{s}$**, full chamber flooding in **$3.23\ \text{min}$**, with **$\Delta P = 1.47\ \text{kPa}$** (well below seal safety margins).
+- **Nominal Injection (_Q_inj = 10 mL/min)**: Root substrate saturation (5.28 mL void volume) completes in **_t_root = 31.7 s**; full chamber immersion (64.60 mL) completes in **_t_flood = 387.6 s (6.46 min)** with total pressure drop **Δ_P_ = 0.73 kPa**.
+- **Rapid Injection (_Q_inj = 20 mL/min)**: Root saturation in **15.8 s**, full chamber flooding in **3.23 min**, with **Δ_P_ = 1.47 kPa** (well below seal safety margins).
 
 ### 3.5 14-Day Developmental Growth Trajectory (Days 0–14)
-- **Imbibition Setback (Days 0–2)**: A gentle $Q = 0.25\ \text{L/min}$ germination flow prevents seed-coat desiccation on the top surface of Substrate Blocks 1–3 ($Y = 14.62\ \text{mm}$) while clearing dark seed respiration ($-0.45\ \text{to}\ -0.72\ \text{nmol CO}_2/\text{s}$).
+- **Imbibition Setback (Days 0–2)**: A gentle _Q_ = 0.25 L/min germination flow prevents seed-coat desiccation on the top surface of Substrate Blocks 1–3 (_Y_ = 14.62 mm) while clearing dark seed respiration (-0.45 to -0.72 nmol CO₂/s).
 - **Autotrophic Transition**: Net daily carbon fixation turns positive at **Day 2.8** for *B. rapa* and **Day 3.2** for *A. thaliana*.
-- **Adaptive Lunar Pump Schedule**: Stepping $Q_{\text{day}}$ from $0.25 \rightarrow 0.50 \rightarrow 0.65 \rightarrow 0.85\ \text{L/min}$ across Days 0–14 reduces *B. rapa* boundary-layer drawdown by **$41\%$** ($\Delta[CO_2]$ from $-3.98\ \text{ppm}$ to $-2.35\ \text{ppm}$ at Day 14) while root biomass compaction ($\epsilon: 0.50 \rightarrow 0.34$) raises Day 14 RNAlater injection $\Delta P$ from $0.73\ \text{kPa}$ to $4.04\ \text{kPa}$ (safely below the $5.0\ \text{kPa}$ seal limit).
+- **Adaptive Lunar Pump Schedule**: Stepping _Q_day from 0.25 → 0.50 → 0.65 → 0.85 L/min across Days 0–14 reduces *B. rapa* boundary-layer drawdown by **41%** (Δ[CO₂] from -3.98 ppm to -2.35 ppm at Day 14) while root biomass compaction (ε: 0.50 → 0.34) raises Day 14 RNAlater injection Δ_P_ from 0.73 kPa to 4.04 kPa (safely below the 5.0 kPa seal limit).
 
 ### 3.6 Off-Nominal Spacecraft Sensitivity & Fault-Tolerance Sweeps
-- **Elevated Spacecraft Cabin $\text{CO}_2$ ($420\text{--}5{,}000\ \text{ppm}$)**: Cabin $\text{CO}_2 \ge 2{,}000\ \text{ppm}$ saturates FvCB carboxylation at the TPU plateau ($A_{\text{net}} \approx 29.9\text{--}31.6\ \mu\text{mol m}^{-2}\ \text{s}^{-1}$ in *B. rapa*), masking Lunar carbon limitation, **but** induces $50\%$ stomatal closure ($g_s$: $0.165 \rightarrow 0.082\ \text{mol m}^{-2}\ \text{s}^{-1}$ at $4{,}000\ \text{ppm}$), reducing evaporative cooling and elevating Lunar leaf temperature to $\Delta T_{\text{leaf}} = +3.05\ ^\circ\text{C}$ at $0.50\ \text{L/min}$ vs. $+2.19\ ^\circ\text{C}$ at $0.85\ \text{L/min}$.
-- **Root-Induced Substrate Compaction ($\epsilon = 0.50 \rightarrow 0.20$)**: If root density compresses substrate porosity below $\epsilon = 0.32$, stepping RNAlater injection down from $10\ \text{mL/min}$ to $5\ \text{mL/min}$ maintains $\Delta P < 3.5\ \text{kPa}$.
-- **Pump Brownout Grace Window**: Complete pump outage ($Q \le 0.04\ \text{L/min}$) has a **grace window of $t_{\text{grace}} = 10.4\text{--}18.5\ \text{min}$** before transpired humidity reaches $92\%$ RH condensation onset on the lid window.
+- **Elevated Spacecraft Cabin CO₂ (420–5,000 ppm)**: Cabin CO₂ ≥ 2,000 ppm saturates FvCB carboxylation at the TPU plateau (_A_net ≈ 29.9–31.6 μmol m⁻² s⁻¹ in *B. rapa*), masking Lunar carbon limitation, **but** induces 50% stomatal closure (_g_s: 0.165 → 0.082 mol m⁻² s⁻¹ at 4,000 ppm), reducing evaporative cooling and elevating Lunar leaf temperature to Δ_T_leaf = +3.05 °C at 0.50 L/min vs. +2.19 °C at 0.85 L/min.
+- **Root-Induced Substrate Compaction (ε = 0.50 → 0.20)**: If root density compresses substrate porosity below ε = 0.32, stepping RNAlater injection down from 10 mL/min to 5 mL/min maintains Δ_P_ < 3.5 kPa.
+- **Pump Brownout Grace Window**: Complete pump outage (_Q_ ≤ 0.04 L/min) has a **grace window of _t_grace = 10.4–18.5 min** before transpired humidity reaches 92% RH condensation onset on the lid window.
 
 ### 3.7 Porous Substrate Capillarity & Optical Lid Condensation Defense
-- **Lunar Capillary Retention (Richards / van Genuchten)**: In Lunar $0.166\,g$, capillary forces ($P_c = 2\sigma\cos\theta_c / r_{\text{pore}}$) exceed gravity drainage by $>250\times$, producing a uniform hydration profile ($\theta_w = 0.314\ \text{m}^3/\text{m}^3$) across the $7.0\ \text{mm}$ substrate cassettes. Air-filled porosity is sustained at $\varepsilon_{\text{air}} = 0.266\ \text{m}^3/\text{m}^3$ (above the hypoxia ceiling $\varepsilon_{\text{crit}} = 0.15$), with active drainage through the lower aeration wells ($Y \in [0, 7.62]\ \text{mm}$).
-- **Optical Lid Condensation Margin ($\Delta T_{\text{margin}}$)**: Transpiration across 164 plants injects $4.4\ \text{mL/day}$ of moisture. Nominal flow ($Q = 0.50\ \text{L/min}$) maintains inner lid temperature above dew point ($\Delta T_{\text{margin}} = +0.83\ ^\circ\text{C}$ daytime, $+2.15\ ^\circ\text{C}$ at $0.85\ \text{L/min}$), preventing camera window fogging unless ventilation drops below $Q_{\text{crit}} \approx 0.08\ \text{L/min}$.
-- **Two-Phase RNAlater Venting**: Injection at $10\ \text{mL/min}$ via Port 3 dipping nozzle ($Y = 9.5\ \text{mm}$) operates at $Ca = 1.78 \times 10^{-3}$ and $Bo_{\text{lunar}} = 6.31 \times 10^{-5} \ll 1$. Root substrate wets in $26.4\ \text{s}$, with $100\%$ displaced air vented via Port 2 at $\Delta P_{\text{vent}} < 0.01\ \text{kPa}$ with zero trapped bubbles.
+- **Lunar Capillary Retention (Richards / van Genuchten)**: In Lunar 0.166g, capillary forces (_P_c = 2σ cos θ_c / _r_pore) exceed gravity drainage by >250×, producing a uniform hydration profile (θ_w = 0.314 m³/m³) across the 7.0 mm substrate cassettes. Air-filled porosity is sustained at ε_air = 0.266 m³/m³ (above the hypoxia ceiling ε_crit = 0.15), with active drainage through the lower aeration wells (_Y_ = 0–7.62 mm).
+- **Optical Lid Condensation Margin (Δ_T_margin)**: Transpiration across 164 plants injects 4.4 mL/day of moisture. Nominal flow (_Q_ = 0.50 L/min) maintains inner lid temperature above dew point (Δ_T_margin = +0.83 °C daytime, +2.15 °C at 0.85 L/min), preventing camera window fogging unless ventilation drops below _Q_crit ≈ 0.08 L/min.
+- **Two-Phase RNAlater Venting**: Injection at 10 mL/min via Port 3 dipping nozzle (_Y_ = 9.5 mm) operates at Ca = 1.78 × 10⁻³ and Bo_lunar = 6.31 × 10⁻⁵ ≪ 1. Root substrate wets in 26.4 s, with 100% displaced air vented via Port 2 at Δ_P_vent < 0.01 kPa with zero trapped bubbles.
 
 ---
 
@@ -103,17 +103,17 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 | Figure | Description | Files |
 | :--- | :--- | :--- |
 | **Orthographic Blueprint** | 3-view CAD projection (Top Plan, Side Elevation, Longitudinal Cutaway) with full ABAI QC badges | [PNG](figures/fig_orthographic_projection_annotated.png) · [SVG](figures/fig_orthographic_projection_annotated.svg) |
-| **Assembly Cutaways** | Mated STEP cross-sections across compartments ($X=-5\ \text{mm}$), ports ($X=-15.49\ \text{mm}$), and center ($Z=0$) | [Annotated](figures/assembly_cross_sections_annotated.png) · [Exact CAD](figures/assembly_cross_sections_exact.png) |
-| **Figure 1** | Parametric pump sweep ($0.05\text{--}4.0\ \text{L/min}$): velocity, boundary-layer conductance, $\Delta[CO_2]$, $A_{\text{net}}$ | [PNG](figures/fig1_pump_speed_vs_aerodynamics.png) · [SVG](figures/fig1_pump_speed_vs_aerodynamics.svg) |
-| **Figure 2** | 2D/3D velocity vector fields & scalar distributions comparing Earth $1.0\,g$ vs. Lunar $0.166\,g$ | [PNG](figures/fig2_velocity_fields_earth_vs_lunar.png) · [SVG](figures/fig2_velocity_fields_earth_vs_lunar.svg) |
-| **Figure 3** | Lunar compensatory pump sizing curve & regime classification ($\text{Ri}$, $\text{Pe}$, $\text{Gr}/\text{Re}^2$) | [PNG](figures/fig3_lunar_compensatory_pump_curve.png) · [SVG](figures/fig3_lunar_compensatory_pump_curve.svg) |
-| **Figure 4** | 3D spatial Mean Age of Air ($\theta$), chamber uniformity, and Sandberg identity verification | [PNG](figures/fig4_mean_age_of_air_and_chamber_uniformity.png) · [SVG](figures/fig4_mean_age_of_air_and_chamber_uniformity.svg) |
+| **Assembly Cutaways** | Mated STEP cross-sections across compartments (_X_ = -5 mm), ports (_X_ = -15.49 mm), and center (_Z_ = 0) | [Annotated](figures/assembly_cross_sections_annotated.png) · [Exact CAD](figures/assembly_cross_sections_exact.png) |
+| **Figure 1** | Parametric pump sweep (0.05–4.0 L/min): velocity, boundary-layer conductance, Δ[CO₂], _A_net | [PNG](figures/fig1_pump_speed_vs_aerodynamics.png) · [SVG](figures/fig1_pump_speed_vs_aerodynamics.svg) |
+| **Figure 2** | 2D/3D velocity vector fields & scalar distributions comparing Earth 1.0g vs. Lunar 0.166g | [PNG](figures/fig2_velocity_fields_earth_vs_lunar.png) · [SVG](figures/fig2_velocity_fields_earth_vs_lunar.svg) |
+| **Figure 3** | Lunar compensatory pump sizing curve & regime classification (Ri, Pe, Gr/Re²) | [PNG](figures/fig3_lunar_compensatory_pump_curve.png) · [SVG](figures/fig3_lunar_compensatory_pump_curve.svg) |
+| **Figure 4** | 3D spatial Mean Age of Air (θ), chamber uniformity, and Sandberg identity verification | [PNG](figures/fig4_mean_age_of_air_and_chamber_uniformity.png) · [SVG](figures/fig4_mean_age_of_air_and_chamber_uniformity.svg) |
 | **Figure 5** | Flight hardware benchmark comparing LEAF GBC2 against NASA BRIC, CARA, and Veggie | [PNG](figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.png) · [SVG](figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.svg) |
 | **Figure 6** | Predicted transcriptomic stress & phytohormone signaling phenotypes (Auxin, ABA, Ethylene) | [PNG](figures/fig6_predicted_hormone_carbon_phenotypes.png) · [SVG](figures/fig6_predicted_hormone_carbon_phenotypes.svg) |
 | **Figure 7** | Transient RNAlater perfusion front progression & multi-species asymmetric gas exchange | [PNG](figures/fig7_rnalater_perfusion_and_species_dynamics.png) · [SVG](figures/fig7_rnalater_perfusion_and_species_dynamics.svg) |
-| **Figure 8** | Diurnal day/night photoperiod inversion, respiratory $CO_2$ pooling, and nocturnal setback envelope | [PNG](figures/fig8_diurnal_day_night_photoperiod_inversion.png) · [SVG](figures/fig8_diurnal_day_night_photoperiod_inversion.svg) |
+| **Figure 8** | Diurnal day/night photoperiod inversion, respiratory CO₂ pooling, and nocturnal setback envelope | [PNG](figures/fig8_diurnal_day_night_photoperiod_inversion.png) · [SVG](figures/fig8_diurnal_day_night_photoperiod_inversion.svg) |
 | **Figure 9** | 14-day developmental growth time-series: logistic canopy ontogeny, channelling, cumulative C, & root compaction | [PNG](figures/fig9_developmental_growth_timeseries.png) · [SVG](figures/fig9_developmental_growth_timeseries.svg) |
-| **Figure 10** | Off-nominal spacecraft sensitivity sweeps: cabin $CO_2$ ($420\text{--}5{,}000\ \text{ppm}$), root compaction, & pump brownout | [PNG](figures/fig10_off_nominal_sensitivity_sweeps.png) · [SVG](figures/fig10_off_nominal_sensitivity_sweeps.svg) |
+| **Figure 10** | Off-nominal spacecraft sensitivity sweeps: cabin CO₂ (420–5,000 ppm), root compaction, & pump brownout | [PNG](figures/fig10_off_nominal_sensitivity_sweeps.png) · [SVG](figures/fig10_off_nominal_sensitivity_sweeps.svg) |
 | **Figure 11** | Porous substrate unsaturated capillarity, evapotranspiration, optical lid condensation defense, & two-phase venting | [PNG](figures/fig11_water_capillarity_evapotranspiration_condensation.png) · [SVG](figures/fig11_water_capillarity_evapotranspiration_condensation.svg) |
 
 ---

@@ -5,9 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LEAF GBC2 Interactive 3D Chamber & CFD Digital Twin</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
-  <!-- Three.js and OrbitControls via CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- Three.js and OrbitControls: Local bundle with CDN fallback -->
+  <script src="js/three.min.js"></script>
+  <script>
+    if (typeof THREE === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+    }
+  </script>
+  <script src="js/OrbitControls.js"></script>
+  <script>
+    if (typeof THREE !== 'undefined' && typeof THREE.OrbitControls === 'undefined') {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\/script>');
+    }
+  </script>
   <style>
     :root {
       --cose-bg: #0f172a;
@@ -359,6 +369,14 @@
   <!-- Three.js Interactive 3D Digital Twin Engine -->
   <script>
     // -------------------------------------------------------------
+    // Core Engine References (declared early to prevent TDZ errors)
+    // -------------------------------------------------------------
+    let scene = null;
+    let camera = null;
+    let renderer = null;
+    let controls = null;
+
+    // -------------------------------------------------------------
     // Theme Management (CoSE Design System Sync)
     // -------------------------------------------------------------
     const themeToggleBtn = document.getElementById('themeToggleBtn');
@@ -368,29 +386,35 @@
     function applyTheme(theme) {
       if (theme === 'light') {
         document.documentElement.classList.add('light');
-        sunIcon.classList.add('hidden');
-        sunIcon.classList.remove('block');
-        moonIcon.classList.remove('hidden');
-        moonIcon.classList.add('block');
+        if (sunIcon) { sunIcon.classList.add('hidden'); sunIcon.classList.remove('block'); }
+        if (moonIcon) { moonIcon.classList.remove('hidden'); moonIcon.classList.add('block'); }
         if (scene) scene.background = new THREE.Color(0xf1f5f9);
       } else {
         document.documentElement.classList.remove('light');
-        sunIcon.classList.remove('hidden');
-        sunIcon.classList.add('block');
-        moonIcon.classList.add('hidden');
-        moonIcon.classList.remove('block');
+        if (sunIcon) { sunIcon.classList.remove('hidden'); sunIcon.classList.add('block'); }
+        if (moonIcon) { moonIcon.classList.add('hidden'); moonIcon.classList.remove('block'); }
         if (scene) scene.background = new THREE.Color(0x0a0f1d);
       }
-      localStorage.setItem('barker.theme', theme);
+      try {
+        localStorage.setItem('barker.theme', theme);
+      } catch (e) {}
     }
 
-    const savedTheme = localStorage.getItem('barker.theme') || 'dark';
+    const savedTheme = (function() {
+      try {
+        return localStorage.getItem('barker.theme') || 'dark';
+      } catch (e) {
+        return 'dark';
+      }
+    })();
     applyTheme(savedTheme);
 
-    themeToggleBtn.addEventListener('click', () => {
-      const isLight = document.documentElement.classList.contains('light');
-      applyTheme(isLight ? 'dark' : 'light');
-    });
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', () => {
+        const isLight = document.documentElement.classList.contains('light');
+        applyTheme(isLight ? 'dark' : 'light');
+      });
+    }
 
     // Listen to parent frame message and storage events for synchronized theme switching
     window.addEventListener('message', (e) => {
@@ -408,25 +432,39 @@
     // Three.js Scene Setup
     // -------------------------------------------------------------
     const container = document.getElementById('webgl-container');
-    const scene = new THREE.Scene();
+    function getContainerDimensions() {
+      const w = container ? container.clientWidth : 0;
+      const h = container ? container.clientHeight : 0;
+      return {
+        width: w > 0 ? w : (window.innerWidth || 800),
+        height: h > 0 ? h : ((window.innerHeight - 56) > 0 ? (window.innerHeight - 56) : 600)
+      };
+    }
+
+    const initialDims = getContainerDimensions();
+    scene = new THREE.Scene();
     scene.background = new THREE.Color(savedTheme === 'light' ? 0xf1f5f9 : 0x0a0f1d);
 
-    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 1, 1000);
+    camera = new THREE.PerspectiveCamera(45, initialDims.width / initialDims.height, 1, 1000);
     camera.position.set(50, 45, 65);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(initialDims.width, initialDims.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    container.appendChild(renderer.domElement);
+    if (container) {
+      container.appendChild(renderer.domElement);
+    }
 
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.target.set(0, 17, 0); // Center of chamber CAD frame
     controls.maxDistance = 250;
     controls.minDistance = 15;
+    controls.autoRotate = false;
+    controls.autoRotateSpeed = 2.0;
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
@@ -677,6 +715,8 @@
       transparent: true,
       opacity: 0.85
     });
+    particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+    particleGeo.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
     const particleSystem = new THREE.Points(particleGeo, particleMat);
     groups.streamlines.add(particleSystem);
 
@@ -757,12 +797,7 @@
     function animate() {
       requestAnimationFrame(animate);
 
-      if (autoRotate) {
-        controls.update();
-        scene.rotation.y += 0.003;
-      } else {
-        controls.update();
-      }
+      controls.update();
 
       // Update Particle Streamlines
       if (groups.streamlines.visible) {
@@ -826,8 +861,6 @@
           }
         }
 
-        particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-        particleGeo.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
         particleGeo.attributes.position.needsUpdate = true;
         particleGeo.attributes.color.needsUpdate = true;
       }
@@ -849,13 +882,21 @@
     animate();
 
     // -------------------------------------------------------------
-    // Window Resize Handling
+    // Window & Container Resize Handling
     // -------------------------------------------------------------
-    window.addEventListener('resize', () => {
-      camera.aspect = container.clientWidth / container.clientHeight;
+    function handleResize() {
+      if (!container || !renderer || !camera) return;
+      const d = getContainerDimensions();
+      if (d.width <= 0 || d.height <= 0) return;
+      camera.aspect = d.width / d.height;
       camera.updateProjectionMatrix();
-      renderer.setSize(container.clientWidth, container.clientHeight);
-    });
+      renderer.setSize(d.width, d.height);
+    }
+    window.addEventListener('resize', handleResize);
+    if (typeof ResizeObserver !== 'undefined' && container) {
+      const resizeObserver = new ResizeObserver(() => handleResize());
+      resizeObserver.observe(container);
+    }
 
     // -------------------------------------------------------------
     // UI Controls & Mode Buttons
@@ -910,39 +951,41 @@
 
     // Camera Presets
     document.getElementById('btnIso').onclick = () => {
-      scene.rotation.y = 0;
       camera.position.set(50, 45, 65);
       controls.target.set(0, 17, 0);
+      controls.update();
     };
     document.getElementById('btnTop').onclick = () => {
-      scene.rotation.y = 0;
       camera.position.set(0, 95, 0);
       controls.target.set(0, 17, 0);
+      controls.update();
     };
     document.getElementById('btnSide').onclick = () => {
-      scene.rotation.y = 0;
       camera.position.set(85, 17, 0);
       controls.target.set(0, 17, 0);
+      controls.update();
     };
     document.getElementById('btnFront').onclick = () => {
-      scene.rotation.y = 0;
       camera.position.set(0, 17, 90);
       controls.target.set(0, 17, 0);
+      controls.update();
     };
     document.getElementById('btnPlenum').onclick = () => {
-      scene.rotation.y = 0;
       camera.position.set(22, 28, 25);
       controls.target.set(0, 22, 0); // Focus on central Chamber 2 open plenum
+      controls.update();
     };
     document.getElementById('btnReset').onclick = () => {
-      scene.rotation.y = 0;
       camera.position.set(50, 45, 65);
       controls.target.set(0, 17, 0);
       autoRotate = false;
+      controls.autoRotate = false;
       document.getElementById('btnSpin').classList.remove('bg-emerald-600');
+      controls.update();
     };
     document.getElementById('btnSpin').onclick = () => {
       autoRotate = !autoRotate;
+      controls.autoRotate = autoRotate;
       document.getElementById('btnSpin').classList.toggle('bg-emerald-600', autoRotate);
     };
 

@@ -937,7 +937,7 @@
       <div class="hero-eyebrow">Spaceflight Hardware Fluidics &amp; Multi-Species Gas Exchange</div>
       <h1>LEAF GBC2 Plant Chamber: 1g Earth vs. 0.166g Lunar CFD Model</h1>
       <p class="lead">
-        Full 3D Navier–Stokes, Brinkman–Darcy porous media, and coupled Farquhar–von Caemmerer–Berry (FvCB) photosynthetic modeling for the mated GBC2 pot (<code>M09024F-MDL-5</code>) and lid (<code>M09025F-MDL-2</code>). Incorporates a 3-part partitioned porous substrate ($Y = 7.62\text{–}14.62\ \text{mm}$), lower aeration wells ($Y = 0\text{–}7.62\ \text{mm}$), asymmetric planting densities (<strong>32 <em>Brassica rapa</em> seeds</strong> in Chambers 1 &amp; 3 vs. <strong>100 <em>Arabidopsis thaliana</em> seeds</strong> in central Chamber 2), diurnal photoperiod inversion, 14-day developmental growth time-series, off-nominal fault sweeps, and harvest-phase RNAlater fixative perfusion.
+        Full 3D Navier–Stokes, Brinkman–Darcy porous media, and coupled Farquhar–von Caemmerer–Berry (FvCB) photosynthetic modeling for the mated GBC2 pot (<code>M09024F-MDL-5</code>) and lid (<code>M09025F-MDL-2</code>). Incorporates a 3-part partitioned porous substrate (<em>Y</em> = 7.62–14.62 mm), lower aeration wells (<em>Y</em> = 0–7.62 mm), asymmetric planting densities (<strong>32 <em>Brassica rapa</em> seeds</strong> in Chambers 1 &amp; 3 vs. <strong>100 <em>Arabidopsis thaliana</em> seeds</strong> in central Chamber 2), diurnal photoperiod inversion, 14-day developmental growth time-series, off-nominal fault sweeps, and harvest-phase RNAlater fixative perfusion.
       </p>
       <div class="hero-actions">
         <a href="#digital-twin" class="btn-primary">Explore Interactive 3D Digital Twin</a>
@@ -983,10 +983,10 @@
       <div class="viewer-frame-wrap">
         <div class="viewer-toolbar">
           <div class="viewer-toolbar-info">
-            <span><span class="dot-indicator" style="background:#e74c3c;"></span>Port 1: Air Inlet ($Z=-21.6\text{ mm}$)</span>
-            <span><span class="dot-indicator" style="background:#9b59b6;"></span>Port 2: Central Exhaust ($Z=0.0\text{ mm}$)</span>
-            <span><span class="dot-indicator" style="background:#3498db;"></span>Port 3: Dipping Nozzle ($Z=+21.6\text{ mm}, Y=9.5\text{ mm}$)</span>
-            <span><span class="dot-indicator" style="background:#e67e22;"></span>3-Part Substrate ($Y=7.62\text{–}14.62\text{ mm}$)</span>
+            <span><span class="dot-indicator" style="background:#e74c3c;"></span>Port 1: Air Inlet (<em>Z</em> = −21.6 mm)</span>
+            <span><span class="dot-indicator" style="background:#9b59b6;"></span>Port 2: Central Exhaust (<em>Z</em> = 0.0 mm)</span>
+            <span><span class="dot-indicator" style="background:#3498db;"></span>Port 3: Dipping Nozzle (<em>Z</em> = +21.6 mm, <em>Y</em> = 9.5 mm)</span>
+            <span><span class="dot-indicator" style="background:#e67e22;"></span>3-Part Substrate (<em>Y</em> = 7.62–14.62 mm)</span>
           </div>
           <span style="font-size:0.78rem; color:var(--text-muted);">Drag to Orbit · Scroll to Zoom · Right-Click to Pan</span>
         </div>
@@ -999,7 +999,7 @@
       <div class="section-header">
         <div>
           <h2>2. ABAI QC Orthographic Blueprints &amp; Mated CAD Cross-Sections</h2>
-          <p>Exact 3D STEP cross-sections verifying lid mating ($Y = 33.67\ \text{mm}$), 3-part partitioned substrate, Port 3 dipping nozzle, and "dip-and-converge" airflow streamlines.</p>
+          <p>Exact 3D STEP cross-sections verifying lid mating (<em>Y</em> = 33.67 mm), 3-part partitioned substrate, Port 3 dipping nozzle, and &ldquo;dip-and-converge&rdquo; airflow streamlines.</p>
         </div>
         <div class="tabs-bar">
           <button class="tab-btn active" onclick="switchBlueprint('ortho', this)">Orthographic 3-View Blueprint</button>
@@ -1019,22 +1019,22 @@
           <ul class="spec-list">
             <li>
               <strong>Mated CAD Envelope (Pot + Lid)</strong>
-              Pot (`M09024F-MDL-5`): $47.63 \times 33.67 \times 67.95\ \text{mm}$. Lid (`M09025F-MDL-2`) rotated $90^\circ$ and seated at $Y = 33.67\ \text{mm}$ ($Y \in [32.40, 38.11]\ \text{mm}$).
+              Pot (<code>M09024F-MDL-5</code>): 47.63 &times; 33.67 &times; 67.95 mm. Lid (<code>M09025F-MDL-2</code>) rotated 90&deg; and seated at <em>Y</em> = 33.67 mm (<em>Y</em> span 32.40–38.11 mm).
             </li>
             <li>
-              <strong>3-Part Partitioned Porous Substrate ($Y = 7.62\text{–}14.62\ \text{mm}$)</strong>
-              Split into 3 discrete blocks seated on internal chamber retainer ledges ($\Delta Y = 7.00\ \text{mm}$, $\epsilon = 0.50$, $K = 10^{-10}\ \text{m}^2$). Total bulk volume $= 10.55\ \text{cm}^3$ ($5.28\ \text{mL}$ void volume).
+              <strong>3-Part Partitioned Porous Substrate (<em>Y</em> = 7.62–14.62 mm)</strong>
+              Split into 3 discrete blocks seated on internal chamber retainer ledges (thickness &Delta;<em>Y</em> = 7.00 mm, &epsilon; = 0.50, permeability <em>K</em> = 10<sup>&minus;10</sup> m&sup2;). Total bulk volume = 10.55 cm&sup3; (5.28 mL void volume).
             </li>
             <li>
-              <strong>Lower Aeration &amp; Drainage Base ($Y = 0.0\text{–}7.62\ \text{mm}$)</strong>
-              Molded basal troughs ($8.74\ \text{cm}^3$) below the substrate ledges provide root zone oxygenation and capillary moisture buffering.
+              <strong>Lower Aeration &amp; Drainage Base (<em>Y</em> = 0.0–7.62 mm)</strong>
+              Molded basal troughs (8.74 cm&sup3;) below the substrate ledges provide root zone oxygenation and capillary moisture buffering.
             </li>
             <li>
-              <strong>Open Central Plenum ($\Delta Y = 14.2\ \text{mm}$ in Chamber 2)</strong>
-              Because Chamber 2 houses prostrate <em>Arabidopsis</em> rosettes ($h = 4.9\ \text{mm}$) between tall <em>B. rapa</em> canopies ($h = 11.4\ \text{mm}$), air skims across Chamber 1, dips into Chamber 2's open plenum, converges with Chamber 3, and exits cleanly out Port 2.
+              <strong>Open Central Plenum (&Delta;<em>Y</em> = 14.2 mm in Chamber 2)</strong>
+              Because Chamber 2 houses prostrate <em>Arabidopsis</em> rosettes (height <em>h</em> = 4.9 mm) between tall <em>B. rapa</em> canopies (height <em>h</em> = 11.4 mm), air skims across Chamber 1, dips into Chamber 2's open plenum, converges with Chamber 3, and exits cleanly out Port 2.
             </li>
             <li>
-              <strong>Port 3 Sub-Surface Dipping Nozzle ($Y = 9.5\ \text{mm}$)</strong>
+              <strong>Port 3 Sub-Surface Dipping Nozzle (<em>Y</em> = 9.5 mm)</strong>
               Delivers water and harvest-phase RNAlater directly into the core of Substrate Block 3, driving bottom-up capillary imbibition without foliar splashing.
             </li>
           </ul>
@@ -1061,12 +1061,12 @@
             </div>
             <span class="seed-pill">32 Seeds</span>
           </div>
-          <div class="metric-row"><span>Axial Span ($Z$)</span><span>-30.5 to -9.5 mm</span></div>
+          <div class="metric-row"><span>Axial Span (<em>Z</em>)</span><span>−30.5 to −9.5 mm</span></div>
           <div class="metric-row"><span>Planting Density</span><span>47.2 seeds / dm²</span></div>
           <div class="metric-row"><span>Total Chamber Leaf Area</span><span>64.0 cm² (2.0 cm²/plant)</span></div>
-          <div class="metric-row"><span>Canopy Vertical Span ($Y$)</span><span>15.0 – 26.0 mm (h = 11.4 mm)</span></div>
-          <div class="metric-row"><span>Leaf Area Index (LAI) / Density ($a$)</span><span>9.44 / 828 m²/m³</span></div>
-          <div class="metric-row"><span>Aerodynamic Drag ($D = C_d a U$)</span><span>8.28 s⁻¹ (L_leaf = 20 mm)</span></div>
+          <div class="metric-row"><span>Canopy Vertical Span (<em>Y</em>)</span><span>15.0 – 26.0 mm (<em>h</em> = 11.4 mm)</span></div>
+          <div class="metric-row"><span>Leaf Area Index (LAI) / Density (<em>a</em>)</span><span>9.44 / 828 m²/m³</span></div>
+          <div class="metric-row"><span>Aerodynamic Drag (<em>D</em> = <em>C</em><sub>d</sub> <em>a</em> <em>U</em>)</span><span>8.28 s⁻¹ (<em>L</em><sub>leaf</sub> = 20 mm)</span></div>
           <div class="metric-row"><span>Substrate Block 1 Void Volume</span><span>2.01 mL (4.02 cm³ bulk)</span></div>
         </div>
 
@@ -1079,13 +1079,13 @@
             </div>
             <span class="seed-pill">100 Seeds</span>
           </div>
-          <div class="metric-row"><span>Axial Span ($Z$)</span><span>-7.5 to +7.5 mm</span></div>
+          <div class="metric-row"><span>Axial Span (<em>Z</em>)</span><span>−7.5 to +7.5 mm</span></div>
           <div class="metric-row"><span>Planting Density</span><span>206.2 seeds / dm²</span></div>
           <div class="metric-row"><span>Total Chamber Leaf Area</span><span>15.0 cm² (0.15 cm²/plant)</span></div>
-          <div class="metric-row"><span>Canopy Vertical Span ($Y$)</span><span>15.0 – 19.5 mm (h = 4.9 mm)</span></div>
-          <div class="metric-row"><span>Leaf Area Index (LAI) / Density ($a$)</span><span>3.09 / 630 m²/m³</span></div>
-          <div class="metric-row"><span>Aerodynamic Drag ($D = C_d a U$)</span><span>4.72 s⁻¹ (L_leaf = 8 mm)</span></div>
-          <div class="metric-row"><span>Open Central Plenum Headspace</span><span>&Delta;Y = 14.2 mm (Y = 19.5–33.7 mm)</span></div>
+          <div class="metric-row"><span>Canopy Vertical Span (<em>Y</em>)</span><span>15.0 – 19.5 mm (<em>h</em> = 4.9 mm)</span></div>
+          <div class="metric-row"><span>Leaf Area Index (LAI) / Density (<em>a</em>)</span><span>3.09 / 630 m²/m³</span></div>
+          <div class="metric-row"><span>Aerodynamic Drag (<em>D</em> = <em>C</em><sub>d</sub> <em>a</em> <em>U</em>)</span><span>4.72 s⁻¹ (<em>L</em><sub>leaf</sub> = 8 mm)</span></div>
+          <div class="metric-row"><span>Open Central Plenum Headspace</span><span>&Delta;<em>Y</em> = 14.2 mm (<em>Y</em> = 19.5–33.7 mm)</span></div>
         </div>
 
         <!-- Chamber 3 -->
@@ -1097,13 +1097,13 @@
             </div>
             <span class="seed-pill">32 Seeds</span>
           </div>
-          <div class="metric-row"><span>Axial Span ($Z$)</span><span>+9.5 to +30.5 mm</span></div>
+          <div class="metric-row"><span>Axial Span (<em>Z</em>)</span><span>+9.5 to +30.5 mm</span></div>
           <div class="metric-row"><span>Planting Density</span><span>47.2 seeds / dm²</span></div>
           <div class="metric-row"><span>Total Chamber Leaf Area</span><span>64.0 cm² (2.0 cm²/plant)</span></div>
-          <div class="metric-row"><span>Canopy Vertical Span ($Y$)</span><span>15.0 – 26.0 mm (h = 11.4 mm)</span></div>
-          <div class="metric-row"><span>Leaf Area Index (LAI) / Density ($a$)</span><span>9.44 / 828 m²/m³</span></div>
-          <div class="metric-row"><span>Aerodynamic Drag ($D = C_d a U$)</span><span>8.28 s⁻¹ (L_leaf = 20 mm)</span></div>
-          <div class="metric-row"><span>Substrate Block 3 Void Volume</span><span>2.01 mL (Nozzle at Y = 9.5 mm)</span></div>
+          <div class="metric-row"><span>Canopy Vertical Span (<em>Y</em>)</span><span>15.0 – 26.0 mm (<em>h</em> = 11.4 mm)</span></div>
+          <div class="metric-row"><span>Leaf Area Index (LAI) / Density (<em>a</em>)</span><span>9.44 / 828 m²/m³</span></div>
+          <div class="metric-row"><span>Aerodynamic Drag (<em>D</em> = <em>C</em><sub>d</sub> <em>a</em> <em>U</em>)</span><span>8.28 s⁻¹ (<em>L</em><sub>leaf</sub> = 20 mm)</span></div>
+          <div class="metric-row"><span>Substrate Block 3 Void Volume</span><span>2.01 mL (Nozzle at <em>Y</em> = 9.5 mm)</span></div>
         </div>
       </div>
 
@@ -1113,14 +1113,14 @@
           <thead>
             <tr>
               <th>Gravity &amp; Pump Regime</th>
-              <th>Flow ($Q$)</th>
-              <th>Gravity ($g$)</th>
-              <th>Ch 1 &amp; 3 (32 <em>B. rapa</em>) $g_{bl}$</th>
-              <th>Ch 1 &amp; 3 $\Delta[\text{CO}_2]$ / $\Delta[\text{H}_2\text{O}]$</th>
-              <th>Ch 1 &amp; 3 $A_{\text{net}}$</th>
-              <th>Ch 2 (100 <em>Arabidopsis</em>) $g_{bl}$</th>
-              <th>Ch 2 $\Delta[\text{CO}_2]$ / $\Delta[\text{H}_2\text{O}]$</th>
-              <th>Ch 2 $A_{\text{net}}$</th>
+              <th>Flow Rate (<em>Q</em>)</th>
+              <th>Gravity (<em>g</em>)</th>
+              <th>Ch 1 &amp; 3 (32 <em>B. rapa</em>) <em>g</em><sub>bl</sub></th>
+              <th>Ch 1 &amp; 3 &Delta;[CO₂] / &Delta;[H₂O]</th>
+              <th>Ch 1 &amp; 3 <em>A</em><sub>net</sub></th>
+              <th>Ch 2 (100 <em>Arabidopsis</em>) <em>g</em><sub>bl</sub></th>
+              <th>Ch 2 &Delta;[CO₂] / &Delta;[H₂O]</th>
+              <th>Ch 2 <em>A</em><sub>net</sub></th>
             </tr>
           </thead>
           <tbody>
@@ -1187,7 +1187,7 @@
             <div>
               <span class="fig-tag">Figure 1 · Parametric Sweep</span>
               <h3>Pump Speed vs. Canopy Aerodynamics &amp; Gas Exchange</h3>
-              <p>16-condition sweep ($Q = 0.05\text{–}4.0\ \text{L/min}$) comparing Earth $1.0\,g$ and Lunar $0.166\,g$ canopy velocity, boundary-layer conductance ($g_{bl}$), $\text{CO}_2$ drawdown, and FvCB photosynthesis.</p>
+              <p>16-condition sweep (<em>Q</em> = 0.05–4.0 L/min) comparing Earth 1.0<em>g</em> and Lunar 0.166<em>g</em> canopy velocity, boundary-layer conductance (<em>g</em><sub>bl</sub>), CO₂ drawdown, and FvCB photosynthesis.</p>
             </div>
             <div class="fig-actions">
               <button class="btn-outline" onclick="openLightbox('figures/fig1_pump_speed_vs_aerodynamics.png', 'Figure 1: Parametric Pump Speed Sweep')">🔍 Zoom PNG</button>
@@ -1205,7 +1205,7 @@
             <div>
               <span class="fig-tag">Figure 2 · Spatial Fields</span>
               <h3>Velocity, CO₂ &amp; H₂O Fields: Earth 1g vs. Lunar 0.166g</h3>
-              <p>Mid-plane slices illustrating buoyant plume suppression at $0.166\,g$, 3-part substrate boundaries ($Y = 7.62\text{–}14.62\ \text{mm}$), and restoration of scalar uniformity at $Q = 0.85\ \text{L/min}$.</p>
+              <p>Mid-plane slices illustrating buoyant plume suppression at 0.166<em>g</em>, 3-part substrate boundaries (<em>Y</em> = 7.62–14.62 mm), and restoration of scalar uniformity at <em>Q</em> = 0.85 L/min.</p>
             </div>
             <div class="fig-actions">
               <button class="btn-outline" onclick="openLightbox('figures/fig2_velocity_fields_earth_vs_lunar.png', 'Figure 2: Spatial Fields Earth vs Lunar')">🔍 Zoom PNG</button>
@@ -1223,7 +1223,7 @@
             <div>
               <span class="fig-tag">Figure 3 · Pump Sizing</span>
               <h3>Lunar Compensatory Pump Curve &amp; Convection Regimes</h3>
-              <p>Maps Richardson number ($\text{Ri} = \text{Gr}/\text{Re}^2$) and Peclet number ($\text{Pe}$) across flow rates, identifying $Q = 0.85\ \text{L/min}$ as the daytime compensation setpoint.</p>
+              <p>Maps Richardson number (Ri = Gr / Re²) and P&eacute;clet number (Pe) across flow rates, identifying <em>Q</em> = 0.85 L/min as the daytime compensation setpoint.</p>
             </div>
             <div class="fig-actions">
               <button class="btn-outline" onclick="openLightbox('figures/fig3_lunar_compensatory_pump_curve.png', 'Figure 3: Lunar Compensatory Pump Curve')">🔍 Zoom PNG</button>
@@ -1240,8 +1240,8 @@
           <div class="fig-body">
             <div>
               <span class="fig-tag">Figure 4 · Residence Time</span>
-              <h3>3D Mean Age of Air ($\theta$) &amp; Sandberg Conservation</h3>
-              <p>Solves $\mathbf{u}\cdot\nabla\theta - D_\theta\nabla^2\theta = 1$, confirming $< 1.0\%$ inter-chamber age disparity ($6.05\text{–}6.10\ \text{s}$) and exact Sandberg outlet flux conservation.</p>
+              <h3>3D Mean Age of Air (&theta;) &amp; Sandberg Conservation</h3>
+              <p>Solves <strong>u</strong> &middot; &nabla;&theta; &minus; <em>D</em><sub>&theta;</sub>&nabla;&sup2;&theta; = 1, confirming &lt; 1.0% inter-chamber age disparity (6.05–6.10 s) and exact Sandberg outlet flux conservation.</p>
             </div>
             <div class="fig-actions">
               <button class="btn-outline" onclick="openLightbox('figures/fig4_mean_age_of_air_and_chamber_uniformity.png', 'Figure 4: Mean Age of Air & Uniformity')">🔍 Zoom PNG</button>
@@ -1259,7 +1259,7 @@
             <div>
               <span class="fig-tag">Figure 5 · Hardware Benchmark</span>
               <h3>Spaceflight Hardware Benchmark: GBC2 vs. BRIC, CARA &amp; Veggie</h3>
-              <p>Demonstrates how active forced ventilation in GBC2 ($0.50\text{–}0.85\ \text{L/min}$) eliminates the diffusive hypoxia and $\text{CO}_2$ starvation characteristic of sealed passive Petri hardware.</p>
+              <p>Demonstrates how active forced ventilation in GBC2 (0.50–0.85 L/min) eliminates the diffusive hypoxia and CO₂ starvation characteristic of sealed passive Petri hardware.</p>
             </div>
             <div class="fig-actions">
               <button class="btn-outline" onclick="openLightbox('figures/fig5_flight_hardware_benchmark_gbc2_vs_nasa.png', 'Figure 5: NASA Flight Hardware Benchmark')">🔍 Zoom PNG</button>
@@ -1277,7 +1277,7 @@
             <div>
               <span class="fig-tag">Figure 6 · Omics Covariates</span>
               <h3>Predicted Phytohormone &amp; Transcriptomic Stress Signatures</h3>
-              <p>Projects boundary-layer Péclet and $\Delta[\text{H}_2\text{O}]$ metrics onto Auxin, ABA, Ethylene, and cell-wall remodeling gene expression indices across pump speeds.</p>
+              <p>Projects boundary-layer P&eacute;clet and &Delta;[H₂O] metrics onto Auxin, ABA, Ethylene, and cell-wall remodeling gene expression indices across pump speeds.</p>
             </div>
             <div class="fig-actions">
               <button class="btn-outline" onclick="openLightbox('figures/fig6_predicted_hormone_carbon_phenotypes.png', 'Figure 6: Predicted Hormone & Carbon Phenotypes')">🔍 Zoom PNG</button>
@@ -1295,7 +1295,7 @@
             <div>
               <span class="fig-tag">Figure 7 · Harvest Fixation &amp; Species</span>
               <h3>RNAlater Perfusion Kinetics &amp; 32 vs. 100 Seed Asymmetry</h3>
-              <p>Two-stage Darcy + VOF front progression from Port 3 nozzle ($Y = 9.5\ \text{mm}$ in Substrate 3) alongside chamber-specific <em>B. rapa</em> and <em>A. thaliana</em> assimilation profiles.</p>
+              <p>Two-stage Darcy + VOF front progression from Port 3 nozzle (<em>Y</em> = 9.5 mm in Substrate 3) alongside chamber-specific <em>B. rapa</em> and <em>A. thaliana</em> assimilation profiles.</p>
             </div>
             <div class="fig-actions">
               <button class="btn-outline" onclick="openLightbox('figures/fig7_rnalater_perfusion_and_species_dynamics.png', 'Figure 7: RNAlater Perfusion & Species Dynamics')">🔍 Zoom PNG</button>
@@ -1313,7 +1313,7 @@
             <div>
               <span class="fig-tag">Figure 8 · Diurnal Cycle</span>
               <h3>Diurnal Photoperiod Inversion &amp; Nocturnal Lunar Setback</h3>
-              <p>Contrasts 16h daytime buoyant transpiration against 8h nocturnal radiative cooling and dense respiratory $\text{CO}_2$ pooling, establishing the $Q_{\text{night}} \ge 0.60\ \text{L/min}$ rule.</p>
+              <p>Contrasts 16h daytime buoyant transpiration against 8h nocturnal radiative cooling and dense respiratory CO₂ pooling, establishing the <em>Q</em><sub>night</sub> &ge; 0.60 L/min rule.</p>
             </div>
             <div class="fig-actions">
               <button class="btn-outline" onclick="openLightbox('figures/fig8_diurnal_day_night_photoperiod_inversion.png', 'Figure 8: Diurnal Day/Night Photoperiod Inversion')">🔍 Zoom PNG</button>
@@ -1331,7 +1331,7 @@
             <div>
               <span class="fig-tag">Figure 9 · 14-Day Developmental Ontogeny</span>
               <h3>14-Day Developmental Growth Time-Series (Day 0 to Day 14)</h3>
-              <p>Tracks canopy stature $h(t)$, $\text{LAI}(t)$, autotrophic transition (Day 2.8), cumulative carbon gain, adaptive pump ramp $Q(t)$ ($0.25 \rightarrow 0.85\ \text{L/min}$), and root-driven porosity compaction $\epsilon(t)$.</p>
+              <p>Tracks canopy stature <em>h</em>(<em>t</em>), LAI(<em>t</em>), autotrophic transition (Day 2.8), cumulative carbon gain, adaptive pump ramp <em>Q</em>(<em>t</em>) (0.25 &rarr; 0.85 L/min), and root-driven porosity compaction &epsilon;(<em>t</em>).</p>
             </div>
             <div class="fig-actions">
               <button class="btn-outline" onclick="openLightbox('figures/fig9_developmental_growth_timeseries.png', 'Figure 9: 14-Day Developmental Growth Time-Series')">🔍 Zoom PNG</button>
@@ -1349,7 +1349,7 @@
             <div>
               <span class="fig-tag">Figure 10 · Off-Nominal &amp; Fault Tolerance</span>
               <h3>Spacecraft Cabin CO₂ (420–5,000 ppm), Root Compaction &amp; Brownouts</h3>
-              <p>Evaluates stomatal closure heating under elevated cabin $\text{CO}_2$, Kozeny–Carman root compaction ($\epsilon = 0.50 \rightarrow 0.20$), and pump outage grace windows ($t_{\text{grace}} \approx 10.4\text{–}18.5\ \text{min}$).</p>
+              <p>Evaluates stomatal closure heating under elevated cabin CO₂, Kozeny–Carman root compaction (&epsilon; = 0.50 &rarr; 0.20), and pump outage grace windows (<em>t</em><sub>grace</sub> &approx; 10.4–18.5 min).</p>
             </div>
             <div class="fig-actions">
               <button class="btn-outline" onclick="openLightbox('figures/fig10_off_nominal_sensitivity_sweeps.png', 'Figure 10: Off-Nominal Sensitivity Sweeps')">🔍 Zoom PNG</button>
@@ -1367,7 +1367,7 @@
             <div>
               <span class="fig-tag">Figure 11 · Water Capillarity &amp; Condensation Defense</span>
               <h3>Porous Media Capillarity, Multi-Species Evapotranspiration &amp; Fogging Defense</h3>
-              <p>Solves van Genuchten capillary retention across the $7.0\ \text{mm}$ substrate cassettes under Lunar $0.166\,g$, tracks 164-plant transpiration ($4.4\ \text{mL/day}$), proves optical lid camera window remains fog-free ($+0.83\ ^\circ\text{C}$ to $+2.15\ ^\circ\text{C}$ margin), and confirms two-phase displaced gas purging through Port 2.</p>
+              <p>Solves van Genuchten capillary retention across the 7.0 mm substrate cassettes under Lunar 0.166<em>g</em>, tracks 164-plant transpiration (4.4 mL/day), proves optical lid camera window remains fog-free (+0.83 &deg;C to +2.15 &deg;C margin), and confirms two-phase displaced gas purging through Port 2.</p>
             </div>
             <div class="fig-actions">
               <button class="btn-outline" onclick="openLightbox('figures/fig11_water_capillarity_evapotranspiration_condensation.png', 'Figure 11: Water Capillarity & Condensation Defense')">🔍 Zoom PNG</button>
@@ -1406,13 +1406,13 @@
             </tr>
             <tr>
               <td><code>gbc2_cfd_sweep_results.tsv</code></td>
-              <td>16-run parametric pump speed sweep ($0.05\text{–}4.0\ \text{L/min}$) at Earth $1.0\,g$ and Lunar $0.166\,g$</td>
+              <td>16-run parametric pump speed sweep (0.05–4.0 L/min) at Earth 1.0<em>g</em> and Lunar 0.166<em>g</em></td>
               <td><code>u_canopy_mean</code>, <code>Re</code>, <code>Gr</code>, <code>Ri</code>, <code>Pe</code>, <code>g_bl</code>, <code>delta_CO2</code>, <code>A_net</code></td>
               <td><a href="results/tables/gbc2_cfd_sweep_results.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
             </tr>
             <tr>
               <td><code>gbc2_advanced_analytics.tsv</code></td>
-              <td>Mean Age of Air ($\theta$), Sandberg conservation ratio, and hormone signaling indices</td>
+              <td>Mean Age of Air (&theta;), Sandberg conservation ratio, and hormone signaling indices</td>
               <td><code>age_ch1_s</code>, <code>age_ch2_s</code>, <code>age_ch3_s</code>, <code>sandberg_ratio</code>, <code>auxin_idx</code>, <code>aba_idx</code></td>
               <td><a href="results/tables/gbc2_advanced_analytics.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
             </tr>
@@ -1424,7 +1424,7 @@
             </tr>
             <tr>
               <td><code>gbc2_rnalater_perfusion_kinetics.tsv</code></td>
-              <td>Harvest RNAlater injection kinetics ($2\text{–}25\ \text{mL/min}$) through Port 3 dipping nozzle</td>
+              <td>Harvest RNAlater injection kinetics (2–25 mL/min) through Port 3 dipping nozzle</td>
               <td><code>Q_inj_mL_min</code>, <code>t_root_saturation_s</code>, <code>t_full_chamber_s</code>, <code>dP_total_kPa</code></td>
               <td><a href="results/tables/gbc2_rnalater_perfusion_kinetics.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
             </tr>
@@ -1448,7 +1448,7 @@
             </tr>
             <tr>
               <td><code>gbc2_off_nominal_sensitivity.tsv</code></td>
-              <td>Off-nominal mission sensitivity sweeps (Cabin $\text{CO}_2$ $420\text{–}5{,}000\ \text{ppm}$, root compaction, pump brownout)</td>
+              <td>Off-nominal mission sensitivity sweeps (Cabin CO₂ 420–5,000 ppm, root compaction, pump brownout)</td>
               <td><code>sweep_type</code>, <code>parameter_value</code>, <code>gs_stomatal</code>, <code>leaf_dT_elevation_C</code>, <code>grace_window_min</code></td>
               <td><a href="results/tables/gbc2_off_nominal_sensitivity.tsv" target="_blank" class="btn-outline">Download TSV</a></td>
             </tr>
