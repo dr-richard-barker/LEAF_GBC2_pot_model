@@ -2,7 +2,8 @@
 
 [![3D Digital Twin](https://img.shields.io/badge/Interactive-3D_Digital_Twin-27ae60?style=for-the-badge)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html)
 [![GitHub Pages Portal](https://img.shields.io/badge/Live_Portal-GitHub_Pages-2980b9?style=for-the-badge)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/)
-[![Technical Manuscript](https://img.shields.io/badge/Manuscript-Full_Text_Report-8e44ad?style=for-the-badge)](./MANUSCRIPT_LEAF_GBC1_CFD.md)
+[![Narrative Manuscript](https://img.shields.io/badge/Interactive-Manuscript_Reader-3B6EA5?style=for-the-badge)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/manuscript.html)
+[![Technical Manuscript](https://img.shields.io/badge/Manuscript-Markdown_Report-8e44ad?style=for-the-badge)](./MANUSCRIPT_LEAF_GBC1_CFD.md)
 
 Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developmental canopy ontogeny, diurnal photoperiod inversion, off-nominal spacecraft fault-tolerance, and harvest-phase RNAlater fixative perfusion modeling for the **LEAF GBC1 spaceflight plant growth pot (`M09024F-MDL-5.STEP`) and lid (`M09025F-MDL-2.STEP`) assembly** under **Earth (1.0g, 9.81 m/s²)** and **Lunar (0.166g, 1.62 m/s²)** gravity regimes.
 
@@ -10,9 +11,10 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 
 ## Quick Links
 
+- **Interactive Publication Reader (CoSE Theme & 20 Figures)**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/manuscript.html`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/manuscript.html) ([`manuscript.html`](./manuscript.html))
 - **Live GitHub Pages Research Portal**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/) ([`index.html`](./index.html))
 - **Live Interactive 3D Chamber Digital Twin & CFD Simulator**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html) ([`viewer_3d.html`](./viewer_3d.html))
-- **Full Technical Manuscript (Methods, Results & Figure Legends)**: [`MANUSCRIPT_LEAF_GBC1_CFD.md`](./MANUSCRIPT_LEAF_GBC1_CFD.md)
+- **Full Technical Manuscript (Markdown Narrative & 3-Pillar Breakdown)**: [`MANUSCRIPT_LEAF_GBC1_CFD.md`](./MANUSCRIPT_LEAF_GBC1_CFD.md)
 - **Zenodo Open Science Dataset Package**: [`zenodo/`](./zenodo/) ([`datapackage.json`](./zenodo/datapackage.json) · [`README.md`](./zenodo/README.md))
 - **Orthographic Blueprint (ABAI QC Annotated)**: [`figures/fig_orthographic_projection_annotated.png`](./figures/fig_orthographic_projection_annotated.png) | [`.svg`](./figures/fig_orthographic_projection_annotated.svg)
 - **Mated CAD Assembly Cross-Sections**: [`figures/assembly_cross_sections_annotated.png`](./figures/assembly_cross_sections_annotated.png) | [`exact`](./figures/assembly_cross_sections_exact.png)

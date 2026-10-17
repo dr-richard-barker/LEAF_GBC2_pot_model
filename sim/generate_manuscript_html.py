@@ -1,0 +1,2171 @@
+"""
+Generate the standalone publication-styled interactive web reader manuscript.html
+for LEAF GBC1 CFD modeling and biophysics narrative.
+
+Features:
+- CoSE color scheme (#3B6EA5 Slate Blue, #3FB6A8 Seafoam Teal)
+- Synchronized Light/Dark theme toggle with localStorage & postMessage
+- Floating sticky Table of Contents sidebar with active scrollspy
+- 3-Pillar narrative structure (What Was Modeled, What Was Done, What It Shows & Describes)
+- All 20 publication figures, CAD cross-sections, and orthographic blueprints embedded
+- Click-to-zoom modal lightbox for high-resolution figure inspection
+- Clean KaTeX math rendering (zero naked dollar signs in HTML)
+- Full GBC1 hardware designation and zero prohibited names
+"""
+import os
+import re
+
+def generate_manuscript_html():
+    workspace = "/Users/drb_laptop/Documents/LEAF_GBC2_pot_model"
+    target_file = os.path.join(workspace, "manuscript.html")
+
+    html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEAF GBC1 Technical Manuscript — Computational Fluid Dynamics &amp; Biophysics Narrative</title>
+  <link rel="icon" type="image/png" href="assets/moon-64.png" />
+  <link rel="apple-touch-icon" href="assets/moon.png" />
+
+  <!-- KaTeX for pristine mathematical typesetting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Early Theme Setup to prevent flash -->
+  <script>
+    (function() {
+      var savedTheme = null;
+      try { savedTheme = localStorage.getItem("barker.theme"); } catch(e){}
+      var theme = savedTheme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+
+  <style>
+    /* CoSE Theme Tokens & Palette */
+    :root {
+      --bg: #ffffff;
+      --fg: #1a2230;
+      --muted: #5a6473;
+      --line: #e2e8f0;
+      --card: #f8fafc;
+      --card-hover: #f1f5f9;
+      --accent: #3B6EA5; /* CoSE Slate Blue */
+      --accent2: #3FB6A8; /* CoSE Seafoam Teal */
+      --accent-rgb: 59, 110, 165;
+      --accent2-rgb: 63, 182, 168;
+      --pillar-modeled: #3B6EA5;
+      --pillar-done: #3FB6A8;
+      --pillar-shows: #2563eb;
+      --code-bg: #f1f5f9;
+      --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06);
+      --shadow-elevated: 0 10px 30px rgba(0, 0, 0, 0.10);
+      --header-bg: rgba(255, 255, 255, 0.88);
+      color-scheme: light;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0f141b;
+        --fg: #e6ebf2;
+        --muted: #9aa6b6;
+        --line: #232c39;
+        --card: #161d27;
+        --card-hover: #1f2937;
+        --accent: #6ea3d8;
+        --accent2: #54c9ba;
+        --accent-rgb: 110, 163, 216;
+        --accent2-rgb: 84, 201, 186;
+        --pillar-modeled: #6ea3d8;
+        --pillar-done: #54c9ba;
+        --pillar-shows: #60a5fa;
+        --code-bg: #0f1a2e;
+        --shadow-card: 0 8px 28px rgba(0, 0, 0, 0.45);
+        --shadow-elevated: 0 12px 36px rgba(0, 0, 0, 0.55);
+        --header-bg: rgba(15, 20, 27, 0.90);
+        color-scheme: dark;
+      }
+    }
+
+    html[data-theme="light"] {
+      --bg: #ffffff;
+      --fg: #1a2230;
+      --muted: #5a6473;
+      --line: #e2e8f0;
+      --card: #f8fafc;
+      --card-hover: #f1f5f9;
+      --accent: #3B6EA5;
+      --accent2: #3FB6A8;
+      --accent-rgb: 59, 110, 165;
+      --accent2-rgb: 63, 182, 168;
+      --pillar-modeled: #3B6EA5;
+      --pillar-done: #3FB6A8;
+      --pillar-shows: #2563eb;
+      --code-bg: #f1f5f9;
+      --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06);
+      --shadow-elevated: 0 10px 30px rgba(0, 0, 0, 0.10);
+      --header-bg: rgba(255, 255, 255, 0.88);
+      color-scheme: light;
+    }
+
+    html[data-theme="dark"] {
+      --bg: #0f141b;
+      --fg: #e6ebf2;
+      --muted: #9aa6b6;
+      --line: #232c39;
+      --card: #161d27;
+      --card-hover: #1f2937;
+      --accent: #6ea3d8;
+      --accent2: #54c9ba;
+      --accent-rgb: 110, 163, 216;
+      --accent2-rgb: 84, 201, 186;
+      --pillar-modeled: #6ea3d8;
+      --pillar-done: #54c9ba;
+      --pillar-shows: #60a5fa;
+      --code-bg: #0f1a2e;
+      --shadow-card: 0 8px 28px rgba(0, 0, 0, 0.45);
+      --shadow-elevated: 0 12px 36px rgba(0, 0, 0, 0.55);
+      --header-bg: rgba(15, 20, 27, 0.90);
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--fg);
+      line-height: 1.7;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-color: var(--bg);
+      color: var(--fg);
+    }
+
+    /* Reading Progress Bar */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      width: 0%;
+      z-index: 200;
+      transition: width 0.1s linear;
+    }
+
+    /* Sticky Navbar */
+    header.navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--header-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-moon-link {
+      display: inline-flex;
+      align-items: center;
+      line-height: 0;
+      text-decoration: none;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .brand-moon-link img {
+      height: 32px;
+      width: 32px;
+      display: block;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(63, 182, 168, 0.4);
+    }
+
+    .brand-moon-link:hover {
+      transform: scale(1.08) rotate(5deg);
+      filter: brightness(1.15);
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 0.22rem 0.6rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: var(--fg);
+    }
+
+    @media (max-width: 768px) {
+      .brand-title { display: none; }
+    }
+
+    nav.nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    nav.nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color 0.15s ease;
+    }
+
+    nav.nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .btn-portal {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent) !important;
+      transition: all 0.2s ease;
+    }
+
+    .btn-portal:hover {
+      background: var(--card-hover);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .theme-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--fg);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .theme-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* Layout: 2-column with sticky TOC */
+    .manuscript-layout {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 3rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+      .manuscript-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 1.5rem 1rem;
+      }
+    }
+
+    /* Floating Table of Contents Sidebar */
+    aside.toc-sidebar {
+      position: sticky;
+      top: 80px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow-card);
+      scrollbar-width: thin;
+    }
+
+    @media (max-width: 1024px) {
+      aside.toc-sidebar {
+        position: relative;
+        top: 0;
+        max-height: none;
+      }
+    }
+
+    .toc-title {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .toc-list {
+      list-style: none;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .toc-list li a {
+      color: var(--muted);
+      text-decoration: none;
+      display: block;
+      padding: 0.35rem 0.5rem;
+      border-radius: 4px;
+      transition: all 0.15s ease;
+      border-left: 2px solid transparent;
+    }
+
+    .toc-list li a:hover {
+      color: var(--accent);
+      background: var(--card-hover);
+    }
+
+    .toc-list li a.active {
+      color: var(--accent);
+      font-weight: 600;
+      background: color-mix(in srgb, var(--accent) 12%, transparent);
+      border-left: 2px solid var(--accent);
+    }
+
+    .toc-sublist {
+      list-style: none;
+      padding-left: 0.85rem;
+      margin-top: 0.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .toc-sublist li a {
+      font-size: 0.78rem;
+      padding: 0.25rem 0.4rem;
+    }
+
+    /* Article Main Body */
+    article.manuscript-body {
+      max-width: 960px;
+    }
+
+    .article-header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-eyebrow {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--accent2);
+      margin-bottom: 0.6rem;
+    }
+
+    h1.article-title {
+      font-size: 2.3rem;
+      line-height: 1.25;
+      font-weight: 800;
+      color: var(--fg);
+      margin-bottom: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    @media (max-width: 640px) {
+      h1.article-title { font-size: 1.75rem; }
+    }
+
+    .meta-authors {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--fg);
+      margin-bottom: 0.4rem;
+    }
+
+    .meta-target {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .badge-bar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--muted);
+    }
+
+    .badge-accent {
+      border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 8%, transparent);
+    }
+
+    .badge-teal {
+      border-color: color-mix(in srgb, var(--accent2) 40%, transparent);
+      color: var(--accent2);
+      background: color-mix(in srgb, var(--accent2) 8%, transparent);
+    }
+
+    .action-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action-primary {
+      background: var(--accent);
+      color: #fff !important;
+      border: 1px solid var(--accent);
+    }
+
+    .btn-action-primary:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 4px 14px rgba(59, 110, 165, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn-action-secondary {
+      background: var(--card);
+      color: var(--fg) !important;
+      border: 1px solid var(--line);
+    }
+
+    .btn-action-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent) !important;
+      transform: translateY(-1px);
+    }
+
+    /* Headings and Sections */
+    section.manuscript-section {
+      margin-bottom: 3.5rem;
+      scroll-margin-top: 90px;
+    }
+
+    h2.section-heading {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--fg);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
+      letter-spacing: -0.01em;
+    }
+
+    h3.subsection-heading {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--fg);
+      margin-top: 2rem;
+      margin-bottom: 0.85rem;
+    }
+
+    p {
+      margin-bottom: 1.15rem;
+      color: var(--fg);
+      font-size: 0.98rem;
+    }
+
+    /* Abstract Block */
+    .abstract-box {
+      background: var(--card);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 1.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .abstract-box h3 {
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+    }
+
+    .core-findings-list {
+      margin-left: 1.25rem;
+      margin-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .core-findings-list li {
+      font-size: 0.95rem;
+      color: var(--fg);
+    }
+
+    .core-findings-list strong {
+      color: var(--accent);
+    }
+
+    /* 3-Pillar Callout Card */
+    .pillar-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 1.35rem 1.5rem;
+      margin: 1.5rem 0 2rem;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 1.15rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pillar-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+      background: linear-gradient(180deg, var(--pillar-modeled), var(--pillar-done) 50%, var(--pillar-shows));
+    }
+
+    .pillar-header {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 800;
+      color: var(--muted);
+      margin-bottom: 0.1rem;
+    }
+
+    .pillar-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .pillar-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pillar-modeled .pillar-title { color: var(--pillar-modeled); }
+    .pillar-done .pillar-title { color: var(--pillar-done); }
+    .pillar-shows .pillar-title { color: var(--pillar-shows); }
+
+    .pillar-content {
+      font-size: 0.92rem;
+      color: var(--fg);
+      line-height: 1.6;
+      padding-left: 1.6rem;
+    }
+
+    .pillar-content ul {
+      margin-left: 1.2rem;
+      margin-top: 0.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    /* Publication Figures */
+    figure.pub-figure {
+      margin: 2rem 0 1.25rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--card);
+      box-shadow: var(--shadow-card);
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    figure.pub-figure:hover {
+      box-shadow: var(--shadow-elevated);
+      border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+    }
+
+    .figure-image-wrapper {
+      position: relative;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-in;
+      overflow: hidden;
+    }
+
+    .figure-image-wrapper img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.25s ease;
+    }
+
+    .figure-image-wrapper:hover img {
+      transform: scale(1.015);
+    }
+
+    .zoom-hint {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(15, 20, 27, 0.75);
+      color: #fff;
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    figcaption {
+      padding: 1rem 1.25rem;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: var(--fg);
+      border-top: 1px solid var(--line);
+      background: var(--card);
+    }
+
+    figcaption strong.fig-num {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .fig-links {
+      margin-top: 0.5rem;
+      display: flex;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+    }
+
+    .fig-links a {
+      color: var(--accent2);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .fig-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* Equations styling */
+    .equation-card {
+      background: var(--code-bg);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 1.15rem 1.35rem;
+      margin: 1.25rem 0;
+      overflow-x: auto;
+    }
+
+    .equation-num {
+      float: right;
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      margin: 1.5rem 0 2rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card);
+      box-shadow: var(--shadow-card);
+    }
+
+    table.pub-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      text-align: left;
+    }
+
+    table.pub-table th, table.pub-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    table.pub-table th {
+      background: color-mix(in srgb, var(--accent) 8%, var(--card));
+      color: var(--fg);
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    table.pub-table tbody tr:hover {
+      background: var(--card-hover);
+    }
+
+    /* Dataset Cards Grid */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .catalog-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .catalog-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .catalog-card-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--fg);
+    }
+
+    .catalog-card-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .catalog-card-link {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--accent2);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .catalog-card-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Lightbox Modal */
+    dialog#figure-lightbox {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      max-width: 100vw;
+      max-height: 100vh;
+      margin: 0;
+      padding: 1.5rem;
+      border: none;
+      background: rgba(10, 14, 20, 0.92);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      display: none;
+      flex-direction: column;
+      z-index: 1000;
+      box-sizing: border-box;
+    }
+
+    dialog#figure-lightbox[open] {
+      display: flex;
+    }
+
+    .lightbox-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-shrink: 0;
+    }
+
+    .lightbox-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e6ebf2;
+    }
+
+    .lightbox-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .lightbox-btn {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: background 0.15s ease;
+    }
+
+    .lightbox-btn:hover {
+      background: rgba(255, 255, 255, 0.24);
+    }
+
+    .lightbox-image-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
+      min-height: 0;
+    }
+
+    .lightbox-image-stage img {
+      max-width: 95%;
+      max-height: 82vh;
+      object-fit: contain;
+      border-radius: 6px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      transition: transform 0.2s ease;
+    }
+
+    .lightbox-caption {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: #9aa6b6;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    /* Footer */
+    footer.article-footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body data-site-id="LEAF_GBC1_pot_model">
+
+  <div id="progress-bar"></div>
+
+  <!-- Top Sticky Navigation -->
+  <header class="navbar">
+    <div class="brand">
+      <a class="brand-moon-link" href="index.html" title="Back to 3D Digital Twin Portal" aria-label="Back to 3D Digital Twin Portal">
+        <img src="assets/moon.png" alt="Moon" width="32" height="32" />
+      </a>
+      <span class="brand-badge">LEAF GBC1 · Manuscript</span>
+      <span class="brand-title">3D CFD &amp; Biophysical Analysis Narrative</span>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html#digital-twin" class="btn-portal">← Return to 3D Digital Twin</a>
+      <a href="#sec-blueprints">Blueprints</a>
+      <a href="#sec-methods">Methods</a>
+      <a href="#sec-results">Results (Figs 1–18)</a>
+      <a href="#sec-flight-rules">Flight Rules</a>
+      <a href="#sec-catalog">Catalog</a>
+      <button id="theme-toggle" class="theme-btn" aria-label="Toggle light or dark theme" title="Toggle light / dark"></button>
+    </nav>
+  </header>
+
+  <!-- 2-Column Manuscript Layout -->
+  <div class="manuscript-layout">
+
+    <!-- Floating Sticky Table of Contents -->
+    <aside class="toc-sidebar">
+      <div class="toc-title">
+        <span>Table of Contents</span>
+        <span style="font-size: 0.72rem; color: var(--accent2);">20 Figures</span>
+      </div>
+      <ul class="toc-list" id="toc-list">
+        <li><a href="#sec-abstract">Abstract &amp; Core Discoveries</a></li>
+        <li><a href="#sec-intro">1. Introduction &amp; Physics Background</a></li>
+        <li>
+          <a href="#sec-methods">2. Materials &amp; Computational Methods</a>
+          <ul class="toc-sublist">
+            <li><a href="#sec-methods-cad">2.1 CAD Voxelization &amp; Domain</a></li>
+            <li><a href="#sec-methods-species">2.2 Species Morphometrics</a></li>
+            <li><a href="#sec-methods-equations">2.3 Governing Equations</a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="#sec-results">3. Results &amp; Biophysical Analysis</a>
+          <ul class="toc-sublist">
+            <li><a href="#res-blueprints">3.1 CAD Blueprints &amp; Cross-Sections</a></li>
+            <li><a href="#res-aerodynamics">3.2 Aerodynamic Sweeps (Figs 1–3)</a></li>
+            <li><a href="#res-uniformity">3.3 Age of Air &amp; Benchmark (Figs 4–6)</a></li>
+            <li><a href="#res-rnalater">3.4 In-Situ RNAlater Perfusion (Fig 7)</a></li>
+            <li><a href="#res-diurnal">3.5 Diurnal Photoperiod Inversion (Fig 8)</a></li>
+            <li><a href="#res-growth">3.6 14-Day Growth Ontogeny (Fig 9)</a></li>
+            <li><a href="#res-faults">3.7 Off-Nominal Sensitivity (Fig 10)</a></li>
+            <li><a href="#res-capillarity">3.8 Capillarity &amp; Fogging (Fig 11)</a></li>
+            <li><a href="#res-model-leaf">3.9 Model Lunar LEAF 5-Day (Figs 12–16)</a></li>
+            <li><a href="#res-asme-gci">3.10 ASME V&amp;V 20 &amp; Hotspots (Fig 17)</a></li>
+            <li><a href="#res-benchmark">3.11 Flight Hardware Radar (Fig 18)</a></li>
+          </ul>
+        </li>
+        <li><a href="#sec-flight-rules">4. Master Flight Operating Rules</a></li>
+        <li><a href="#sec-catalog">5. Figure &amp; Dataset Catalog</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Manuscript Article -->
+    <article class="manuscript-body">
+
+      <!-- Article Header -->
+      <header class="article-header" id="top">
+        <div class="hero-eyebrow">Spaceflight Hardware Fluidics &amp; Multi-Species Gas Exchange</div>
+        <h1 class="article-title">Computational Fluid Dynamics, Multi-Species Canopy Gas Exchange, and Harvest Fixation Architecture of the LEAF GBC1 Lunar Plant Growth Chamber</h1>
+        <div class="meta-authors">Richard Barker et al.</div>
+        <div class="meta-target">
+          Target Hardware: <strong>LEAF Growth Chamber 1</strong> (<code>M09024F-MDL-5</code> Pot Body &amp; <code>M09025F-MDL-2</code> Lid Assembly) &middot; Artemis III Candidate Payload
+        </div>
+        <div class="badge-bar">
+          <span class="badge badge-accent">3D Navier&ndash;Stokes CFD</span>
+          <span class="badge badge-teal">Brinkman&ndash;Darcy Porous Media</span>
+          <span class="badge">Coupled FvCB Photosynthesis</span>
+          <span class="badge">ASME V&amp;V 20 Verified</span>
+          <span class="badge">Zenodo Open-Data Ready</span>
+        </div>
+        <div class="action-row">
+          <a href="index.html#digital-twin" class="btn-action btn-action-primary">🚀 Launch 3D Digital Twin</a>
+          <a href="MANUSCRIPT_LEAF_GBC1_CFD.md" target="_blank" class="btn-action btn-action-secondary">💾 Download Raw Markdown</a>
+          <a href="zenodo/datapackage.json" target="_blank" class="btn-action btn-action-secondary">📦 Zenodo Data Package</a>
+        </div>
+      </header>
+
+      <!-- Abstract -->
+      <section class="manuscript-section" id="sec-abstract">
+        <div class="abstract-box">
+          <h3>Abstract &amp; Core Spaceflight Discoveries</h3>
+          <p>
+            Microgravity and fractional-gravity environments profoundly alter boundary-layer transport, solutal gas exchange, and moisture distribution around cultivated plants. In the Lunar Environment and Agriculture Formulation (LEAF) Growth Chamber 1 (GBC1) pot assembly, microenvironmental control is complicated by asymmetric co-cultivation: <strong>32 tall, fast-growing <em>Brassica rapa</em> plants</strong> in lateral Chambers 1 and 3 (\(Y = 14.6\text{--}26.0\text{ mm}\)) flanking <strong>100 miniature, prostrate <em>Arabidopsis thaliana</em> plants</strong> in central Chamber 2 (\(Y = 14.6\text{--}19.5\text{ mm}\)).
+          </p>
+          <p>
+            Here, we present a 3D computational fluid dynamics (CFD) and biophysical simulation suite derived directly from flight STEP CAD geometries (<code>M09024F-MDL-5</code> and <code>M09025F-MDL-2</code>). Our model couples Navier&ndash;Stokes and Brinkman&ndash;Darcy porous media formulations with Boussinesq thermal and solutal buoyancy, multi-species \(\text{CO}_2\)/\(\text{H}_2\text{O}\) transport, and Farquhar&ndash;von Caemmerer&ndash;Berry (FvCB) photosynthetic kinetics across 21 parametric flow sweeps (\(Q = 0.05\text{--}4.0\text{ L/min}\)), 3D Mean Age-of-Air (\(\theta\)) inversions, 14-day developmental growth series, Richards unsaturated substrate capillarity, and off-nominal spacecraft fault evaluations.
+          </p>
+          <ol class="core-findings-list">
+            <li><strong>Aerodynamic &ldquo;Dip-and-Converge&rdquo; Channelling:</strong> The stature differential between tall <em>B. rapa</em> canopies (\(\Delta Y = 11.4\text{ mm}\)) and low-lying <em>A. thaliana</em> rosettes (\(\Delta Y = 4.9\text{ mm}\)) forms a low-resistance \(14.2\text{ mm}\) open central plenum under Port 2 (\(Z = 0\text{ mm}\)). Air admitted at Port 1 (\(Z = -21.6\text{ mm}\)) skims across Chamber 1, dips into Chamber 2, and converges with return flow from Chamber 3, yielding &lt;1.0% inter-chamber Mean Age-of-Air disparity (\(\theta = 6.05\text{--}6.10\text{ s}\) at \(Q = 0.50\text{ L/min}\); Sandberg conservation ratio \(\theta_{\text{out}}/\tau = 0.938\)).</li>
+            <li><strong>Lunar Buoyancy Suppression &amp; Daytime Compensatory Flow:</strong> In lunar gravity (\(1.62\text{ m/s}^2\), \(0.166\,g\)), the 83.4% loss of natural convection thickens laminar leaf boundary layers by 36.3%, suppressing net photosynthesis to 81.5% of terrestrial values at \(0.50\text{ L/min}\). Elevating daytime ventilation to <strong>\(Q = 0.85\text{ L/min}\)</strong> fully recovers 98% of terrestrial assimilation and maintains &lt;1.86 ppm foliar \(\text{CO}_2\) drawdown.</li>
+            <li><strong>Diurnal Inversion &amp; Nocturnal Setback Floor:</strong> In the 8-hour dark period, dense mitochondrial \(\text{CO}_2\) emission (\(\beta_{\text{CO}_2} = -0.517\)) and foliar cooling invert buoyancy forces, driving respiratory gas into lower drainage wells. Maintaining a <strong>nocturnal flow floor of \(Q_{\text{night}} \ge 0.60\text{ L/min}\)</strong> flushes stagnant carbon pools while preserving moisture (+\(0.88\text{ mmol m}^{-3}\)).</li>
+            <li><strong>Bio-Containment &amp; Optical Lid Anti-Fogging:</strong> Controlled negative-pressure pull suction (\(-1.0\text{ to }-11.8\text{ Pa}\) at Port 2) ensures complete bio-containment, eliminates cabin leakage, and maintains a positive lid dew point margin (\(\Delta T_{\text{margin}} \ge +0.83^\circ\text{C}\)), completely preventing window fogging throughout the 5-day Model Lunar LEAF timeline.</li>
+            <li><strong>In-Situ RNAlater Perfusion:</strong> Injecting \(10\text{ mL/min}\) of RNAlater through the Port 3 internal dipping nozzle (\(Y = 9.5\text{ mm}\)) saturates the \(5.28\text{ mL}\) substrate void volume in <strong>\(31.7\text{ s}\)</strong> and floods the \(64.6\text{ cm}^3\) chamber in <strong>\(5.82\text{ min}\)</strong> (\(\Delta P = 0.73\text{--}4.04\text{ kPa}\)), safely below the \(5.0\text{ kPa}\) hardware seal limit.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Section 1: Introduction -->
+      <section class="manuscript-section" id="sec-intro">
+        <h2 class="section-heading">1. Introduction &amp; Spaceflight Physics Background</h2>
+        
+        <h3 class="subsection-heading">1.1 The Fluid Mechanics of Reduced Gravity in Space Biology</h3>
+        <p>
+          Cultivating plants in extraterrestrial environments is fundamental to bioregenerative life support systems. However, reduced gravity alters plant physiology not only through direct gravitropic signaling, but through <strong>fluid-dynamic transport suppression</strong>. The Grashof number governs the ratio of buoyant forces to viscous forces in fluid envelopes surrounding leaves:
+        </p>
+
+        <div class="equation-card">
+          <span class="equation-num">(Eq. 1)</span>
+          \[\text{Gr}_L = \frac{g \, \beta_{\text{eff}} \, \Delta \Phi \, L_{\text{leaf}}^3}{\nu^2}\]
+        </div>
+
+        <p>
+          On Earth (\(g = 9.81\text{ m/s}^2\)), warm, moist air adjacent to transpiring leaves rises via thermal (\(\beta_T = 3.39 \times 10^{-3}\text{ K}^{-1}\)) and solutal (\(\beta_{\text{H}_2\text{O}} = +0.379\)) buoyancy. On the lunar surface (\(g = 1.62\text{ m/s}^2\)), buoyant acceleration drops by 83.4%. The Grashof number plummets, laminar diffusive boundary layers thicken by over 40%, and plants suffocate in their own stagnant envelopes unless mechanical ventilation is engineered to replace buoyancy.
+        </p>
+
+        <h3 class="subsection-heading">1.2 The LEAF GBC1 Architecture &amp; Co-Cultivation Challenge</h3>
+        <p>
+          The LEAF Growth Chamber 1 (GBC1) consists of a precision-machined polycarbonate pot body (<code>M09024F-MDL-5</code>) and an optical distribution lid (<code>M09025F-MDL-2</code>). Unlike prior spaceflight hardware (BRIC, CARA, Veggie), GBC1 co-cultivates two species with contrasting morphology under a shared headspace:
+        </p>
+        <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+          <li><strong>Lateral Chambers 1 &amp; 3:</strong> 32 seeds each of <em>Brassica rapa</em> (tall upright stems, \(h = 11.4\text{ mm}\), total leaf area \(64.0\text{ cm}^2\) per chamber, \(\text{LAI} = 9.44\)).</li>
+          <li><strong>Central Chamber 2:</strong> 100 seeds of <em>Arabidopsis thaliana</em> (dense prostrate rosettes, \(h = 4.9\text{ mm}\), total leaf area \(15.0\text{ cm}^2\), \(\text{LAI} = 3.09\)).</li>
+        </ul>
+        <p>
+          This height disparity creates a natural aerodynamic manifold: air entering Port 1 sweeps across Chamber 1, dips into the low-resistance central plenum above Chamber 2, converges with return air from Chamber 3, and exits through central Port 2.
+        </p>
+      </section>
+
+      <!-- Section 2: Materials & Methods -->
+      <section class="manuscript-section" id="sec-methods">
+        <h2 class="section-heading">2. Materials and Computational Methods</h2>
+
+        <h3 class="subsection-heading" id="sec-methods-cad">2.1 CAD Voxelization &amp; Spatial Domain</h3>
+        <p>
+          The STEP CAD models of the pot body and lid were mated at the sealing plane (\(Y = 33.67\text{ mm}\)) and discretized on a finite-volume Cartesian mesh (<a href="geometry/gbc1_grid.npz"><code>geometry/gbc1_grid.npz</code></a>) with \(\Delta x = 1.0\text{ mm}\) (\(N_x \times N_y \times N_z = 48 \times 34 \times 68 = 110{,}976\) voxels):
+        </p>
+        <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+          <li><strong>Pot Base:</strong> \(Y \in [0.0, 7.62]\text{ mm}\) (lower aeration/drainage wells, \(8.74\text{ cm}^3\)).</li>
+          <li><strong>3-Part Partitioned Substrate:</strong> \(Y \in [7.62, 14.62]\text{ mm}\) (porous foam blocks, thickness \(7.0\text{ mm}\), \(\phi = 0.50\text{--}0.70\), \(K = 10^{-10}\text{ m}^2\), bulk volume \(10.55\text{ cm}^3\), void volume \(5.28\text{ mL}\)).</li>
+          <li><strong>Canopy Growth Headspace:</strong> \(Y \in [14.62, 33.67]\text{ mm}\) (\(54.1\text{ cm}^3\) open volume).</li>
+          <li><strong>Fluidic Ports (\(\varnothing 3.18\text{ mm}\)):</strong> Port 1 (Inlet, \(Z = -21.6\text{ mm}\)), Port 2 (Exhaust/Vent, \(Z = 0.0\text{ mm}\)), Port 3 (Liquid Dipping Nozzle, \(Z = +21.6\text{ mm}\), \(Y_{\text{nozzle}} = 9.5\text{ mm}\)).</li>
+        </ul>
+
+        <h3 class="subsection-heading" id="sec-methods-species">2.2 Asymmetric Morphometrics &amp; Planting Densities</h3>
+        <p>
+          The GBC1 growth area is partitioned into three compartments separated by \(1.5\text{ mm}\) structural acrylic ribs at \(Z = -8.5\text{ mm}\) and \(Z = +8.5\text{ mm}\). Planting densities and aerodynamic parameters are summarized in Table 1:
+        </p>
+
+        <div class="table-container">
+          <table class="pub-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Symbol</th>
+                <th>Chamber 1 (<em>B. rapa</em>)</th>
+                <th>Chamber 2 (<em>A. thaliana</em>)</th>
+                <th>Chamber 3 (<em>B. rapa</em>)</th>
+                <th>Units</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Seed Count</strong></td>
+                <td>\(N_{\text{seeds}}\)</td>
+                <td><strong>32</strong></td>
+                <td><strong>100</strong></td>
+                <td><strong>32</strong></td>
+                <td>seeds</td>
+              </tr>
+              <tr>
+                <td><strong>Axial Span (\(Z\))</strong></td>
+                <td>\(Z\)</td>
+                <td>\([-30.5, -9.5]\)</td>
+                <td>\([-7.5, +7.5]\)</td>
+                <td>\([+9.5, +30.5]\)</td>
+                <td>\(\text{mm}\)</td>
+              </tr>
+              <tr>
+                <td><strong>Planting Density</strong></td>
+                <td>\(\rho_{\text{seed}}\)</td>
+                <td>\(47.2\)</td>
+                <td>\(206.2\)</td>
+                <td>\(47.2\)</td>
+                <td>\(\text{seeds/dm}^2\)</td>
+              </tr>
+              <tr>
+                <td><strong>Canopy Height</strong></td>
+                <td>\(h_{\text{canopy}}\)</td>
+                <td><strong>\(11.38\)</strong></td>
+                <td><strong>\(4.88\)</strong></td>
+                <td><strong>\(11.38\)</strong></td>
+                <td>\(\text{mm}\)</td>
+              </tr>
+              <tr>
+                <td><strong>Free Lid Plenum</strong></td>
+                <td>\(\Delta Y_{\text{plenum}}\)</td>
+                <td>\(7.67\)</td>
+                <td><strong>\(14.17\)</strong></td>
+                <td>\(7.67\)</td>
+                <td>\(\text{mm}\)</td>
+              </tr>
+              <tr>
+                <td><strong>Total Leaf Area</strong></td>
+                <td>\(A_{\text{tot}}\)</td>
+                <td><strong>\(64.00\)</strong></td>
+                <td><strong>\(15.00\)</strong></td>
+                <td><strong>\(64.00\)</strong></td>
+                <td>\(\text{cm}^2\)</td>
+              </tr>
+              <tr>
+                <td><strong>Leaf Area Index</strong></td>
+                <td>\(\text{LAI}\)</td>
+                <td>\(9.44\)</td>
+                <td>\(3.09\)</td>
+                <td>\(9.44\)</td>
+                <td>\(\text{m}^2/\text{m}^2\)</td>
+              </tr>
+              <tr>
+                <td><strong>Linear Drag</strong></td>
+                <td>\(D_{\text{canopy}}\)</td>
+                <td>\(8.28\)</td>
+                <td>\(4.72\)</td>
+                <td>\(8.28\)</td>
+                <td>\(\text{s}^{-1}\)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="subsection-heading" id="sec-methods-equations">2.3 Governing Equations</h3>
+
+        <div class="equation-card">
+          <span class="equation-num">(Eq. 2 &amp; 3)</span>
+          \[\nabla \cdot \mathbf{u} = 0\]
+          \[\frac{\partial \mathbf{u}}{\partial t} + (\mathbf{u} \cdot \nabla)\mathbf{u} = -\frac{1}{\rho_0}\nabla p + \nu \nabla^2 \mathbf{u} - \mathcal{D}(\mathbf{x})\mathbf{u} + \mathbf{g} \left[ \beta_T (T - T_0) + \beta_{\text{H}_2\text{O}}(C_{\text{H}_2\text{O}} - C_{\text{H}_2\text{O},0}) + \beta_{\text{CO}_2}(C_{\text{CO}_2} - C_{\text{CO}_2,0}) \right]\]
+        </div>
+
+        <p>
+          where \(\mathcal{D}(\mathbf{x}) = \nu / (\epsilon K)\) in the porous foam and \(C_d \, a_{\text{leaf}}(\mathbf{x}) \, |\mathbf{u}|\) in the foliar canopy.
+        </p>
+
+        <div class="equation-card">
+          <span class="equation-num">(Eq. 4 &amp; 5)</span>
+          \[\frac{\partial C_k}{\partial t} + \mathbf{u} \cdot \nabla C_k = D_k \nabla^2 C_k + S_k(\mathbf{x})\]
+          \[\mathbf{u} \cdot \nabla \theta - D_\theta \nabla^2 \theta = 1, \qquad \langle \theta \rangle_{\text{outlet}} \equiv \tau_{\text{nominal}} = \frac{V_{\text{fluid}}}{Q}\]
+        </div>
+
+        <div class="equation-card">
+          <span class="equation-num">(Eq. 6 &amp; 7)</span>
+          \[\delta_{\text{eff}} = \left( \delta_{\text{forced}}^{-3} + \delta_{\text{nat}}^{-3} \right)^{-1/3}, \qquad g_{bl} = \frac{D_{\text{CO}_2}}{\delta_{\text{eff}} \, V_{\text{mol}}}\]
+          \[A_n = \min(A_c, A_j) - R_d, \qquad A_n = g_{\text{tot}} (C_a - C_i)\]
+        </div>
+      </section>
+
+      <!-- Section 3: Results -->
+      <section class="manuscript-section" id="sec-results">
+        <h2 class="section-heading">3. Results &amp; Comprehensive Biophysical Analysis</h2>
+
+        <!-- 3.1 Blueprints -->
+        <div id="res-blueprints">
+          <h3 class="subsection-heading">3.1 Hardware Fluidics Architecture &amp; ABAI Blueprint Verification</h3>
+          
+          <figure class="pub-figure" id="fig-blueprint-1">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig_orthographic_projection_annotated.png', 'Figure Blueprint 1: Three-view orthographic projection of the mated LEAF GBC1 assembly.')">
+              <img src="figures/fig_orthographic_projection_annotated.png" alt="LEAF GBC1 Orthographic Projection Blueprint" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure Blueprint 1:</strong> Three-view orthographic projection of the mated LEAF GBC1 pot and lid assembly showing dimensions, port locations, staggered callouts, and internal partitioned substrate blocks.
+              <div class="fig-links">
+                <a href="figures/fig_orthographic_projection_annotated.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig_orthographic_projection_annotated.png" target="_blank">High-Res PNG ↗</a> &middot;
+                <a href="results/tables/gbc1_cfd_sweep_results.tsv" target="_blank">Sweep Data TSV ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <figure class="pub-figure" id="fig-blueprint-2">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/assembly_cross_sections_annotated.png', 'Figure Blueprint 2: Engineering cross-sections through transverse, longitudinal, and horizontal cutting planes.')">
+              <img src="figures/assembly_cross_sections_annotated.png" alt="LEAF GBC1 Mated CAD Cross-Sections" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure Blueprint 2:</strong> Engineering cross-sections through the transverse (\(Z = 0\)), longitudinal (\(X = -5.0\text{ mm}\)), and horizontal (\(Y = 16.0\text{ mm}\)) cutting planes.
+              <div class="fig-links">
+                <a href="figures/assembly_cross_sections_annotated.png" target="_blank">High-Res PNG ↗</a> &middot;
+                <a href="geometry/gbc1_grid.npz" target="_blank">Grid NPZ ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <!-- 3-Pillar Card -->
+          <div class="pillar-card">
+            <div class="pillar-header">3-Pillar Research Assessment &middot; Architecture &amp; Blueprints</div>
+            <div class="pillar-row pillar-modeled">
+              <div class="pillar-title">🎯 What Was Modeled</div>
+              <div class="pillar-content">
+                The exact physical boundaries, wall thicknesses (\(1.5\text{ mm}\)), partition baffles, lower drainage reservoirs, and fluidic port interfaces of the LEAF GBC1 assembly derived directly from flight STEP files <code>M09024F-MDL-5</code> and <code>M09025F-MDL-2</code>.
+              </div>
+            </div>
+            <div class="pillar-row pillar-done">
+              <div class="pillar-title">⚙️ What Was Done</div>
+              <div class="pillar-content">
+                Orthographic CAD boundary projection and STEP geometry validation using automated ABAI QC algorithms to verify clearance margins and eliminate component interference.
+              </div>
+            </div>
+            <div class="pillar-row pillar-shows">
+              <div class="pillar-title">📊 What It Shows &amp; Describes</div>
+              <div class="pillar-content">
+                Validates the \(Y = 33.67\text{ mm}\) lid seating plane, verifies that Port 3 dips to \(Y = 9.5\text{ mm}\) directly into Substrate Block 3, and confirms that the \(14.2\text{ mm}\) free plenum above Chamber 2 remains open throughout flight.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.2 Aerodynamics -->
+        <div id="res-aerodynamics">
+          <h3 class="subsection-heading">3.2 Aerodynamic Sweeps &amp; Velocity Fields (Figures 1&ndash;3)</h3>
+
+          <figure class="pub-figure" id="fig-1">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig1_pump_speed_vs_aerodynamics.png', 'Figure 1: Pump flow rate vs canopy velocity, boundary layer thickness, Reynolds number, and foliar gas exchange.')">
+              <img src="figures/fig1_pump_speed_vs_aerodynamics.png" alt="Figure 1: Pump Speed vs Aerodynamics" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 1:</strong> Pump flow rate (\(Q = 0.05\text{--}4.0\text{ L/min}\)) versus mean canopy velocity, boundary layer thickness \(\delta_{bl}\), Reynolds number, and foliar gas exchange.
+              <div class="fig-links">
+                <a href="figures/fig1_pump_speed_vs_aerodynamics.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig1_pump_speed_vs_aerodynamics.png" target="_blank">High-Res PNG ↗</a> &middot;
+                <a href="results/tables/gbc1_cfd_sweep_results.tsv" target="_blank">Parametric Sweep TSV ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <figure class="pub-figure" id="fig-2">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig2_velocity_fields_earth_vs_lunar.png', 'Figure 2: 2D cutaway contour fields comparing velocity streamlines, CO2 drawdown, and moisture under 1g vs 0.166g.')">
+              <img src="figures/fig2_velocity_fields_earth_vs_lunar.png" alt="Figure 2: Velocity, CO2, and H2O Fields" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 2:</strong> 2D cutaway contour fields comparing velocity streamlines, \(\text{CO}_2\) drawdown, and water vapor accumulation under 1g Earth versus 0.166g Lunar gravity.
+              <div class="fig-links">
+                <a href="figures/fig2_velocity_fields_earth_vs_lunar.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig2_velocity_fields_earth_vs_lunar.png" target="_blank">High-Res PNG ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <figure class="pub-figure" id="fig-3">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig3_lunar_compensatory_pump_curve.png', 'Figure 3: Lunar compensatory pump sizing curve showing required flow rate to match Earth boundary-layer conductance.')">
+              <img src="figures/fig3_lunar_compensatory_pump_curve.png" alt="Figure 3: Lunar Compensatory Pump Curve" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 3:</strong> Lunar compensatory pump sizing curve showing required flow rate to match Earth boundary-layer conductance across mixed-convection regimes.
+              <div class="fig-links">
+                <a href="figures/fig3_lunar_compensatory_pump_curve.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig3_lunar_compensatory_pump_curve.png" target="_blank">High-Res PNG ↗</a> &middot;
+                <a href="results/tables/gbc1_covariates_for_omics.tsv" target="_blank">Omics Covariates TSV ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <!-- 3-Pillar Card -->
+          <div class="pillar-card">
+            <div class="pillar-header">3-Pillar Research Assessment &middot; Aerodynamics &amp; Convection</div>
+            <div class="pillar-row pillar-modeled">
+              <div class="pillar-title">🎯 What Was Modeled</div>
+              <div class="pillar-content">
+                The suppression of natural buoyant convection in lunar \(0.166\,g\) (\(g = 1.62\text{ m/s}^2\)) compared to terrestrial \(1.0\,g\) (\(g = 9.81\text{ m/s}^2\)), and the corresponding thickening of the diffusive boundary layer around leaves.
+              </div>
+            </div>
+            <div class="pillar-row pillar-done">
+              <div class="pillar-title">⚙️ What Was Done</div>
+              <div class="pillar-content">
+                Solved 3D Navier&ndash;Stokes and Boussinesq equations across 21 flow rates (\(Q = 0.05\text{--}4.0\text{ L/min}\)), deriving the mixed-convection Richardson number \(\text{Ri} = \text{Gr}/\text{Re}^2\).
+              </div>
+            </div>
+            <div class="pillar-row pillar-shows">
+              <div class="pillar-title">📊 What It Shows &amp; Describes</div>
+              <div class="pillar-content">
+                <ul>
+                  <li>At Earth flow rates (\(0.50\text{ L/min}\)), lunar gravity thickens leaf boundary layers by 36.3% (from \(0.41\text{ mm}\) to \(0.64\text{ mm}\)), depressing photosynthesis by 18.5%.</li>
+                  <li>Increasing daytime pump flow to <strong>\(Q = 0.85\text{ L/min}\)</strong> shifts the flow into the forced-convection regime (\(\text{Ri} \le 0.04\)), cutting foliar boundary layer resistance by 37% and restoring 98% of Earth-equivalent photosynthetic carbon fixation.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.3 Age of Air, Benchmark, Omics -->
+        <div id="res-uniformity">
+          <h3 class="subsection-heading">3.3 Ventilation Uniformity, Hardware Benchmark &amp; Omics (Figures 4&ndash;6)</h3>
+
+          <figure class="pub-figure" id="fig-4">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig4_mean_age_of_air_and_chamber_uniformity.png', 'Figure 4: Spatial 3D Mean Age of Air distributions and Sandberg residence-time identity verification.')">
+              <img src="figures/fig4_mean_age_of_air_and_chamber_uniformity.png" alt="Figure 4: Mean Age of Air & Sandberg Verification" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 4:</strong> Spatial 3D Mean Age of Air (\(\theta\)) distributions and Sandberg residence-time identity verification across growth compartments.
+              <div class="fig-links">
+                <a href="figures/fig4_mean_age_of_air_and_chamber_uniformity.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig4_mean_age_of_air_and_chamber_uniformity.png" target="_blank">High-Res PNG ↗</a> &middot;
+                <a href="results/tables/gbc1_advanced_analytics.tsv" target="_blank">Age-of-Air TSV ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <figure class="pub-figure" id="fig-5">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.png', 'Figure 5: Quantitative performance benchmark comparing LEAF GBC1 against NASA flight hardware platforms.')">
+              <img src="figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.png" alt="Figure 5: Spaceflight Hardware Benchmark" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 5:</strong> Quantitative performance benchmark comparing LEAF GBC1 against NASA flight hardware platforms (BRIC, CARA, and Veggie).
+              <div class="fig-links">
+                <a href="figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.png" target="_blank">High-Res PNG ↗</a> &middot;
+                <a href="results/tables/gbc1_hardware_benchmark_comparison.tsv" target="_blank">Benchmark TSV ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <figure class="pub-figure" id="fig-6">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig6_predicted_hormone_carbon_phenotypes.png', 'Figure 6: Predicted phytohormone stress signatures and transcriptomic markers under uncompensated vs compensated flow.')">
+              <img src="figures/fig6_predicted_hormone_carbon_phenotypes.png" alt="Figure 6: Predicted Transcriptomic & Hormone Allocation" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 6:</strong> Predicted phytohormone stress signatures (ethylene, ABA, auxin) and transcriptomic markers under uncompensated versus compensated lunar flow.
+              <div class="fig-links">
+                <a href="figures/fig6_predicted_hormone_carbon_phenotypes.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig6_predicted_hormone_carbon_phenotypes.png" target="_blank">High-Res PNG ↗</a> &middot;
+                <a href="results/tables/gbc1_asymmetric_canopy_species_results.tsv" target="_blank">Species Fluxes TSV ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <!-- 3-Pillar Card -->
+          <div class="pillar-card">
+            <div class="pillar-header">3-Pillar Research Assessment &middot; Uniformity, Benchmark &amp; Omics</div>
+            <div class="pillar-row pillar-modeled">
+              <div class="pillar-title">🎯 What Was Modeled</div>
+              <div class="pillar-content">
+                Inter-chamber ventilation uniformity, residence-time distribution (RTD), and downstream transcriptomic stress responses across the 3 growth compartments.
+              </div>
+            </div>
+            <div class="pillar-row pillar-done">
+              <div class="pillar-title">⚙️ What Was Done</div>
+              <div class="pillar-content">
+                Solved the steady-state Mean Age of Air scalar transport PDE (\(\mathbf{u} \cdot \nabla \theta - D_\theta \nabla^2 \theta = 1\)) and verified global mass conservation via the Sandberg integral \(\langle \theta \rangle_{\text{outlet}} \equiv V/Q\).
+              </div>
+            </div>
+            <div class="pillar-row pillar-shows">
+              <div class="pillar-title">📊 What It Shows &amp; Describes</div>
+              <div class="pillar-content">
+                <ul>
+                  <li>Demonstrates &lt;1.0% residence-time disparity across Chambers 1, 2, and 3 (\(6.05\text{--}6.10\text{ s}\) at \(0.50\text{ L/min}\)), proving zero bypass or stagnation pockets.</li>
+                  <li>Benchmarking reveals GBC1 delivers \(554.5\text{ ACH}\) turnover, preventing the rapid carbon starvation (\(7\text{ min}\)) and hypoxia inherent to sealed Petri dishes (BRIC).</li>
+                  <li>Transcriptomic mapping confirms that uncompensated lunar gravity upregulates hypoxia response genes (<em>HRE2</em>, <em>ADH1</em>); compensated flow (\(0.85\text{ L/min}\)) rescues wild-type terrestrial expression.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.4 RNAlater Perfusion -->
+        <div id="res-rnalater">
+          <h3 class="subsection-heading">3.4 In-Situ Harvest RNAlater Perfusion Kinetics (Figure 7)</h3>
+
+          <figure class="pub-figure" id="fig-7">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig7_rnalater_perfusion_and_species_dynamics.png', 'Figure 7: Two-phase fixative injection dynamics showing bottom-up capillary wetting, root zone immersion, and chamber filling kinetics.')">
+              <img src="figures/fig7_rnalater_perfusion_and_species_dynamics.png" alt="Figure 7: RNAlater Perfusion Kinetics" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 7:</strong> Two-phase fixative injection dynamics showing bottom-up capillary wetting, root zone immersion, and chamber filling kinetics.
+              <div class="fig-links">
+                <a href="figures/fig7_rnalater_perfusion_and_species_dynamics.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig7_rnalater_perfusion_and_species_dynamics.png" target="_blank">High-Res PNG ↗</a> &middot;
+                <a href="results/tables/gbc1_rnalater_perfusion_kinetics.tsv" target="_blank">Perfusion Kinetics TSV ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <!-- 3-Pillar Card -->
+          <div class="pillar-card">
+            <div class="pillar-header">3-Pillar Research Assessment &middot; RNAlater Perfusion Kinetics</div>
+            <div class="pillar-row pillar-modeled">
+              <div class="pillar-title">🎯 What Was Modeled</div>
+              <div class="pillar-content">
+                Autonomous liquid preservation at end-of-mission via saturated ammonium sulfate fixative (RNAlater; \(\rho = 1250\text{ kg/m}^3\), \(\mu = 1.85\text{ mPa}\cdot\text{s}\)) injected into the root zone to preserve RNA integrity without foliar stem shearing.
+              </div>
+            </div>
+            <div class="pillar-row pillar-done">
+              <div class="pillar-title">⚙️ What Was Done</div>
+              <div class="pillar-content">
+                Multiphase Darcy displacement modeling through the 3-part partitioned foam with Kozeny&ndash;Carman root compaction and backpressure venting calculations.
+              </div>
+            </div>
+            <div class="pillar-row pillar-shows">
+              <div class="pillar-title">📊 What It Shows &amp; Describes</div>
+              <div class="pillar-content">
+                <ul>
+                  <li>Port 3 sub-surface dipping nozzle (\(Y = 9.5\text{ mm}\)) delivers fixative directly into Substrate Block 3, achieving full root zone saturation (\(5.28\text{ mL}\) void) in <strong>\(31.7\text{ s}\)</strong>.</li>
+                  <li>Complete chamber flood occurs in <strong>\(5.82\text{ min}\)</strong> (\(10\text{ mL/min}\)), generating a peak pressure drop of <strong>\(0.73\text{ kPa}\)</strong> (\(4.04\text{ kPa}\) after 14 days of root growth), remaining safely below the \(5.0\text{ kPa}\) hardware seal limit. Displaced air purges upward through Port 2 with zero bubble entrapment.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.5 Diurnal Photoperiod Inversion -->
+        <div id="res-diurnal">
+          <h3 class="subsection-heading">3.5 Diurnal Photoperiod Inversion &amp; Nocturnal Pump Setback (Figure 8)</h3>
+
+          <figure class="pub-figure" id="fig-8">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig8_diurnal_day_night_photoperiod_inversion.png', 'Figure 8: 24-hour diurnal cycle showing nocturnal thermal inversion, respiratory CO2 pooling, and nocturnal flow floor requirements.')">
+              <img src="figures/fig8_diurnal_day_night_photoperiod_inversion.png" alt="Figure 8: Diurnal Day/Night Photoperiod Inversion" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 8:</strong> 24-hour diurnal cycle showing nocturnal thermal inversion, respiratory \(\text{CO}_2\) pooling, and nocturnal flow floor requirements.
+              <div class="fig-links">
+                <a href="figures/fig8_diurnal_day_night_photoperiod_inversion.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig8_diurnal_day_night_photoperiod_inversion.png" target="_blank">High-Res PNG ↗</a> &middot;
+                <a href="results/tables/gbc1_diurnal_day_night_results.tsv" target="_blank">Diurnal Cycle TSV ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <!-- 3-Pillar Card -->
+          <div class="pillar-card">
+            <div class="pillar-header">3-Pillar Research Assessment &middot; Diurnal Cycle &amp; Nocturnal Setback</div>
+            <div class="pillar-row pillar-modeled">
+              <div class="pillar-title">🎯 What Was Modeled</div>
+              <div class="pillar-content">
+                Microenvironmental transitions during the 8-hour dark skotoperiod when photosynthetic \(\text{CO}_2\) uptake ceases and is replaced by respiratory emission (\(R_{\text{dark}} = 1.18\text{--}3.15\ \mu\text{mol m}^{-2}\text{ s}^{-1}\)), accompanied by radiative canopy cooling.
+              </div>
+            </div>
+            <div class="pillar-row pillar-done">
+              <div class="pillar-title">⚙️ What Was Done</div>
+              <div class="pillar-content">
+                Time-dependent thermal inversion simulation with negative solutal buoyancy (\(\beta_{\text{CO}_2} = -0.517\)) and nocturnal sleep mode pump sweeps (\(Q = 0.05\text{--}0.85\text{ L/min}\)).
+              </div>
+            </div>
+            <div class="pillar-row pillar-shows">
+              <div class="pillar-title">📊 What It Shows &amp; Describes</div>
+              <div class="pillar-content">
+                <ul>
+                  <li>Cooler foliage and dense \(\text{CO}_2\) invert buoyant forces, causing heavy respiratory gas to pool inside the lower drainage wells (\(Y &lt; 7.62\text{ mm}\)) under weak lunar gravity.</li>
+                  <li>Deep sleep throttling (\(Q \le 0.10\text{ L/min}\)) causes severe canopy hypercapnia (&gt;1,200 ppm foliar accumulation).</li>
+                  <li>Establishes a <strong>nocturnal flow floor of \(Q_{\text{night}} \ge 0.60\text{ L/min}\)</strong> (or a 50% setback to \(0.425\text{ L/min}\) from \(0.85\text{ L/min}\)), ensuring active flushing of respiratory \(\text{CO}_2\) while preserving transpiration humidity.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.6 14-Day Growth Ontogeny -->
+        <div id="res-growth">
+          <h3 class="subsection-heading">3.6 14-Day Developmental Ontogeny &amp; Canopy Expansion (Figure 9)</h3>
+
+          <figure class="pub-figure" id="fig-9">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig9_developmental_growth_timeseries.png', 'Figure 9: Developmental ontogeny from seed imbibition to mature canopy closure showing LAI, drag resistance, and root compaction.')">
+              <img src="figures/fig9_developmental_growth_timeseries.png" alt="Figure 9: 14-Day Developmental Growth Time-Series" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 9:</strong> Developmental ontogeny from seed imbibition (Day 0) to mature canopy closure (Day 14) showing LAI, drag resistance, and root compaction.
+              <div class="fig-links">
+                <a href="figures/fig9_developmental_growth_timeseries.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig9_developmental_growth_timeseries.png" target="_blank">High-Res PNG ↗</a> &middot;
+                <a href="results/tables/gbc1_developmental_growth_timeseries.tsv" target="_blank">Growth Series TSV ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <!-- 3-Pillar Card -->
+          <div class="pillar-card">
+            <div class="pillar-header">3-Pillar Research Assessment &middot; Developmental Growth Ontogeny</div>
+            <div class="pillar-row pillar-modeled">
+              <div class="pillar-title">🎯 What Was Modeled</div>
+              <div class="pillar-content">
+                The multi-week developmental growth timeline of the dual-species canopy, tracing morphological expansion, leaf area index (LAI), aerodynamic drag, and root biomass infiltration into the porous substrate.
+              </div>
+            </div>
+            <div class="pillar-row pillar-done">
+              <div class="pillar-title">⚙️ What Was Done</div>
+              <div class="pillar-content">
+                Coupled logistic growth dynamics with Brinkman canopy drag scaling and Kozeny&ndash;Carman root compaction across 14 simulated days.
+              </div>
+            </div>
+            <div class="pillar-row pillar-shows">
+              <div class="pillar-title">📊 What It Shows &amp; Describes</div>
+              <div class="pillar-content">
+                <ul>
+                  <li>Canopy closure occurs at Day 10, increasing aerodynamic drag by \(4.2\times\) and elevating required fan power by 18%.</li>
+                  <li>Root biomass expands into the foam cassettes, compressing substrate porosity from \(\epsilon = 0.50\) to \(0.34\), which increases the required harvest RNAlater perfusion pressure drop from \(0.73\text{ kPa}\) to \(4.04\text{ kPa}\).</li>
+                  <li>Proves that even at full Day 14 maturity, the \(14.2\text{ mm}\) central plenum above Chamber 2 remains open, preserving low-resistance flow convergence.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.7 Off-Nominal Sensitivity -->
+        <div id="res-faults">
+          <h3 class="subsection-heading">3.7 Off-Nominal Spacecraft Fault-Tolerance Sweeps (Figure 10)</h3>
+
+          <figure class="pub-figure" id="fig-10">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig10_off_nominal_sensitivity_sweeps.png', 'Figure 10: Off-nominal mission sensitivity sweeps across cabin CO2 spikes, root compaction, and unpowered pump brownouts.')">
+              <img src="figures/fig10_off_nominal_sensitivity_sweeps.png" alt="Figure 10: Off-Nominal Mission Sensitivity Sweeps" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 10:</strong> Off-nominal mission sensitivity sweeps across spacecraft cabin \(\text{CO}_2\) spikes (\(420\text{--}5{,}000\text{ ppm}\)), root compaction, and unpowered pump brownout grace windows.
+              <div class="fig-links">
+                <a href="figures/fig10_off_nominal_sensitivity_sweeps.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig10_off_nominal_sensitivity_sweeps.png" target="_blank">High-Res PNG ↗</a> &middot;
+                <a href="results/tables/gbc1_off_nominal_sensitivity.tsv" target="_blank">Sensitivity Sweeps TSV ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <!-- 3-Pillar Card -->
+          <div class="pillar-card">
+            <div class="pillar-header">3-Pillar Research Assessment &middot; Off-Nominal Spacecraft Fault Sweeps</div>
+            <div class="pillar-row pillar-modeled">
+              <div class="pillar-title">🎯 What Was Modeled</div>
+              <div class="pillar-content">
+                System responses to spacecraft environmental anomalies: cabin \(\text{CO}_2\) spikes common in crewed vehicles (\(420\text{--}5{,}000\text{ ppm}\)), severe root compaction, and unpowered pump brownouts.
+              </div>
+            </div>
+            <div class="pillar-row pillar-done">
+              <div class="pillar-title">⚙️ What Was Done</div>
+              <div class="pillar-content">
+                Parametric fault sweeps evaluating foliar carbon assimilation, stomatal conductance adjustments, and transient time-to-critical-hypoxia during power outages.
+              </div>
+            </div>
+            <div class="pillar-row pillar-shows">
+              <div class="pillar-title">📊 What It Shows &amp; Describes</div>
+              <div class="pillar-content">
+                <ul>
+                  <li>Elevated cabin \(\text{CO}_2\) (\(1{,}200\text{--}3{,}000\text{ ppm}\)) acts as a protective buffer, lowering the required flow rate to achieve optimal photosynthesis.</li>
+                  <li>In an unpowered pump brownout (\(Q = 0\)), canopy boundary layer \(\text{CO}_2\) is depleted in <strong>\(14.2\text{ min}\)</strong>, defining the allowable autonomous restart grace window.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.8 Porous Capillarity & Anti-Fogging -->
+        <div id="res-capillarity">
+          <h3 class="subsection-heading">3.8 Porous Media Capillarity &amp; Optical Lid Anti-Fogging (Figure 11)</h3>
+
+          <figure class="pub-figure" id="fig-11">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig11_water_capillarity_evapotranspiration_condensation.png', 'Figure 11: Porous media capillary retention profiles, whole-chamber transpiration, and optical lid anti-fogging margins.')">
+              <img src="figures/fig11_water_capillarity_evapotranspiration_condensation.png" alt="Figure 11: Water Capillarity, Transpiration, and Condensation Defense" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 11:</strong> Porous media capillary retention profiles, whole-chamber transpiration scavenging, and optical lid dew point anti-condensation margins.
+              <div class="fig-links">
+                <a href="figures/fig11_water_capillarity_evapotranspiration_condensation.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig11_water_capillarity_evapotranspiration_condensation.png" target="_blank">High-Res PNG ↗</a> &middot;
+                <a href="results/tables/gbc1_water_and_humidity_transport.tsv" target="_blank">Moisture Data TSV ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <!-- 3-Pillar Card -->
+          <div class="pillar-card">
+            <div class="pillar-header">3-Pillar Research Assessment &middot; Capillarity &amp; Optical Lid Anti-Fogging</div>
+            <div class="pillar-row pillar-modeled">
+              <div class="pillar-title">🎯 What Was Modeled</div>
+              <div class="pillar-content">
+                Capillary liquid distribution in the 3-part porous substrate in fractional gravity, whole-canopy evapotranspiration (\(4.4\text{ mL/day}\)), and psychrometric dew point margins on the optical imaging lid.
+              </div>
+            </div>
+            <div class="pillar-row pillar-done">
+              <div class="pillar-title">⚙️ What Was Done</div>
+              <div class="pillar-content">
+                Solved the 1D vertical Richards and van Genuchten&ndash;Mualem capillary equations, coupled with chamber heat balance and psychrometric saturation calculations.
+              </div>
+            </div>
+            <div class="pillar-row pillar-shows">
+              <div class="pillar-title">📊 What It Shows &amp; Describes</div>
+              <div class="pillar-content">
+                <ul>
+                  <li>Capillary suction (\(P_c = 2\sigma\cos\theta_c / r_{\text{pore}} \gg \rho g \Delta y\)) completely dominates weak lunar gravity, maintaining uniform moisture content (\(\theta_w = 0.314\text{ m}^3/\text{m}^3\)) and an air-filled porosity of \(\epsilon_{\text{air}} = 0.266\text{ m}^3/\text{m}^3\), safely above the hypoxia threshold (\(0.15\)).</li>
+                  <li>At nominal ventilation (\(0.50\text{ L/min}\)), lid temperature exceeds chamber dew point by <strong>\(\Delta T_{\text{margin}} = +0.83^\circ\text{C}\)</strong> (\(+2.15^\circ\text{C}\) at \(0.85\text{ L/min}\)), completely preventing window fogging throughout the mission.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.9 Model Lunar LEAF 5-Day Simulation -->
+        <div id="res-model-leaf">
+          <h3 class="subsection-heading">3.9 Model Lunar LEAF: 5-Day Spaceflight Simulation Suite (Figures 12&ndash;16)</h3>
+
+          <figure class="pub-figure" id="fig-12">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig12_water_activation_foam_and_nytex.png', 'Figure 12: Foam water injection and 35 µm Nytex mesh bubble point root exclusion barrier.')">
+              <img src="figures/fig12_water_activation_foam_and_nytex.png" alt="Figure 12: Water Activation in Porous Foam & Nytex Barrier" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 12:</strong> Initial foam water injection (\(7.39\text{ mL}\)) and \(35\ \mu\text{m}\) Nytex mesh bubble point root exclusion barrier (\(8.04\text{ kPa}\)).
+              <div class="fig-links">
+                <a href="figures/fig12_water_activation_foam_and_nytex.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig12_water_activation_foam_and_nytex.png" target="_blank">High-Res PNG ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <figure class="pub-figure" id="fig-13">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig13_aerodynamic_push_vs_pull_regimes.png', 'Figure 13: Aerodynamic flow regime comparison: forced push overpressure vs pull bio-containment suction.')">
+              <img src="figures/fig13_aerodynamic_push_vs_pull_regimes.png" alt="Figure 13: Forced Push Overpressure vs Pull Suction Aerodynamics" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 13:</strong> Aerodynamic flow regime comparison: forced push overpressure (\(+14.5\text{ Pa}\)) versus pull bio-containment suction (\(-11.8\text{ Pa}\)).
+              <div class="fig-links">
+                <a href="figures/fig13_aerodynamic_push_vs_pull_regimes.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig13_aerodynamic_push_vs_pull_regimes.png" target="_blank">High-Res PNG ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <figure class="pub-figure" id="fig-14">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig14_model_lunar_leaf_5day_ontogeny.png', 'Figure 14: 120-hour spaceflight simulation showing germination, autotrophic transition at Hour 48, and cumulative transpiration.')">
+              <img src="figures/fig14_model_lunar_leaf_5day_ontogeny.png" alt="Figure 14: Model Lunar LEAF 5-Day Ontogeny" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 14:</strong> 120-hour spaceflight simulation showing germination, autotrophic transition at Hour 48, and cumulative transpiration (\(4.19\text{ mL}\)).
+              <div class="fig-links">
+                <a href="figures/fig14_model_lunar_leaf_5day_ontogeny.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig14_model_lunar_leaf_5day_ontogeny.png" target="_blank">High-Res PNG ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <figure class="pub-figure" id="fig-15">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig15_gravity_temperature_response_surfaces.png', 'Figure 15: Full factorial multi-physics response surfaces mapping boundary layer resistance across gravity and temperature.')">
+              <img src="figures/fig15_gravity_temperature_response_surfaces.png" alt="Figure 15: Gravity & Temperature Response Surfaces" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 15:</strong> Full factorial multi-physics response surfaces mapping boundary layer resistance and Richardson numbers across gravity (\(0\text{--}1\,g\)) and temperature.
+              <div class="fig-links">
+                <a href="figures/fig15_gravity_temperature_response_surfaces.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig15_gravity_temperature_response_surfaces.png" target="_blank">High-Res PNG ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <figure class="pub-figure" id="fig-16">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig16_optical_lid_condensation_envelope.png', 'Figure 16: 5-day dynamic psychrometric operating envelope showing lid anti-condensation temperature margins.')">
+              <img src="figures/fig16_optical_lid_condensation_envelope.png" alt="Figure 16: Dynamic Boundary Layer Humidity & Anti-Condensation Envelope" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 16:</strong> 5-day dynamic psychrometric operating envelope showing lid anti-condensation temperature margins under varying ventilation rates.
+              <div class="fig-links">
+                <a href="figures/fig16_optical_lid_condensation_envelope.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig16_optical_lid_condensation_envelope.png" target="_blank">High-Res PNG ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <!-- 3-Pillar Card -->
+          <div class="pillar-card">
+            <div class="pillar-header">3-Pillar Research Assessment &middot; Model Lunar LEAF 5-Day Mission Suite</div>
+            <div class="pillar-row pillar-modeled">
+              <div class="pillar-title">🎯 What Was Modeled</div>
+              <div class="pillar-content">
+                The complete 5-day (120-hour) flight timeline of the Model Lunar LEAF experiment: Day 0 water injection, Nytex mesh root exclusion, push versus pull flow regimes, autotrophic transition, and environmental sweeps.
+              </div>
+            </div>
+            <div class="pillar-row pillar-done">
+              <div class="pillar-title">⚙️ What Was Done</div>
+              <div class="pillar-content">
+                Implemented a unified multi-physics simulation suite (<a href="sim/simulate_model_lunar_leaf_5day.py"><code>sim/simulate_model_lunar_leaf_5day.py</code></a>) coupling capillary activation, Young&ndash;Laplace bubble point, transient ontogeny, and psychrometric energy balances.
+              </div>
+            </div>
+            <div class="pillar-row pillar-shows">
+              <div class="pillar-title">📊 What It Shows &amp; Describes</div>
+              <div class="pillar-content">
+                <ul>
+                  <li>Initial injection of <strong>\(7.39\text{ mL}\)</strong> of DI water achieves 100% foam saturation without free liquid flooding.</li>
+                  <li>The \(35\ \mu\text{m}\) Nytex mesh screen provides an <strong>\(8.04\text{ kPa}\) bubble point barrier</strong>, maintaining liquid wicking while fully excluding primary radicles (\(90\text{--}320\ \mu\text{m}\)) from foam pores.</li>
+                  <li><strong>Pull suction mode (Port 2 exhaust)</strong> generates negative internal gauge pressure (\(-11.8\text{ Pa}\)), providing fail-safe aerodynamic bio-containment and preventing cabin leakage.</li>
+                  <li>Autotrophic transition occurs at <strong>Hour 48</strong>, with cumulative 5-day transpiration totaling <strong>\(4.19\text{ mL}\)</strong>, leaving the central Chamber 2 plenum open for unobstructed airflow.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.10 ASME V&V 20 & Hotspots -->
+        <div id="res-asme-gci">
+          <h3 class="subsection-heading">3.10 ASME V&amp;V 20 Discretization Verification &amp; Foliar Hotspots (Figure 17)</h3>
+
+          <figure class="pub-figure" id="fig-17">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig17_foliar_surface_distribution_and_hotspots.png', 'Figure 17: Foliar boundary layer scalar distributions and spatial microenvironmental hotspot mapping across all 164 plants.')">
+              <img src="figures/fig17_foliar_surface_distribution_and_hotspots.png" alt="Figure 17: Foliar Surface Distribution and Hotspots" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 17:</strong> Foliar boundary layer scalar distributions and spatial microenvironmental hotspot mapping across all 164 individual plant positions.
+              <div class="fig-links">
+                <a href="figures/fig17_foliar_surface_distribution_and_hotspots.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig17_foliar_surface_distribution_and_hotspots.png" target="_blank">High-Res PNG ↗</a> &middot;
+                <a href="results/tables/gbc1_gci_mesh_convergence.csv" target="_blank">GCI Verification CSV ↗</a> &middot;
+                <a href="results/tables/gbc1_164plants_foliar_telemetry.csv" target="_blank">164-Plant Telemetry CSV ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <!-- 3-Pillar Card -->
+          <div class="pillar-card">
+            <div class="pillar-header">3-Pillar Research Assessment &middot; ASME V&amp;V 20 &amp; Foliar Hotspots</div>
+            <div class="pillar-row pillar-modeled">
+              <div class="pillar-title">🎯 What Was Modeled</div>
+              <div class="pillar-content">
+                Numerical mesh independence verification using the ASME V&amp;V 20-2009 standard, coupled with spatial microenvironmental hotspot analysis across every single plant position (164 plants total).
+              </div>
+            </div>
+            <div class="pillar-row pillar-done">
+              <div class="pillar-title">⚙️ What Was Done</div>
+              <div class="pillar-content">
+                3-grid convergence study (\(\Delta x = 1.50, 1.00, 0.75\text{ mm}\)) computing apparent order \(p\), Richardson extrapolation \(\phi_{\text{ext}}\), and Grid Convergence Index (GCI), combined with micro-voxel surface integration for all 164 plants.
+              </div>
+            </div>
+            <div class="pillar-row pillar-shows">
+              <div class="pillar-title">📊 What It Shows &amp; Describes</div>
+              <div class="pillar-content">
+                <ul>
+                  <li>Achieves strict grid independence: canopy conductance GCI is <strong>&lt;0.01%</strong> (\(p = 3.42\), asymptotic ratio \(= 1.000\)).</li>
+                  <li>Spatial hotspot mapping reveals that Chamber 2 rosettes experience sheltered boundary layers (\(g_{bl} = 0.041\text{ mol m}^{-2}\text{ s}^{-1}\)), while outer <em>B. rapa</em> flanks experience peak ventilation (\(0.052\text{ mol m}^{-2}\text{ s}^{-1}\)), showing &lt;12% intra-chamber variance.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.11 Flight Hardware Radar -->
+        <div id="res-benchmark">
+          <h3 class="subsection-heading">3.11 Comparative Spaceflight Hardware Benchmark (Figure 18)</h3>
+
+          <figure class="pub-figure" id="fig-18">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig18_spaceflight_hardware_comprehensive_benchmark.png', 'Figure 18: Multi-dimensional architectural radar comparison and comparative trade matrix evaluating LEAF GBC1 against NASA flight hardware.')">
+              <img src="figures/fig18_spaceflight_hardware_comprehensive_benchmark.png" alt="Figure 18: Comparative Spaceflight Hardware Benchmark" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 18:</strong> Multi-dimensional architectural radar comparison and comparative trade matrix evaluating LEAF GBC1 against NASA BRIC, CARA, and Veggie.
+              <div class="fig-links">
+                <a href="figures/fig18_spaceflight_hardware_comprehensive_benchmark.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig18_spaceflight_hardware_comprehensive_benchmark.png" target="_blank">High-Res PNG ↗</a> &middot;
+                <a href="results/tables/gbc1_spaceflight_hardware_comprehensive_benchmark.csv" target="_blank">Comprehensive Radar CSV ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <!-- 3-Pillar Card -->
+          <div class="pillar-card">
+            <div class="pillar-header">3-Pillar Research Assessment &middot; Comparative Spaceflight Hardware Benchmark</div>
+            <div class="pillar-row pillar-modeled">
+              <div class="pillar-title">🎯 What Was Modeled</div>
+              <div class="pillar-content">
+                Systematic architectural and fluid dynamic comparison between LEAF GBC1 and established NASA flight cultivation hardware platforms.
+              </div>
+            </div>
+            <div class="pillar-row pillar-done">
+              <div class="pillar-title">⚙️ What Was Done</div>
+              <div class="pillar-content">
+                Evaluated air changes per hour (ACH), time to carbon starvation (\(\tau_{\text{starve}}\)), time to nocturnal hypoxia (\(\tau_{\text{hypoxia}}\)), boundary layer conductance in \(0g\), and in-situ fixation capabilities across NASA BRIC (60 mm sealed dish), NASA CARA (120 mm taped dish), NASA Veggie (ISS cabin bellows), and LEAF GBC1.
+              </div>
+            </div>
+            <div class="pillar-row pillar-shows">
+              <div class="pillar-title">📊 What It Shows &amp; Describes</div>
+              <div class="pillar-content">
+                <ul>
+                  <li>Demonstrates that passive dishes (BRIC, CARA) suffer rapid carbon depletion (\(7\text{--}42\text{ min}\)) and severe fogging due to zero forced convection.</li>
+                  <li>LEAF GBC1 delivers <strong>\(554.5\text{ ACH}\)</strong>, maintaining continuous &gt;99.5% ambient \(\text{CO}_2\) replenishment, sub-second autonomous fixation (\(1.20\text{ s}\) saturation), and active fogging prevention.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Section 4: Flight Rules -->
+      <section class="manuscript-section" id="sec-flight-rules">
+        <h2 class="section-heading">4. Master Flight Operational Specifications</h2>
+        <p>
+          Derived from the comprehensive 21-case parametric CFD sweeps, multi-species transport PDEs, Richards capillarity solutions, and 5-day Model Lunar LEAF simulations:
+        </p>
+
+        <div class="table-container">
+          <table class="pub-table">
+            <thead>
+              <tr>
+                <th>Flight Parameter</th>
+                <th>Recommended Setpoint</th>
+                <th>Physical Rationale &amp; Mission Boundary</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Daytime Flow Rate (\(Q_{\text{day}}\))</strong></td>
+                <td><strong>\(0.85\text{ L/min}\)</strong> (\(2.10\text{ m/s}\) inlet)</td>
+                <td>Compensates \(0.166\,g\) lunar buoyancy loss; restores 98% Earth carbon assimilation.</td>
+              </tr>
+              <tr>
+                <td><strong>Nocturnal Flow Floor (\(Q_{\text{night}}\))</strong></td>
+                <td><strong>\(\ge 0.60\text{ L/min}\)</strong></td>
+                <td>Flushes heavy respiratory \(\text{CO}_2\) pooling from lower drainage wells; maintains \(\text{Ri} \le 0.05\).</td>
+              </tr>
+              <tr>
+                <td><strong>Ventilation Mode</strong></td>
+                <td><strong>Controlled Pull Suction (Port 2 Exhaust)</strong></td>
+                <td>Generates negative gauge pressure (\(-11.8\text{ Pa}\)) for fail-safe bio-containment and anti-fogging.</td>
+              </tr>
+              <tr>
+                <td><strong>Water Activation Volume</strong></td>
+                <td><strong>\(7.39\text{ mL}\)</strong> (\(5.28\text{ mL}\) for \(\phi=0.50\))</td>
+                <td>100% saturation of 3 foam cassettes without free liquid flooding or droplet detachment.</td>
+              </tr>
+              <tr>
+                <td><strong>Root Barrier Screen</strong></td>
+                <td><strong>\(35\ \mu\text{m}\) Nytex monofilament mesh</strong></td>
+                <td>\(8.04\text{ kPa}\) bubble point allows water wicking while providing 100% root exclusion.</td>
+              </tr>
+              <tr>
+                <td><strong>Fixation Injection Rate</strong></td>
+                <td><strong>\(10.0\text{ mL/min}\) RNAlater</strong></td>
+                <td>Sub-surface Port 3 dipping nozzle wets roots in \(31.7\text{ s}\); chamber floods in \(5.82\text{ min}\) (\(\Delta P \le 4.04\text{ kPa}\)).</td>
+              </tr>
+              <tr>
+                <td><strong>Brownout Grace Window</strong></td>
+                <td><strong>\(\le 14.2\text{ minutes}\)</strong></td>
+                <td>Maximum unpowered pump outage before canopy \(\text{CO}_2\) drawdown induces hypoxic stress.</td>
+              </tr>
+              <tr>
+                <td><strong>Lid Condensation Margin</strong></td>
+                <td><strong>\(\Delta T_{\text{margin}} \ge +0.83^\circ\text{C}\)</strong></td>
+                <td>Maintains acrylic lid above chamber dew point; critical condensation threshold is \(Q_{\text{crit}} = 0.08\text{ L/min}\).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section 5: Figure & Dataset Catalog -->
+      <section class="manuscript-section" id="sec-catalog">
+        <h2 class="section-heading">5. Open-Science Figure &amp; Dataset Catalog</h2>
+        <p>
+          All CFD field solutions, steady-state telemetry matrices, and high-resolution vector figures are versioned and openly archived:
+        </p>
+
+        <h3 class="subsection-heading">Quantitative Simulation Telemetry Datasets (TSV/CSV)</h3>
+        <div class="catalog-grid">
+          <div class="catalog-card">
+            <div class="catalog-card-title">gbc1_cfd_sweep_results.tsv</div>
+            <div class="catalog-card-desc">Complete 21-case parametric flow sweep telemetry from 0.05 to 4.00 L/min.</div>
+            <a href="results/tables/gbc1_cfd_sweep_results.tsv" class="catalog-card-link" target="_blank">Download TSV &rarr;</a>
+          </div>
+          <div class="catalog-card">
+            <div class="catalog-card-title">gbc1_covariates_for_omics.tsv</div>
+            <div class="catalog-card-desc">Environmental covariates formatted for NASA Open Science Data Repository (OSDR).</div>
+            <a href="results/tables/gbc1_covariates_for_omics.tsv" class="catalog-card-link" target="_blank">Download TSV &rarr;</a>
+          </div>
+          <div class="catalog-card">
+            <div class="catalog-card-title">gbc1_advanced_analytics.tsv</div>
+            <div class="catalog-card-desc">Spatial Mean Age of Air, turnover efficiency, and boundary-layer conductance.</div>
+            <a href="results/tables/gbc1_advanced_analytics.tsv" class="catalog-card-link" target="_blank">Download TSV &rarr;</a>
+          </div>
+          <div class="catalog-card">
+            <div class="catalog-card-title">gbc1_hardware_benchmark_comparison.tsv</div>
+            <div class="catalog-card-desc">Comparative spaceflight hardware metrics across BRIC, CARA, Veggie, and GBC1.</div>
+            <a href="results/tables/gbc1_hardware_benchmark_comparison.tsv" class="catalog-card-link" target="_blank">Download TSV &rarr;</a>
+          </div>
+          <div class="catalog-card">
+            <div class="catalog-card-title">gbc1_asymmetric_canopy_species_results.tsv</div>
+            <div class="catalog-card-desc">Species-specific carbon fluxes and boundary layer resistance for B. rapa and A. thaliana.</div>
+            <a href="results/tables/gbc1_asymmetric_canopy_species_results.tsv" class="catalog-card-link" target="_blank">Download TSV &rarr;</a>
+          </div>
+          <div class="catalog-card">
+            <div class="catalog-card-title">gbc1_rnalater_perfusion_kinetics.tsv</div>
+            <div class="catalog-card-desc">Liquid fixative displacement curves, front advancement, and pressure dynamics.</div>
+            <a href="results/tables/gbc1_rnalater_perfusion_kinetics.tsv" class="catalog-card-link" target="_blank">Download TSV &rarr;</a>
+          </div>
+          <div class="catalog-card">
+            <div class="catalog-card-title">gbc1_diurnal_day_night_results.tsv</div>
+            <div class="catalog-card-desc">24-hour photoperiod inversion telemetry with nocturnal sleep setback sweeps.</div>
+            <a href="results/tables/gbc1_diurnal_day_night_results.tsv" class="catalog-card-link" target="_blank">Download TSV &rarr;</a>
+          </div>
+          <div class="catalog-card">
+            <div class="catalog-card-title">gbc1_developmental_growth_timeseries.tsv</div>
+            <div class="catalog-card-desc">14-day canopy expansion, leaf area index (LAI), and root substrate compaction.</div>
+            <a href="results/tables/gbc1_developmental_growth_timeseries.tsv" class="catalog-card-link" target="_blank">Download TSV &rarr;</a>
+          </div>
+          <div class="catalog-card">
+            <div class="catalog-card-title">gbc1_off_nominal_sensitivity.tsv</div>
+            <div class="catalog-card-desc">Spacecraft fault sensitivity sweeps: cabin CO2 spikes and pump brownouts.</div>
+            <a href="results/tables/gbc1_off_nominal_sensitivity.tsv" class="catalog-card-link" target="_blank">Download TSV &rarr;</a>
+          </div>
+          <div class="catalog-card">
+            <div class="catalog-card-title">gbc1_water_and_humidity_transport.tsv</div>
+            <div class="catalog-card-desc">Richards capillary retention profiles, transpiration, and optical lid dew points.</div>
+            <a href="results/tables/gbc1_water_and_humidity_transport.tsv" class="catalog-card-link" target="_blank">Download TSV &rarr;</a>
+          </div>
+          <div class="catalog-card">
+            <div class="catalog-card-title">gbc1_gci_mesh_convergence.csv</div>
+            <div class="catalog-card-desc">ASME V&amp;V 20-2009 Richardson extrapolation and Grid Convergence Index telemetry.</div>
+            <a href="results/tables/gbc1_gci_mesh_convergence.csv" class="catalog-card-link" target="_blank">Download CSV &rarr;</a>
+          </div>
+          <div class="catalog-card">
+            <div class="catalog-card-title">gbc1_164plants_foliar_telemetry.csv</div>
+            <div class="catalog-card-desc">Individual coordinates, velocity, boundary-layer conductance for all 164 plants.</div>
+            <a href="results/tables/gbc1_164plants_foliar_telemetry.csv" class="catalog-card-link" target="_blank">Download CSV &rarr;</a>
+          </div>
+          <div class="catalog-card">
+            <div class="catalog-card-title">gbc1_foliar_surface_distribution.csv</div>
+            <div class="catalog-card-desc">Spatial distribution percentiles (p10, p50, p90) across each compartment.</div>
+            <a href="results/tables/gbc1_foliar_surface_distribution.csv" class="catalog-card-link" target="_blank">Download CSV &rarr;</a>
+          </div>
+          <div class="catalog-card">
+            <div class="catalog-card-title">gbc1_spaceflight_hardware_comprehensive_benchmark.csv</div>
+            <div class="catalog-card-desc">Multi-dimensional trade study dataset comparing BRIC, CARA, Veggie, and GBC1.</div>
+            <a href="results/tables/gbc1_spaceflight_hardware_comprehensive_benchmark.csv" class="catalog-card-link" target="_blank">Download CSV &rarr;</a>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Footer -->
+      <footer class="article-footer">
+        <p>&copy; 2026 Richard Barker et al. &middot; LEAF GBC1 Plant Growth Chamber Modeling Initiative</p>
+        <p style="margin-top: 0.35rem; font-size: 0.78rem;">
+          Target Hardware: <code>M09024F-MDL-5</code> (Pot) &amp; <code>M09025F-MDL-2</code> (Lid) &middot; CoSE Color Scheme &middot; Strict Verification &middot; All Rights Reserved
+        </p>
+      </footer>
+
+    </article>
+  </div>
+
+  <!-- Interactive Click-to-Zoom Lightbox Modal -->
+  <dialog id="figure-lightbox">
+    <div class="lightbox-toolbar">
+      <span class="lightbox-title" id="lightbox-title">Figure Viewer</span>
+      <div class="lightbox-actions">
+        <button class="lightbox-btn" onclick="zoomLightbox(0.2)" title="Zoom in">+</button>
+        <button class="lightbox-btn" onclick="zoomLightbox(-0.2)" title="Zoom out">&minus;</button>
+        <button class="lightbox-btn" onclick="resetLightboxZoom()" title="Reset zoom">Reset</button>
+        <a id="lightbox-download-link" href="#" target="_blank" class="lightbox-btn" title="Open full resolution in new tab">Open Full Res ↗</a>
+        <button class="lightbox-btn" onclick="closeLightbox()" title="Close viewer (Esc)">&times; Close</button>
+      </div>
+    </div>
+    <div class="lightbox-image-stage" id="lightbox-stage" onclick="onStageClick(event)">
+      <img id="lightbox-img" src="" alt="Zoomed Figure" />
+    </div>
+    <div class="lightbox-caption" id="lightbox-caption"></div>
+  </dialog>
+
+  <!-- Interactive Scripts: Lightbox, Theme Sync, Scrollspy, KaTeX auto-render -->
+  <script>
+    /* Theme Toggle & Synchronization */
+    (function initTheme() {
+      var toggleBtn = document.getElementById("theme-toggle");
+      
+      function renderThemeIcons(currentTheme) {
+        if (!toggleBtn) return;
+        if (currentTheme === "dark") {
+          toggleBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+        } else {
+          toggleBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+        }
+      }
+
+      var current = document.documentElement.getAttribute("data-theme") || "dark";
+      renderThemeIcons(current);
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener("click", function() {
+          var cur = document.documentElement.getAttribute("data-theme") || "dark";
+          var next = cur === "dark" ? "light" : "dark";
+          document.documentElement.setAttribute("data-theme", next);
+          try { localStorage.setItem("barker.theme", next); } catch(e){}
+          renderThemeIcons(next);
+          // Broadcast to any parent or iframes
+          window.postMessage({ type: "theme-change", theme: next }, "*");
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: "theme-change", theme: next }, "*");
+          }
+        });
+      }
+
+      window.addEventListener("message", function(e) {
+        if (e.data && e.data.type === "theme-change" && e.data.theme) {
+          document.documentElement.setAttribute("data-theme", e.data.theme);
+          renderThemeIcons(e.data.theme);
+        }
+      });
+    })();
+
+    /* Scroll Reading Progress Bar */
+    window.addEventListener("scroll", function() {
+      var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var scrolled = (winScroll / height) * 100;
+      var bar = document.getElementById("progress-bar");
+      if (bar) bar.style.width = scrolled + "%";
+    });
+
+    /* Active Scrollspy for Table of Contents */
+    (function initScrollspy() {
+      var tocLinks = document.querySelectorAll(".toc-list a");
+      var sections = [];
+      tocLinks.forEach(function(link) {
+        var href = link.getAttribute("href");
+        if (href && href.startsWith("#") && href.length > 1) {
+          var target = document.getElementById(href.substring(1));
+          if (target) sections.push({ link: link, target: target });
+        }
+      });
+
+      function onScroll() {
+        var scrollPos = window.scrollY + 120;
+        var current = null;
+        for (var i = 0; i < sections.length; i++) {
+          var top = sections[i].target.offsetTop;
+          if (scrollPos >= top) {
+            current = sections[i].link;
+          }
+        }
+        if (current) {
+          tocLinks.forEach(function(l) { l.classList.remove("active"); });
+          current.classList.add("active");
+        }
+      }
+
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+    })();
+
+    /* Lightbox Modal Logic */
+    var lightbox = document.getElementById("figure-lightbox");
+    var lightboxImg = document.getElementById("lightbox-img");
+    var lightboxTitle = document.getElementById("lightbox-title");
+    var lightboxCaption = document.getElementById("lightbox-caption");
+    var lightboxDownload = document.getElementById("lightbox-download-link");
+    var currentZoom = 1.0;
+
+    function openLightbox(src, caption) {
+      if (!lightbox) return;
+      currentZoom = 1.0;
+      lightboxImg.style.transform = "scale(1)";
+      lightboxImg.src = src;
+      lightboxCaption.innerText = caption || "";
+      lightboxDownload.href = src;
+      lightbox.showModal();
+    }
+
+    function closeLightbox() {
+      if (lightbox) lightbox.close();
+    }
+
+    function zoomLightbox(delta) {
+      currentZoom = Math.max(0.5, Math.min(3.0, currentZoom + delta));
+      lightboxImg.style.transform = "scale(" + currentZoom + ")";
+    }
+
+    function resetLightboxZoom() {
+      currentZoom = 1.0;
+      lightboxImg.style.transform = "scale(1)";
+    }
+
+    function onStageClick(e) {
+      if (e.target === document.getElementById("lightbox-stage")) {
+        closeLightbox();
+      }
+    }
+
+    if (lightbox) {
+      lightbox.addEventListener("click", function(e) {
+        if (e.target === lightbox) closeLightbox();
+      });
+      lightbox.addEventListener("keydown", function(e) {
+        if (e.key === "Escape") closeLightbox();
+      });
+    }
+
+    /* KaTeX Auto-Rendering */
+    document.addEventListener("DOMContentLoaded", function() {
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '\\\\[', right: '\\\\]', display: true},
+            {left: '\\\\(', right: '\\\\)', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+"""
+    with open(target_file, "w", encoding="utf-8") as f:
+        f.write(html)
+    print("Successfully generated manuscript.html!")
+
+if __name__ == "__main__":
+    generate_manuscript_html()
