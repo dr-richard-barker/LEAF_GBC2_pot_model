@@ -1308,12 +1308,45 @@
     <section id="cinematic-4d-videos" class="section-block">
       <div class="section-header">
         <div>
-          <h2>1B. Cinematic 4D Spatiotemporal Mission Videos: Lunar Surface (0.166g) vs. Earth Ground Control (1.0g)</h2>
-          <p>Full-HD 1080p multi-physics 4D visualizations showing water activation of the porous foam, tube manifold airflow &amp; baffle turbulence, moisture boundary-layer gradients, 5-day seedling growth, and end-of-mission RNAlater fixative injection.</p>
+          <h2>1B. Cinematic 4D Spatiotemporal Mission Videos &amp; Multi-Physics Context: Lunar Surface (0.166g) vs. Earth Ground Control (1.0g)</h2>
+          <p>Full-HD 1080p multi-physics 4D visualizations and complete biophysical context showing water activation of the porous foam, tube manifold airflow &amp; baffle turbulence, moisture boundary-layer gradients, 5-day seedling growth, and end-of-mission RNAlater fixative injection.</p>
         </div>
         <div style="display:flex; gap:0.65rem; flex-wrap:wrap;">
           <button id="btnSyncPlay4D" class="btn-primary" onclick="syncPlay4DVideos()">▶ Play Lunar &amp; 1G Synchronized</button>
           <a href="videos/comparison_lunar_vs_1g_4d.mp4" download class="btn-outline">⬇ Download Split-Screen MP4</a>
+          <a href="sim/generate_4d_cinematic_videos.py" target="_blank" class="btn-outline">🐍 View 4D Rendering Script</a>
+        </div>
+      </div>
+
+      <!-- 4D Multi-Physics Overview & 4-Panel Dashboard Context Box -->
+      <div class="narrative-card" style="margin-bottom: 1.75rem;">
+        <div class="narrative-header">
+          <div>
+            <span class="narrative-badge">4D Spatiotemporal Digital Twin Architecture (X, Y, Z, t)</span>
+            <h3 style="margin-top:0.35rem; font-size:1.2rem; color:var(--fg);">How the 4D Virtual Lunar Experiment &amp; 1G Ground Control Models Work</h3>
+          </div>
+          <span class="feature-pill pill-bio">360 Frames · 1920×1080 Full HD · 30 fps</span>
+        </div>
+        <p style="font-size:0.92rem; color:var(--muted); line-height:1.65; margin-bottom:1rem;">
+          To capture the complete time-evolving physics of the <strong>LEAF GBC1</strong> hardware (<code>M09024F-MDL-5</code> Pot Body mated with <code>M09025F-MDL-2</code> Optical Lid at <em>Y</em> = 33.67 mm), we coupled the 3D Navier–Stokes and Brinkman–Darcy porous-media solver with Richards unsaturated capillary imbibition, sigmoidal 164-seedling developmental ontogeny, and two-phase RNAlater displacement into a continuous <strong>4D Spatiotemporal Simulation Engine</strong> (<a href="sim/generate_4d_cinematic_videos.py" target="_blank"><code>sim/generate_4d_cinematic_videos.py</code></a>). Each frame synchronizes four complementary diagnostic panels:
+        </p>
+        <div class="pillar-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+          <div class="pillar-box">
+            <h4>1. 3D Isometric Cutaway Digital Twin</h4>
+            <p>Renders the translucent polycarbonate housing, external fluidic manifold tubes on <strong>Port 1</strong> (Air Inlet, <em>Z</em> = −21.59 mm), <strong>Port 2</strong> (Central Exhaust/Vent, <em>Z</em> = 0.0 mm), and <strong>Port 3</strong> (Dipping Nozzle extending to <em>Y</em> = 9.5 mm in Chamber 3), the 3-part porous foam blocks (<em>Y</em> = 7.62–14.62 mm), the 35 µm Nytex root barrier, 164 growing seedlings, and 3D velocity/liquid streamlines.</p>
+          </div>
+          <div class="pillar-box">
+            <h4>2. 2D Longitudinal Cross-Section (Z–Y Plane)</h4>
+            <p>Displays the live internal moisture/vapor plume contours (RH%), wake recirculation eddies behind the two internal partition baffles (<em>Z</em> = ±8.5 mm), velocity vector arrows, radial/lateral water propagation across the basal communication channels, and the rising RNAlater harvest flood front.</p>
+          </div>
+          <div class="pillar-box">
+            <h4>3. Vertical Moisture &amp; Capillary Profile (Y = 7.62–33.67 mm)</h4>
+            <p>Plots the continuous vertical water saturation profile <em>&theta;(Y)</em> inside the 7.0 mm foam substrate alongside the relative humidity boundary layer <em>RH(Y)</em> across the 19.05 mm headspace up to the optical lid, directly contrasting Lunar 0.166g capillarity against Earth 1.0g hydrostatic drainage.</p>
+          </div>
+          <div class="pillar-box">
+            <h4>4. 5-Day Mission Telemetry Strip (T = −0.5 h to +120.2 h)</h4>
+            <p>Tracks real-time mission progress across all five experimental stages with synchronized time-series curves for foam water fill (%), pump ventilation rate <em>Q</em> (L/min), foliar boundary-layer thickness <em>&delta;<sub>bl</sub></em> (mm), and net canopy carbon assimilation <em>A<sub>net</sub></em> (&mu;mol m⁻² s⁻¹).</p>
+          </div>
         </div>
       </div>
 
@@ -1333,17 +1366,17 @@
           </div>
           <div class="video-card-body">
             <p style="margin-bottom:0.6rem;">
-              <strong>What was done:</strong> Coupled 4D transient simulation of the LEAF GBC1 hardware on the lunar surface (<em>g</em> = 1.62 m/s²) across all 5 operational stages (T = −0.5 h water fill to T = +120.2 h RNAlater harvest).
+              <strong>🎯 What Was Modeled:</strong> Full 5-stage 4D virtual experiment on the lunar surface (<em>g</em> = 1.62 m/s², 0.166g) spanning pre-flight water injection (T = −0.5 h), pump activation &amp; flow compensation (Day 1), 5-day co-cultivation of 32 <em>B. rapa</em> + 100 <em>Arabidopsis</em> + 32 <em>B. rapa</em>, nocturnal setback, and end-of-mission RNAlater harvest perfusion (T = +120.2 h).
             </p>
             <p style="margin-bottom:0.6rem;">
-              <strong>What it describes:</strong> Dominance of capillary forces (<em>Bo</em> = 2.0 × 10⁻⁵, <em>h<sub>c</sub></em> = 4,380 mm) inside the 7 mm porous foam blocks, suppressed natural thermal buoyancy (<em>Gr<sub>L</sub></em> reduced 6×), and active pump compensation (0.50 → 0.85 L/min).
+              <strong>⚙️ What It Describes:</strong> Under 0.166g, the Bond number drops 6× to <em>Bo</em> = 2.0 × 10⁻⁵ and Jurin capillary rise reaches <em>h<sub>c</sub></em> = 4,380 mm (&gg; 7.0 mm foam height), while natural convective Grashof buoyancy drops by 83.4%, thickening uncompensated foliar boundary layers by +36.3%.
             </p>
             <p style="margin-bottom:0.75rem;">
-              <strong>What it shows:</strong> (1) Uniform 99.1% capillary foam saturation up to the 35 µm Nytex barrier; (2) thickened moisture boundary layer (<em>&delta;<sub>bl</sub></em> = 5.1 mm) at uncompensated 0.50 L/min swept down to 3.4 mm at 0.85 L/min; (3) piston-like capillary RNAlater front saturating roots in 31.7 s and full chamber in 5.82 min.
+              <strong>📊 What It Shows:</strong> (1) <strong>Uniform 99.1% capillary saturation</strong> all the way up to the 35 µm Nytex seedbed; (2) a thick stagnant moisture plume (<em>&delta;<sub>bl</sub></em> = 5.1 mm) at uncompensated 0.50 L/min that is actively swept down to <strong>3.4 mm</strong> when pump flow steps to <strong>0.85 L/min</strong> (restoring 98% of Earth photosynthesis, <em>A<sub>net</sub></em> = 13.41 &mu;mol m⁻² s⁻¹); and (3) a piston-like capillary RNAlater front saturating roots in <strong>31.7 s</strong> and flooding the full chamber in <strong>5.82 min</strong>.
             </p>
             <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
               <a href="videos/lunar_experiment_4d_cinematic.mp4" download class="btn-outline">⬇ Download Lunar 4D Video (MP4)</a>
-              <a href="videos/poster_lunar_4d.png" target="_blank" class="btn-outline">🖼 View High-Res Poster</a>
+              <button type="button" class="btn-outline" onclick="openLightbox('videos/poster_lunar_4d.png', 'Virtual Lunar Surface Experiment (0.166g) — High-Res 4D Dashboard Poster')">🔍 Zoom High-Res Poster</button>
             </div>
           </div>
         </div>
@@ -1356,23 +1389,23 @@
           </div>
           <div class="video-player-wrap">
             <video id="vidGround4D" controls preload="metadata" poster="videos/poster_ground_1g_4d.png">
-              <source src="videos/ground_control_1g_4d.mp4" type="video/mp4" />
+              <source src="videos/ground_control_1g_4d_cinematic.mp4" type="video/mp4" />
               Your browser does not support HTML5 MP4 video.
             </video>
           </div>
           <div class="video-card-body">
             <p style="margin-bottom:0.6rem;">
-              <strong>What was done:</strong> Identical 5-stage 4D digital twin simulation executed under terrestrial gravity (<em>g</em> = 9.81 m/s²) at baseline 0.50 L/min ventilation to serve as the synchronous ground reference.
+              <strong>🎯 What Was Modeled:</strong> Synchronous 5-stage 4D ground control simulation under terrestrial gravity (<em>g</em> = 9.81 m/s², 1.00g) at the nominal 0.50 L/min ventilation setpoint with identical hardware geometry, seed density (164 seeds), and 22.0 °C chamber temperature.
             </p>
             <p style="margin-bottom:0.6rem;">
-              <strong>What it describes:</strong> Hydrostatic drainage tension inside the 7 mm foam substrate (<em>Bo</em> = 1.2 × 10⁻⁴), buoyancy-assisted natural convection plumes (<em>Gr<sub>L</sub></em> = 6× Lunar), and gravity-flattened liquid injection menisci.
+              <strong>⚙️ What It Describes:</strong> Under 1.0g, hydrostatic head pulls pore water downward against matric suction (<em>Bo</em> = 1.2 × 10⁻⁴), while warm, humid transpired air experiences strong upward thermal and solutal buoyancy (<em>&beta;<sub>H₂O</sub></em> = +0.379, <em>Gr<sub>L</sub></em> = 6× Lunar).
             </p>
             <p style="margin-bottom:0.75rem;">
-              <strong>What it shows:</strong> (1) Vertical hydrostatic moisture gradient in the foam (99.2% at floor vs. 91.2% at the Nytex root barrier); (2) upward buoyant vapor plumes thinning the foliar boundary layer (<em>&delta;<sub>bl</sub></em> = 3.5 mm) at 0.50 L/min; (3) gravity-leveled RNAlater flood front rising uniformly across all three chambers while venting headspace gas out Port 2.
+              <strong>📊 What It Shows:</strong> (1) A <strong>hydrostatic vertical moisture gradient</strong> inside the 7.0 mm foam (99.2% saturation at the basal floor vs. <strong>91.2% at the top Nytex barrier</strong>); (2) buoyant convective vapor plumes rising off the leaves that naturally thin the boundary layer to <strong>3.5 mm</strong> even at 0.50 L/min; and (3) a gravity-leveled horizontal RNAlater meniscus rising uniformly across all three compartments while venting air out Port 2.
             </p>
             <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
               <a href="videos/ground_control_1g_4d_cinematic.mp4" download class="btn-outline">⬇ Download 1G Control Video (MP4)</a>
-              <a href="videos/poster_ground_1g_4d.png" target="_blank" class="btn-outline">🖼 View High-Res Poster</a>
+              <button type="button" class="btn-outline" onclick="openLightbox('videos/poster_ground_1g_4d.png', 'Virtual 1.0g Earth Ground Control — High-Res 4D Dashboard Poster')">🔍 Zoom High-Res Poster</button>
             </div>
           </div>
         </div>
@@ -1382,7 +1415,7 @@
       <div class="video-card" style="margin-bottom: 1.75rem;">
         <div class="video-card-header">
           <h3>⚖️ Synchronized Side-by-Side 4D Comparison: Lunar Surface (0.166g) vs. Earth Ground Control (1.0g)</h3>
-          <span class="feature-pill pill-ops">Frame-Locked Dual Telemetry</span>
+          <span class="feature-pill pill-ops">Frame-Locked Dual Telemetry (1920×1080)</span>
         </div>
         <div class="video-player-wrap">
           <video controls preload="metadata" poster="videos/poster_comparison_4d.png">
@@ -1390,16 +1423,77 @@
           </video>
         </div>
         <div class="video-card-body" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
-          <div style="max-width: 920px;">
-            <strong>Direct Gravity-Regime Divergence:</strong> Frame-locked 1080p comparison contrasting capillary vs. hydrostatic water retention in the 3-part porous foam, baffle wake eddies, boundary-layer moisture trapping under reduced buoyancy (0.166g) vs. buoyant plume stripping (1.0g), and end-of-mission RNAlater fixation.
+          <div style="max-width: 900px;">
+            <strong>Direct Gravity-Regime Divergence:</strong> Frame-locked 1080p split-screen comparison contrasting capillary vs. hydrostatic water retention in the 3-part porous foam, baffle wake eddies, boundary-layer moisture trapping under reduced buoyancy (0.166g) vs. buoyant plume stripping (1.0g), and end-of-mission RNAlater fixation.
           </div>
-          <a href="videos/comparison_lunar_vs_1g_4d.mp4" download class="btn-primary">⬇ Download Master Comparison MP4</a>
+          <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+            <button type="button" class="btn-outline" onclick="openLightbox('videos/poster_comparison_4d.png', 'Synchronized Side-by-Side Comparison: Lunar 0.166g vs Earth 1.0g Control')">🔍 Zoom Split-Screen Poster</button>
+            <a href="videos/comparison_lunar_vs_1g_4d.mp4" download class="btn-primary">⬇ Download Master Comparison MP4</a>
+          </div>
         </div>
       </div>
 
-      <!-- 4-Stage Modular Highlight Video Gallery -->
-      <h3 style="font-size:1.15rem; font-weight:700; color:var(--fg); margin-bottom:0.5rem;">Stage-by-Stage 4D Experimental Breakdown</h3>
-      <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1rem;">Individual high-resolution clips isolating each critical physical phase of the 5-day LEAF GBC1 experiment:</p>
+      <!-- Quantitative 4D Comparison Table: Lunar 0.166g vs Earth 1.0g Across All 5 Stages -->
+      <div class="table-wrap" style="margin-bottom: 2rem;">
+        <div style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--line); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+          <h3 style="font-size:1.05rem; font-weight:700; color:var(--fg); margin:0;">Quantitative 4D Spatiotemporal Comparison: Virtual Lunar Experiment (0.166g) vs. Earth Ground Control (1.0g)</h3>
+          <span class="feature-pill pill-aero">5-Stage Mission Synthesis</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Mission Stage &amp; Physical Phenomenon</th>
+                <th>Parameter / Metric</th>
+                <th>Virtual Lunar Experiment (0.166g · 1.62 m/s²)</th>
+                <th>Virtual Earth Ground Control (1.00g · 9.81 m/s²)</th>
+                <th>Biophysical &amp; Engineering Significance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Stage I: Water Injection &amp; Foam Activation</strong><br><span style="font-size:0.78rem; color:var(--muted);">T = −0.5 to 0.0 h (Port 3 Dipping Nozzle, Y = 9.5 mm)</span></td>
+                <td>Activation Water Volume<br>Bond Number (<em>Bo</em>) &amp; Capillary Rise<br>Basal vs. Top Nytex Saturation (<em>&theta;</em>)</td>
+                <td><strong>7.39 mL</strong> (100% void fill, &phi; = 0.70)<br><em>Bo</em> = 2.0 × 10⁻⁵ · <em>h<sub>c</sub></em> = 4,380 mm<br><strong>99.2% (floor) → 99.1% (Nytex top)</strong></td>
+                <td><strong>7.39 mL</strong> (100% void fill, &phi; = 0.70)<br><em>Bo</em> = 1.2 × 10⁻⁴ · <em>h<sub>c</sub></em> = 728 mm<br><strong>99.2% (floor) → 91.2% (Nytex top)</strong></td>
+                <td>Lunar capillarity eliminates vertical hydrostatic drainage, keeping the 35 µm Nytex seedbed (8.04 kPa bubble point) 8% wetter than in 1g without free droplet release.</td>
+              </tr>
+              <tr>
+                <td><strong>Stage II: Tube Airflow, Baffles &amp; Moisture Boundary Layer</strong><br><span style="font-size:0.78rem; color:var(--muted);">T = 0 to 24 h (Ports 1 &amp; 2 Manifold + Z = ±8.5 mm Baffles)</span></td>
+                <td>Grashof Number Ratio (<em>Gr<sub>L</sub></em>)<br>Foliar Boundary Layer (0.50 L/min)<br>Compensated Boundary Layer (0.85 L/min)</td>
+                <td><strong>0.166 × Earth</strong> (83.4% buoyancy loss)<br><strong>&delta;<sub>bl</sub> = 5.1 mm</strong> (thick stagnant vapor halo)<br><strong>&delta;<sub>bl</sub> = 3.4 mm</strong> (restored via 0.85 L/min)</td>
+                <td><strong>1.00 × Earth</strong> (buoyant vapor plumes)<br><strong>&delta;<sub>bl</sub> = 3.5 mm</strong> (thinned by natural plumes)<br><strong>&delta;<sub>bl</sub> = 2.7 mm</strong> (at 0.85 L/min)</td>
+                <td>Internal baffles at <em>Z</em> = ±8.5 mm generate wake vortices that mix inter-chamber air; stepping Lunar flow from 0.50 to 0.85 L/min replaces lost natural convection.</td>
+              </tr>
+              <tr>
+                <td><strong>Stage III: 5-Day Germination &amp; Seedling Ontogeny</strong><br><span style="font-size:0.78rem; color:var(--muted);">T = 24 to 120 h (164 Seeds across Chambers 1, 2 &amp; 3)</span></td>
+                <td>Canopy Height at Day 5 (120 h)<br>Central Chamber 2 Open Plenum<br>Day 5 Net Assimilation (<em>A<sub>net</sub></em>, <em>B. rapa</em>)</td>
+                <td><em>B. rapa</em>: <strong>11.26 mm</strong> · <em>Arabidopsis</em>: <strong>4.75 mm</strong><br><strong>&Delta;Y = 14.2 mm</strong> (&ldquo;Dip-and-Converge&rdquo; jet)<br>10.63 (0.50 L/min) → <strong>13.41 &mu;mol/m²s (0.85 L/min)</strong></td>
+                <td><em>B. rapa</em>: <strong>11.26 mm</strong> · <em>Arabidopsis</em>: <strong>4.75 mm</strong><br><strong>&Delta;Y = 14.2 mm</strong> (&ldquo;Dip-and-Converge&rdquo; jet)<br><strong>13.04 – 13.41 &mu;mol/m²s</strong> (at 0.50 L/min)</td>
+                <td>Asymmetric canopy height channels Port 1 air downward into Chamber 2 before exhausting out Port 2 (&lt;1% age-of-air disparity across all 3 chambers).</td>
+              </tr>
+              <tr>
+                <td><strong>Stage IV: Diurnal Photoperiod Night Transition</strong><br><span style="font-size:0.78rem; color:var(--muted);">8 h Dark Skotoperiod (LEDs Off, Mitochondrial Respiration)</span></td>
+                <td>Solutal CO₂ Buoyancy (<em>&beta;<sub>CO₂</sub></em>)<br>Nocturnal Setback Flow Floor<br>Optical Lid Dew Point Margin</td>
+                <td><em>&beta;<sub>CO₂</sub></em> = −0.517 (dense CO₂ pools at floor)<br><strong>Q<sub>night</sub> &ge; 0.60 L/min</strong> (<em>Ri</em> &le; 0.05)<br><strong>&Delta;T<sub>margin</sub> = +0.83 to +2.15 °C (Clear)</strong></td>
+                <td><em>&beta;<sub>CO₂</sub></em> = −0.517 (strong downward drainage)<br><strong>Q<sub>night</sub> &ge; 0.35 L/min</strong><br><strong>&Delta;T<sub>margin</sub> = +1.10 to +2.35 °C (Clear)</strong></td>
+                <td>Maintaining <em>Q<sub>night</sub></em> &ge; 0.60 L/min in Pull suction mode flushes dense respiratory CO₂ from the lower wells and prevents optical lid condensation fogging.</td>
+              </tr>
+              <tr>
+                <td><strong>Stage V: End-of-Mission RNAlater Harvest Injection</strong><br><span style="font-size:0.78rem; color:var(--muted);">T = 120.0 to 120.2 h (10 mL/min via Port 3 Dipping Nozzle)</span></td>
+                <td>Root Zone Saturation Time (5.28 mL)<br>Full Chamber Flood Time (64.7 mL)<br>Liquid Front Geometry &amp; Seal &Delta;P</td>
+                <td><strong>t<sub>root</sub> = 31.7 s</strong> (<em>Ca</em> = 1.78 × 10⁻³)<br><strong>t<sub>flood</sub> = 5.82 min (349 s)</strong><br><strong>Curved capillary piston · &Delta;P = 0.73–4.04 kPa</strong></td>
+                <td><strong>t<sub>root</sub> = 31.7 s</strong><br><strong>t<sub>flood</sub> = 5.82 min (349 s)</strong><br><strong>Gravity-flat meniscus · &Delta;P = 0.73–4.04 kPa</strong></td>
+                <td>Bottom-up injection at <em>Y</em> = 9.5 mm prevents foliar splash damage and vents 100% of displaced headspace air out Port 2 safely below the 5.0 kPa seal limit.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 4-Stage Modular Highlight Video Gallery with Complete 3-Pillar Breakdown -->
+      <h3 style="font-size:1.15rem; font-weight:700; color:var(--fg); margin-bottom:0.5rem;">Stage-by-Stage 4D Experimental Breakdown &amp; Individual Video Clips</h3>
+      <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1rem;">Each critical physical phase of the 5-day LEAF GBC1 experiment is isolated below with its dedicated 1080p clip and 3-Pillar analysis (<strong>What Was Done</strong>, <strong>What It Describes</strong>, and <strong>What It Shows</strong>):</p>
       <div class="stage-video-grid">
         <!-- Stage 1 -->
         <div class="video-card">
@@ -1413,7 +1507,10 @@
             </video>
           </div>
           <div class="video-card-body">
-            <strong>7.39 mL Port 3 Injection:</strong> Water enters via the Port 3 dipping nozzle (<em>Y</em> = 9.5 mm) in Chamber 3, wicking across the lower aeration channels into Chambers 2 and 1 up to the 35 µm Nytex mesh barrier (8.04 kPa bubble point).
+            <p style="margin-bottom:0.45rem;"><strong>What was done:</strong> Simulated the injection of <strong>7.39 mL</strong> of activation water through the Port 3 dipping nozzle (<em>Z</em> = +21.59 mm, tip at <em>Y</em> = 9.5 mm inside Chamber 3 foam).</p>
+            <p style="margin-bottom:0.45rem;"><strong>What it describes:</strong> Radial Darcy–Richards imbibition across the basal communication channels (<em>Y</em> = 0–7.62 mm) into Chambers 2 and 1, arrested at the top seedbed by the <strong>35 µm Nytex mesh</strong> (8.04 kPa Laplace bubble point).</p>
+            <p style="margin-bottom:0.65rem;"><strong>What it shows:</strong> Lunar 0.166g achieves uniform 99.1% top-to-bottom foam saturation, whereas Earth 1.0g exhibits an 8% vertical hydrostatic drainage gradient (91.2% at the Nytex surface).</p>
+            <a href="videos/stage1_water_foam_activation.mp4" download class="btn-outline">⬇ Download Stage I MP4</a>
           </div>
         </div>
 
@@ -1429,7 +1526,10 @@
             </video>
           </div>
           <div class="video-card-body">
-            <strong>Pump &amp; Baffle Eddies:</strong> Air enters Port 1 tube, generates wake turbulence eddies behind the <em>Z</em> = ±8.5 mm baffles, and sweeps the humid boundary layer above the Nytex mesh (0.50 → 0.85 L/min compensation).
+            <p style="margin-bottom:0.45rem;"><strong>What was done:</strong> Modeled air pump activation through the external Port 1 &amp; Port 2 manifold tubes, wake recirculation behind the <em>Z</em> = ±8.5 mm partition baffles, and vapor transport from the wet Nytex screen.</p>
+            <p style="margin-bottom:0.45rem;"><strong>What it describes:</strong> Coupling between forced ventilation (<em>Re</em>), baffle shear eddies, and gravity-dependent Grashof buoyancy (<em>Gr<sub>L</sub></em>) governing the thickness of the humid boundary layer.</p>
+            <p style="margin-bottom:0.65rem;"><strong>What it shows:</strong> At 0.50 L/min in 0.166g, moisture pools in a thick 5.1 mm boundary layer; stepping pump flow to <strong>0.85 L/min</strong> intensifies baffle eddies and thins the boundary layer to 3.4 mm.</p>
+            <a href="videos/stage2_airflow_turbulence_moisture.mp4" download class="btn-outline">⬇ Download Stage II MP4</a>
           </div>
         </div>
 
@@ -1445,7 +1545,10 @@
             </video>
           </div>
           <div class="video-card-body">
-            <strong>164-Seedling Canopy Ontogeny:</strong> Seeds germinate within 24 h and expand into 32 tall <em>B. rapa</em> seedlings (11.3 mm) in Chambers 1 &amp; 3 and 100 compact <em>Arabidopsis</em> rosettes (4.8 mm) in Chamber 2, inducing the &ldquo;Dip-and-Converge&rdquo; jet.
+            <p style="margin-bottom:0.45rem;"><strong>What was done:</strong> Coupled sigmoidal 5-day plant morphometrics (164 seeds germinating at 18–24 h) with Brinkman canopy drag (<em>D</em> = 8.28 s⁻¹ in Ch 1 &amp; 3 vs. 4.72 s⁻¹ in Ch 2) and FvCB photosynthesis.</p>
+            <p style="margin-bottom:0.45rem;"><strong>What it describes:</strong> Development of the asymmetric canopy architecture—32 tall <em>Brassica rapa</em> (11.26 mm) flanking 100 prostrate <em>Arabidopsis thaliana</em> rosettes (4.75 mm)—and the resulting 14.2 mm central plenum.</p>
+            <p style="margin-bottom:0.65rem;"><strong>What it shows:</strong> Formation of the &ldquo;Dip-and-Converge&rdquo; airstream that flushes the central <em>Arabidopsis</em> lawn and equalizes Mean Age of Air (6.05–6.10 s) while sustaining <em>A<sub>net</sub></em> = 13.41 &mu;mol m⁻² s⁻¹.</p>
+            <a href="videos/stage3_5day_growth_ontogeny.mp4" download class="btn-outline">⬇ Download Stage III MP4</a>
           </div>
         </div>
 
@@ -1461,7 +1564,91 @@
             </video>
           </div>
           <div class="video-card-body">
-            <strong>Bottom-Up Fixative Perfusion:</strong> Viscous RNAlater (<em>&mu;</em> = 3.2 mPa·s) is injected at 10 mL/min via Port 3 (<em>Y</em> = 9.5 mm), saturating the root zone in 31.7 s and flooding the 64.7 mL headspace in 5.82 min while venting air out Port 2.
+            <p style="margin-bottom:0.45rem;"><strong>What was done:</strong> Simulated end-of-mission injection of viscous RNAlater fixative (<em>&rho;</em> = 1,080 kg/m³, <em>&mu;</em> = 3.2 mPa·s) at <strong>10.0 mL/min</strong> through the Port 3 dipping nozzle (<em>Y</em> = 9.5 mm).</p>
+            <p style="margin-bottom:0.45rem;"><strong>What it describes:</strong> Two-phase Darcy displacement through the root-compacted foam (&phi; = 0.50 → 0.34) followed by bottom-up headspace flooding and displaced gas venting through central Port 2.</p>
+            <p style="margin-bottom:0.65rem;"><strong>What it shows:</strong> Complete root-zone saturation in <strong>31.7 s</strong> and full 64.7 mL chamber immersion in <strong>5.82 min</strong> with zero trapped gas pockets and &Delta;P &le; 4.04 kPa (&lt; 5.0 kPa seal limit).</p>
+            <a href="videos/stage4_rnalater_harvest_injection.mp4" download class="btn-outline">⬇ Download Stage IV MP4</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- High-Resolution 4D Poster Gallery (Click-to-Expand) -->
+      <div style="margin-top: 2rem;">
+        <h3 style="font-size:1.15rem; font-weight:700; color:var(--fg); margin-bottom:0.5rem;">High-Resolution 4D Dashboard Stills (Click Any Poster to Zoom)</h3>
+        <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1rem;">Static 1080p keyframe posters at full canopy maturity (Day 3.5, T = +84 h) for publication figures and rapid visual inspection:</p>
+        <div class="gallery-grid" style="grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));">
+          <div class="fig-card" onclick="openLightbox('videos/poster_lunar_4d.png', 'Virtual Lunar Surface Experiment (0.166g, 1.62 m/s²) — Day 3.5 4D Multi-Physics Keyframe')">
+            <div class="fig-img-wrap">
+              <img src="videos/poster_lunar_4d.png" alt="Lunar 0.166g 4D Poster" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to Expand Full HD</div>
+            </div>
+            <div class="fig-body">
+              <div class="fig-meta">
+                <span class="fig-tag">Poster 1 · Lunar 0.166g</span>
+                <span>1920 × 1080 PNG</span>
+              </div>
+              <h4>Virtual Lunar Surface Experiment (0.166g) Keyframe</h4>
+              <p>Shows uniform 99.1% capillary foam hydration up to the 35 µm Nytex barrier and active 0.85 L/min ventilation sweeping the foliar moisture boundary layer down to 3.4 mm.</p>
+            </div>
+          </div>
+
+          <div class="fig-card" onclick="openLightbox('videos/poster_ground_1g_4d.png', 'Virtual 1.0g Earth Ground Control (9.81 m/s²) — Day 3.5 4D Multi-Physics Keyframe')">
+            <div class="fig-img-wrap">
+              <img src="videos/poster_ground_1g_4d.png" alt="Earth 1.0g 4D Poster" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to Expand Full HD</div>
+            </div>
+            <div class="fig-body">
+              <div class="fig-meta">
+                <span class="fig-tag">Poster 2 · Earth 1.0g Control</span>
+                <span>1920 × 1080 PNG</span>
+              </div>
+              <h4>Virtual 1.0g Earth Ground Control Keyframe</h4>
+              <p>Shows hydrostatic vertical drainage inside the 7 mm foam (91.2% top vs. 99.2% floor) and buoyant thermal/moisture plumes rising off the 164-seedling canopy at 0.50 L/min.</p>
+            </div>
+          </div>
+
+          <div class="fig-card" onclick="openLightbox('videos/poster_comparison_4d.png', 'Synchronized Side-by-Side Comparison: Lunar 0.166g vs Earth 1.0g Ground Control')">
+            <div class="fig-img-wrap">
+              <img src="videos/poster_comparison_4d.png" alt="Lunar vs 1G Comparison Poster" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to Expand Full HD</div>
+            </div>
+            <div class="fig-body">
+              <div class="fig-meta">
+                <span class="fig-tag">Poster 3 · Dual Split-Screen</span>
+                <span>1920 × 1080 PNG</span>
+              </div>
+              <h4>Synchronized Lunar (0.166g) vs. Earth (1.0g) Comparison</h4>
+              <p>Direct side-by-side comparison of substrate capillarity, baffle wake vortices, headspace moisture plumes, and 5-day photosynthetic assimilation telemetry.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive 4D WebGL Digital Twin Feature Guide -->
+      <div class="narrative-card" style="margin-top: 2rem;">
+        <div class="narrative-header">
+          <div>
+            <span class="narrative-badge">Interactive 4D WebGL Controls Guide</span>
+            <h3 style="margin-top:0.35rem; font-size:1.15rem; color:var(--fg);">Exploring the Upgraded 4D Interactive Digital Twin (<code>viewer_3d.html</code>)</h3>
+          </div>
+          <a href="#digital-twin" class="btn-primary">↑ Jump to Interactive 4D Viewer</a>
+        </div>
+        <div class="pillar-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+          <div class="pillar-box">
+            <h4>▶ 4D Experiment Sequencer</h4>
+            <p>Click <strong><code>▶ Play 4D Mission</code></strong> in the bottom control bar to run an automated 24-second tour across all 4 mission stages, or jump directly to <strong><code>1. Water Fill</code></strong>, <strong><code>2. Air &amp; Turb</code></strong>, <strong><code>3. 5d Growth</code></strong>, or <strong><code>4. RNAlater</code></strong>.</p>
+          </div>
+          <div class="pillar-box">
+            <h4>💧 60-Voxel 3D Capillary Foam</h4>
+            <p>Drag the <strong>Foam Water Activation (Port 3)</strong> slider (0–100%, 0–7.39 mL) to watch water wick radially from Port 3 across Chambers 3 → 2 → 1, and toggle the <strong>Gravity Slider</strong> (0.166g vs. 1.0g) to see vertical hydrostatic drainage vs. uniform lunar capillarity.</p>
+          </div>
+          <div class="pillar-box">
+            <h4>🧪 Manifold Tubes &amp; Moisture Slice</h4>
+            <p>Toggle <strong><code>🧪 External Manifold Tubes &amp; Tracers</code></strong> and <strong><code>💧 2D/3D Moisture &amp; Turbulence Slice</code></strong> in the right sidebar to inspect animated fluid packets in Ports 1–3, baffle wake eddies at <em>Z</em> = ±8.5 mm, and the live vapor boundary layer.</p>
+          </div>
+          <div class="pillar-box">
+            <h4>🎥 Native WebM Video Capture</h4>
+            <p>Click <strong><code>🎥 Record</code></strong> in the 4D Experiment Sequencer bar to capture a custom 30 fps <code>.webm</code> video directly from the interactive 3D WebGL viewport as you orbit, slice, and adjust gravity or pump flow.</p>
           </div>
         </div>
       </div>
