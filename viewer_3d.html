@@ -396,13 +396,37 @@
       </div>
 
       <!-- Flow Mode Selector, Direction, Ontogeny Scrubber & Continuous Flow Slider (Bottom Floating Panel) -->
-      <div id="flightControlOverlay" class="absolute bottom-3 left-3 right-3 sm:right-auto sm:max-w-lg z-10 bg-slate-900/95 dark:bg-slate-900/95 backdrop-blur border border-slate-700/80 rounded-xl p-3 shadow-2xl">
+      <div id="flightControlOverlay" class="absolute bottom-3 left-3 right-3 sm:right-auto sm:max-w-xl z-10 bg-slate-900/95 dark:bg-slate-900/95 backdrop-blur border border-slate-700/80 rounded-xl p-3 shadow-2xl">
+        <!-- 4D Spatiotemporal Mission Sequencer & Video Recorder -->
+        <div class="pb-2 mb-2 border-b border-slate-800 dark:border-slate-800 light:border-slate-200">
+          <div class="flex items-center justify-between gap-2 mb-1.5">
+            <span class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span id="seqDot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              4D Experiment Sequencer
+            </span>
+            <div class="flex items-center gap-1.5">
+              <button id="btnPlay4D" class="px-2.5 py-1 text-[11px] font-bold rounded-md bg-emerald-600 hover:bg-emerald-500 text-white shadow transition">
+                ▶ Play 4D Mission
+              </button>
+              <button id="btnRecord4D" class="px-2 py-1 text-[11px] font-bold rounded-md bg-rose-600/80 hover:bg-rose-500 text-white shadow transition" title="Record interactive 4D WebM video from viewport">
+                🎥 Record
+              </button>
+            </div>
+          </div>
+          <div class="grid grid-cols-4 gap-1 text-[10px] font-semibold">
+            <button id="stg1Btn" class="py-1 px-1.5 rounded border border-slate-700 bg-slate-800/90 text-sky-300 hover:border-sky-400 transition">1. Water Fill</button>
+            <button id="stg2Btn" class="py-1 px-1.5 rounded border border-slate-700 bg-slate-800/90 text-cyan-300 hover:border-cyan-400 transition">2. Air &amp; Turb</button>
+            <button id="stg3Btn" class="py-1 px-1.5 rounded border border-slate-700 bg-slate-800/90 text-emerald-300 hover:border-emerald-400 transition">3. 5d Growth</button>
+            <button id="stg4Btn" class="py-1 px-1.5 rounded border border-slate-700 bg-slate-800/90 text-purple-300 hover:border-purple-400 transition">4. RNAlater</button>
+          </div>
+        </div>
+
         <!-- Mode Badges -->
         <div class="flex items-center justify-between mb-2">
           <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Fluid Operating Mode</span>
           <span id="activeModeLabel" class="text-xs font-mono font-bold text-sky-400">Earth 1g (0.50 L/min)</span>
         </div>
-        <div class="grid grid-cols-4 gap-1.5 mb-2.5">
+        <div class="grid grid-cols-4 gap-1.5 mb-2">
           <button id="modeEarth" class="px-2 py-1.5 text-[11px] font-medium rounded-lg border border-sky-500 bg-sky-500/25 text-sky-200 text-center transition">
             Earth 1g<br><span class="text-[10px] text-sky-300">0.50 L/min</span>
           </button>
@@ -415,6 +439,16 @@
           <button id="modeRNA" class="px-2 py-1.5 text-[11px] font-medium rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:border-purple-500 hover:bg-purple-500/15 text-center transition">
             RNAlater<br><span class="text-[10px] text-purple-400">10 mL/min</span>
           </button>
+        </div>
+
+        <!-- Foam Water Injection / Hydration Scrubber -->
+        <div class="pt-1.5 border-t border-slate-800 dark:border-slate-800 light:border-slate-200 mb-2">
+          <div class="flex justify-between items-center text-xs mb-1">
+            <span class="font-medium text-slate-300 dark:text-slate-300 light:text-slate-700">Foam Water Activation (Port 3):</span>
+            <span id="waterFillLabel" class="font-mono font-bold text-sky-400 text-xs">7.39 mL (100% Saturated)</span>
+          </div>
+          <input type="range" id="waterSlider" min="0.0" max="100.0" step="1.0" value="100.0"
+                 class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sky-500">
         </div>
 
         <!-- Push vs. Pull Aerodynamic Direction Toggle -->
@@ -652,6 +686,14 @@
             <input type="checkbox" id="chkAeration" checked class="rounded bg-slate-800 border-slate-700 text-emerald-500">
             <span>Lower Aeration &amp; Drainage Wells (Y = 0–7.62 mm)</span>
           </label>
+          <label class="flex items-center gap-2 cursor-pointer text-slate-300 dark:text-slate-300 light:text-slate-700">
+            <input type="checkbox" id="chkTubes" checked class="rounded bg-slate-800 border-slate-700 text-emerald-500">
+            <span class="font-semibold text-cyan-400">🧪 External Manifold Tubes &amp; Tracers</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-slate-300 dark:text-slate-300 light:text-slate-700">
+            <input type="checkbox" id="chkMoistureSlice" checked class="rounded bg-slate-800 border-slate-700 text-emerald-500">
+            <span class="font-semibold text-sky-400">💧 2D/3D Moisture &amp; Turbulence Slice</span>
+          </label>
           <label class="flex items-center gap-2 cursor-pointer text-slate-300 dark:text-slate-300 light:text-slate-700 pt-1.5 border-t border-slate-800 dark:border-slate-800 light:border-slate-200">
             <input type="checkbox" id="chkHeatmap" class="rounded bg-slate-800 border-slate-700 text-emerald-500">
             <span class="font-semibold text-emerald-400">🔥 Foliar Conductance Heatmap (Viridis)</span>
@@ -818,7 +860,9 @@
       aeration: new THREE.Group(),
       liquid: new THREE.Group(),
       probe: new THREE.Group(),
-      petriDish: new THREE.Group()
+      petriDish: new THREE.Group(),
+      tubes: new THREE.Group(),
+      moistureSlice: new THREE.Group()
     };
     Object.values(groups).forEach(g => scene.add(g));
 
@@ -880,35 +924,53 @@
     aerWire.position.copy(aerMesh.position);
     groups.aeration.add(aerWire);
 
-    // 3. 3-Part Porous Substrate Cassettes (Seated at Y = 7.62 to 14.62 mm, Height = 7.0 mm)
+    // 3. 3-Part Porous Substrate Cassettes (Subdivided into 4D Capillary Voxels, Y = 7.62 to 14.62 mm)
     // Chamber 1: Z = [-30.5, -9.5], Chamber 2: Z = [-7.5, +7.5], Chamber 3: Z = [+9.5, +30.5]
-    const subMat = new THREE.MeshStandardMaterial({
-      color: 0xb45309, // Terracotta / Arcillite ceramic matrix
-      roughness: 0.85,
-      metalness: 0.05
-    });
     const subConfigs = [
       { id: 1, zMin: -30.5, zMax: -9.5, zCenter: -20.0, zLen: 21.0 },
       { id: 2, zMin: -7.5, zMax: 7.5, zCenter: 0.0, zLen: 15.0 },
       { id: 3, zMin: 9.5, zMax: 30.5, zCenter: 20.0, zLen: 21.0 }
     ];
 
+    const foamVoxels = [];
+    const nStrataY = 5;
+    const nSlicesZ = 4;
     subConfigs.forEach(cfg => {
+      // Outer bounding wireframe per foam cassette
       const sGeo = new THREE.BoxGeometry(32.3, 7.0, cfg.zLen);
-      const sMesh = new THREE.Mesh(sGeo, subMat);
-      sMesh.position.set(5.15, 11.12, cfg.zCenter);
-      sMesh.castShadow = true;
-      sMesh.receiveShadow = true;
-      groups.substrate.add(sMesh);
-
       const sEdge = new THREE.LineSegments(new THREE.EdgesGeometry(sGeo), new THREE.LineBasicMaterial({ color: 0xd97706 }));
-      sEdge.position.copy(sMesh.position);
+      sEdge.position.set(5.15, 11.12, cfg.zCenter);
       groups.substrate.add(sEdge);
+
+      const dy = 7.0 / nStrataY;
+      const dz = cfg.zLen / nSlicesZ;
+      for (let iy = 0; iy < nStrataY; iy++) {
+        for (let iz = 0; iz < nSlicesZ; iz++) {
+          const vy = 7.62 + (iy + 0.5) * dy;
+          const vz = cfg.zMin + (iz + 0.5) * dz;
+          const vMat = new THREE.MeshStandardMaterial({
+            color: 0x0284c7,
+            roughness: 0.65,
+            metalness: 0.08
+          });
+          const vGeo = new THREE.BoxGeometry(32.1, dy - 0.06, dz - 0.08);
+          const vMesh = new THREE.Mesh(vGeo, vMat);
+          vMesh.position.set(5.15, vy, vz);
+          groups.substrate.add(vMesh);
+          foamVoxels.push({
+            mesh: vMesh,
+            mat: vMat,
+            y: vy,
+            z: vz,
+            yNorm: (iy + 0.5) / nStrataY, // 0 at bottom (7.62 mm), 1 at top Nytex (14.62 mm)
+            distFromPort3: Math.abs(vz - 21.59) / 52.0 // normalized 0 at Port 3, 1 at far Ch 1
+          });
+        }
+      }
     });
 
     // 3b. Nytex Monofilament Mesh Root Barrier (35 µm pore size, 8.04 kPa bubble point)
     // Positioned immediately over the top face of the porous foam at Y = 14.62–14.77 mm
-    // Excludes plant roots from entering foam pores while providing uniform capillary moisture transport
     const nytexMat = new THREE.MeshStandardMaterial({
       color: 0x38bdf8,
       transparent: true,
@@ -936,7 +998,7 @@
       groups.nytex.add(nWire);
     });
 
-    // 4. Fluid Ports & Dipping Injection Nozzle
+    // 4. Fluid Ports, External Manifold Tubes & Dipping Injection Nozzle
     // Port 1 (Air In, Z = -21.6), Port 2 (Exhaust, Z = 0), Port 3 (Water/RNA, Z = +21.6)
     const portGeo = new THREE.CylinderGeometry(1.6, 1.6, 7.0, 16);
     const p1 = new THREE.Mesh(portGeo, new THREE.MeshStandardMaterial({ color: 0xef4444 }));
@@ -950,6 +1012,70 @@
     const p3 = new THREE.Mesh(portGeo, new THREE.MeshStandardMaterial({ color: 0x0284c7 }));
     p3.position.set(-15.49, 37.17, 21.59);
     groups.housing.add(p3);
+
+    // 4b. External Fluidic Manifold Tubes & Animated Tracer Packets (Ports 1, 2, 3)
+    const tubeSpecs = [
+      { id: 1, z: -21.59, color: 0x38bdf8, role: 'inlet' },
+      { id: 2, z: 0.0,    color: 0xa855f7, role: 'exhaust' },
+      { id: 3, z: 21.59,  color: 0x0284c7, role: 'liquid' }
+    ];
+    const tubeTracers = [];
+    tubeSpecs.forEach(ts => {
+      // Translucent vertical silicone manifold tube extending from Y = 40.67 to Y = 55.0 mm
+      const tGeo = new THREE.CylinderGeometry(1.35, 1.35, 14.5, 16);
+      const tMat = new THREE.MeshPhysicalMaterial({
+        color: ts.color,
+        transparent: true,
+        opacity: 0.35,
+        roughness: 0.15,
+        transmission: 0.75
+      });
+      const tMesh = new THREE.Mesh(tGeo, tMat);
+      tMesh.position.set(-15.49, 47.9, ts.z);
+      groups.tubes.add(tMesh);
+
+      // Collar ring at Y = 55.0 mm
+      const cGeo = new THREE.TorusGeometry(1.6, 0.35, 8, 16);
+      cGeo.rotateX(Math.PI / 2);
+      const cMesh = new THREE.Mesh(cGeo, new THREE.MeshStandardMaterial({ color: ts.color }));
+      cMesh.position.set(-15.49, 55.1, ts.z);
+      groups.tubes.add(cMesh);
+
+      // Animated tracer packets inside each tube
+      for (let k = 0; k < 4; k++) {
+        const trGeo = new THREE.SphereGeometry(0.85, 10, 10);
+        const trMat = new THREE.MeshBasicMaterial({ color: ts.color });
+        const trMesh = new THREE.Mesh(trGeo, trMat);
+        trMesh.position.set(-15.49, 41.0 + k * 3.5, ts.z);
+        groups.tubes.add(trMesh);
+        tubeTracers.push({
+          mesh: trMesh,
+          mat: trMat,
+          portId: ts.id,
+          z: ts.z,
+          phase: k / 4.0
+        });
+      }
+    });
+
+    // 4c. 2D/3D Longitudinal Moisture & Baffle Turbulence Slice Plane (Z in [-32, +32], Y in [7.62, 33.67])
+    const moistureCanvas = document.createElement('canvas');
+    moistureCanvas.width = 256;
+    moistureCanvas.height = 128;
+    const moistureCtx = moistureCanvas.getContext('2d');
+    const moistureTex = new THREE.CanvasTexture(moistureCanvas);
+    const slicePlaneGeo = new THREE.PlaneGeometry(64.0, 26.05);
+    slicePlaneGeo.rotateY(Math.PI / 2); // Align along Z-Y longitudinal axis
+    const slicePlaneMat = new THREE.MeshBasicMaterial({
+      map: moistureTex,
+      transparent: true,
+      opacity: 0.58,
+      side: THREE.DoubleSide,
+      depthWrite: false
+    });
+    const slicePlaneMesh = new THREE.Mesh(slicePlaneGeo, slicePlaneMat);
+    slicePlaneMesh.position.set(-4.5, 20.64, 0.0);
+    groups.moistureSlice.add(slicePlaneMesh);
 
     // Port 3 Dipping Nozzle (runs from Y = 33.67 down to Y = 9.5 mm inside Chamber 3 Substrate)
     const nozzleLen = 33.67 - 9.5; // 24.17 mm
@@ -1235,6 +1361,119 @@
     let currentMode = 'earth';
     let autoRotate = false;
     let liquidFillLevel = 0.0; // 0 to 1
+    let waterFillPct = 100.0; // 0 to 100% (7.39 mL activation water)
+    let is4DSequencerPlaying = false;
+    let seqElapsedSec = 0.0;
+    let lastFrameTime = performance.now();
+
+    const dryFoamCol = new THREE.Color(0xb45309);  // Dry Arcillite/Foam terracotta
+    const wetFoamCol = new THREE.Color(0x0284c7);  // Saturated capillary water blue
+    const semiWetCol = new THREE.Color(0x0ea5e9);  // Intermediate wetting front
+
+    // Update 3D Porous Foam Voxels based on Water Activation % and Gravity (0.166g vs 1.0g)
+    function updateFoamHydration(pct) {
+      waterFillPct = Math.max(0.0, Math.min(100.0, pct));
+      const volMl = (waterFillPct / 100.0) * 7.39;
+      const fillFrac = waterFillPct / 100.0;
+
+      const waterFillLabel = document.getElementById('waterFillLabel');
+      const valActVol = document.getElementById('val_act_vol');
+      const gravDrainPenalty = currentGravity * 0.082; // 1g drains top by ~8.2%, 0.166g by ~1.3%
+      const topSatPct = Math.max(12.0, fillFrac * (99.5 - gravDrainPenalty * 100.0));
+      if (waterFillLabel) {
+        waterFillLabel.innerText = volMl.toFixed(2) + ' mL (' + waterFillPct.toFixed(0) + '% Fill · Nytex θ=' + topSatPct.toFixed(1) + '%)';
+      }
+      if (valActVol) {
+        valActVol.innerText = volMl.toFixed(2) + ' mL (' + waterFillPct.toFixed(0) + '% Saturation)';
+      }
+
+      foamVoxels.forEach(v => {
+        // Lateral propagation front from Port 3 (Z = +21.59 mm) across Ch3 -> Ch2 -> Ch1
+        const frontProgress = (fillFrac * 1.35) - (v.distFromPort3 * 0.85);
+        const lateralWet = Math.max(0.0, Math.min(1.0, frontProgress * 3.0));
+
+        // Vertical capillary vs hydrostatic distribution:
+        // In 0.166g (Moon), capillary rise (hc ~ 4380 mm) keeps top & bottom nearly identical.
+        // In 1.0g (Earth), hydrostatic head slightly drains upper strata near the Nytex barrier.
+        const verticalFactor = 1.0 - (currentGravity * 0.22 * v.yNorm);
+        const voxelTheta = Math.max(0.0, Math.min(1.0, lateralWet * verticalFactor));
+
+        v.mat.color.copy(dryFoamCol).lerp(wetFoamCol, voxelTheta);
+        v.mat.roughness = 0.88 - 0.38 * voxelTheta;
+      });
+    }
+
+    // Render 2D/3D Longitudinal Moisture & Baffle Turbulence Slice Texture
+    function updateMoistureAndTurbulenceSlice(timeSec) {
+      if (!moistureCtx || !groups.moistureSlice.visible) return;
+      const w = moistureCanvas.width;
+      const h = moistureCanvas.height;
+      moistureCtx.clearRect(0, 0, w, h);
+
+      const fillFrac = waterFillPct / 100.0;
+      const qNorm = currentFlowQ / 0.50;
+      // Boundary layer thickness increases in low gravity & low flow
+      const blThickness = Math.min(0.65, 0.22 / Math.sqrt(Math.max(0.15, qNorm)) * (1.18 - 0.18 * currentGravity));
+
+      // 1. Draw vertical moisture vapor plume rising from Nytex barrier into headspace
+      const grad = moistureCtx.createLinearGradient(0, h, 0, 0);
+      const baseAlpha = 0.55 * fillFrac;
+      grad.addColorStop(0.0, 'rgba(2, 132, 199, ' + (baseAlpha * 0.95).toFixed(2) + ')');
+      grad.addColorStop(0.27, 'rgba(14, 165, 233, ' + (baseAlpha * 0.80).toFixed(2) + ')');
+      grad.addColorStop(Math.min(0.95, 0.28 + blThickness), 'rgba(56, 189, 248, ' + (baseAlpha * 0.35).toFixed(2) + ')');
+      grad.addColorStop(1.0, 'rgba(15, 23, 42, 0.05)');
+      moistureCtx.fillStyle = grad;
+      moistureCtx.fillRect(0, 0, w, h);
+
+      // 2. Draw buoyant thermal/moisture plumes in 1.0g vs stratified laminar boundary layer in 0.166g
+      if (fillFrac > 0.15) {
+        const numPlumes = 6;
+        for (let i = 0; i < numPlumes; i++) {
+          const px = ((i + 0.5) / numPlumes) * w + Math.sin(timeSec * 1.8 + i) * 6.0;
+          const py = h * (0.68 - 0.18 * currentGravity * Math.sin(timeSec * 2.2 + i * 1.3));
+          const rad = 16.0 + 10.0 * blThickness;
+          const pGrad = moistureCtx.createRadialGradient(px, py, 2, px, py, rad);
+          pGrad.addColorStop(0, 'rgba(56, 189, 248, ' + (0.36 * fillFrac).toFixed(2) + ')');
+          pGrad.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
+          moistureCtx.fillStyle = pGrad;
+          moistureCtx.beginPath();
+          moistureCtx.arc(px, py, rad, 0, Math.PI * 2);
+          moistureCtx.fill();
+        }
+      }
+
+      // 3. Draw Baffle Wake Turbulence Eddies at Z = -8.5 mm and Z = +8.5 mm
+      const baffleX = [w * (0.5 - 8.5 / 64.0), w * (0.5 + 8.5 / 64.0)];
+      baffleX.forEach((bx, idx) => {
+        const eddyX = bx + (currentFlowDir === 'push' ? 10 : -10);
+        const eddyY = h * 0.42;
+        const eddyR = 11.0 + 4.0 * Math.min(2.0, qNorm);
+        moistureCtx.save();
+        moistureCtx.translate(eddyX, eddyY);
+        moistureCtx.rotate(timeSec * 3.2 * (idx === 0 ? 1 : -1) * Math.sqrt(qNorm));
+        moistureCtx.strokeStyle = 'rgba(52, 211, 153, 0.65)';
+        moistureCtx.lineWidth = 1.8;
+        moistureCtx.beginPath();
+        moistureCtx.arc(0, 0, eddyR, 0.2, Math.PI * 1.65);
+        moistureCtx.stroke();
+        moistureCtx.beginPath();
+        moistureCtx.arc(0, 0, eddyR * 0.55, Math.PI * 0.5, Math.PI * 1.9);
+        moistureCtx.stroke();
+        moistureCtx.restore();
+      });
+
+      // 4. Draw RNAlater Harvest Flood Front when in RNAlater mode
+      if (currentMode === 'rna' && liquidFillLevel > 0.01) {
+        const floodH = h * liquidFillLevel;
+        const rnaGrad = moistureCtx.createLinearGradient(0, h, 0, h - floodH);
+        rnaGrad.addColorStop(0, 'rgba(147, 51, 234, 0.75)');
+        rnaGrad.addColorStop(1, 'rgba(192, 132, 252, 0.55)');
+        moistureCtx.fillStyle = rnaGrad;
+        moistureCtx.fillRect(0, h - floodH, w, floodH);
+      }
+
+      moistureTex.needsUpdate = true;
+    }
 
     // Ontogeny Height Formulations (5-Day Developmental Timeline)
     function getBrapaHeight(tHours) {
@@ -1327,6 +1566,7 @@
       else gName = 'Earth (1.00g)';
 
       gravLabel.innerText = gName + ' ' + g.toFixed(2) + 'g (' + (g * 9.81).toFixed(2) + ' m/s²)';
+      updateFoamHydration(waterFillPct);
       updateBiophysicsTelemetry(currentFlowQ);
     }
 
@@ -1557,6 +1797,90 @@
         liquidMesh.material.opacity = 0.0;
       }
 
+      // Animate External Manifold Tube Tracer Packets
+      const nowMs = performance.now();
+      const dtSec = Math.min(0.1, (nowMs - lastFrameTime) * 0.001);
+      lastFrameTime = nowMs;
+      const timeSec = nowMs * 0.001;
+
+      if (groups.tubes && groups.tubes.visible) {
+        const qSpeed = Math.max(0.25, currentFlowQ / 0.50);
+        tubeTracers.forEach(tr => {
+          let dirSign = 0; // +1 upward (exhaust), -1 downward (injection/inlet)
+          if (currentMode === 'rna') {
+            if (tr.portId === 3) {
+              dirSign = -1.2;
+              tr.mat.color.setHex(0xa855f7);
+            } else if (tr.portId === 2) {
+              dirSign = +1.2;
+              tr.mat.color.setHex(0x38bdf8);
+            } else {
+              dirSign = 0;
+            }
+          } else {
+            if (tr.portId === 1) {
+              dirSign = -1.0 * qSpeed;
+              tr.mat.color.setHex(0x38bdf8);
+            } else if (tr.portId === 2) {
+              dirSign = +1.0 * qSpeed;
+              tr.mat.color.setHex(0x10b981);
+            } else if (tr.portId === 3) {
+              dirSign = (waterFillPct < 99.5) ? -1.1 : -0.25;
+              tr.mat.color.setHex(0x0284c7);
+            }
+          }
+          tr.phase = (tr.phase + dtSec * 0.65 * Math.abs(dirSign)) % 1.0;
+          const frac = (dirSign < 0) ? (1.0 - tr.phase) : tr.phase;
+          tr.mesh.position.y = 40.8 + frac * 13.8;
+        });
+      }
+
+      // Update 2D/3D Longitudinal Moisture & Baffle Turbulence Slice
+      updateMoistureAndTurbulenceSlice(timeSec);
+
+      // Step 4D Spatiotemporal Mission Sequencer if playing
+      if (is4DSequencerPlaying) {
+        seqElapsedSec += dtSec;
+        const totalDuration = 24.0; // 24-second full 4D mission tour
+        if (seqElapsedSec <= 5.0) {
+          // Stage 1: Water Injection into Porous Foam (0 -> 5s)
+          highlightStageBtn(1);
+          const pct = Math.min(100.0, (seqElapsedSec / 4.5) * 100.0);
+          const wSlider = document.getElementById('waterSlider');
+          if (wSlider) wSlider.value = pct;
+          updateFoamHydration(pct);
+          if (currentDay !== 0.0) {
+            document.getElementById('daySlider').value = 0.0;
+            updateOntogeny(0.0);
+          }
+        } else if (seqElapsedSec <= 10.0) {
+          // Stage 2: Air Pump Activation, Baffle Eddies & Moisture Plumes (5 -> 10s)
+          highlightStageBtn(2);
+          if (waterFillPct < 100.0) {
+            document.getElementById('waterSlider').value = 100.0;
+            updateFoamHydration(100.0);
+          }
+          const dVal = 0.2 + ((seqElapsedSec - 5.0) / 5.0) * 0.8;
+          document.getElementById('daySlider').value = dVal;
+          updateOntogeny(dVal);
+        } else if (seqElapsedSec <= 18.5) {
+          // Stage 3: 5-Day Germination & Seedling Canopy Growth (10 -> 18.5s)
+          highlightStageBtn(3);
+          const dVal = Math.min(5.0, 1.0 + ((seqElapsedSec - 10.0) / 8.0) * 4.0);
+          document.getElementById('daySlider').value = dVal;
+          updateOntogeny(dVal);
+        } else if (seqElapsedSec <= totalDuration) {
+          // Stage 4: End-of-Mission RNAlater Harvest Perfusion (18.5 -> 24s)
+          highlightStageBtn(4);
+          if (currentMode !== 'rna') {
+            setMode('rna');
+          }
+        } else {
+          // Loop complete
+          stop4DSequencer();
+        }
+      }
+
       // Animate 3D Probe Marker Pulse
       if (probeMarker && probeMarker.visible) {
         const timePulse = Date.now() * 0.003;
@@ -1707,6 +2031,155 @@
     document.getElementById('chkStreamlines').onchange = (e) => groups.streamlines.visible = e.target.checked;
     document.getElementById('chkNozzle').onchange = (e) => groups.nozzle.visible = e.target.checked;
     document.getElementById('chkAeration').onchange = (e) => groups.aeration.visible = e.target.checked;
+    if (document.getElementById('chkTubes')) {
+      document.getElementById('chkTubes').onchange = (e) => groups.tubes.visible = e.target.checked;
+    }
+    if (document.getElementById('chkMoistureSlice')) {
+      document.getElementById('chkMoistureSlice').onchange = (e) => groups.moistureSlice.visible = e.target.checked;
+    }
+
+    // Foam Water Activation Slider
+    const waterSliderEl = document.getElementById('waterSlider');
+    if (waterSliderEl) {
+      waterSliderEl.addEventListener('input', (e) => {
+        updateFoamHydration(parseFloat(e.target.value));
+      });
+    }
+
+    // 4D Experiment Sequencer & Stage Jump Controls
+    const stgBtns = [
+      document.getElementById('stg1Btn'),
+      document.getElementById('stg2Btn'),
+      document.getElementById('stg3Btn'),
+      document.getElementById('stg4Btn')
+    ];
+    const btnPlay4D = document.getElementById('btnPlay4D');
+    const seqDot = document.getElementById('seqDot');
+
+    function highlightStageBtn(stageIdx) {
+      stgBtns.forEach((b, idx) => {
+        if (!b) return;
+        if (idx + 1 === stageIdx) {
+          b.classList.add('ring-2', 'ring-emerald-400', 'bg-slate-700');
+        } else {
+          b.classList.remove('ring-2', 'ring-emerald-400', 'bg-slate-700');
+        }
+      });
+    }
+
+    function stop4DSequencer() {
+      is4DSequencerPlaying = false;
+      if (btnPlay4D) {
+        btnPlay4D.innerText = '▶ Play 4D Mission';
+        btnPlay4D.classList.remove('bg-amber-600', 'hover:bg-amber-500');
+        btnPlay4D.classList.add('bg-emerald-600', 'hover:bg-emerald-500');
+      }
+      if (seqDot) seqDot.classList.remove('animate-ping');
+    }
+
+    if (btnPlay4D) {
+      btnPlay4D.onclick = () => {
+        if (is4DSequencerPlaying) {
+          stop4DSequencer();
+        } else {
+          is4DSequencerPlaying = true;
+          seqElapsedSec = 0.0;
+          if (currentMode === 'rna') setMode(currentGravity < 0.3 ? 'lunar' : 'earth');
+          btnPlay4D.innerText = '⏸ Pause 4D Mission';
+          btnPlay4D.classList.remove('bg-emerald-600', 'hover:bg-emerald-500');
+          btnPlay4D.classList.add('bg-amber-600', 'hover:bg-amber-500');
+          if (seqDot) seqDot.classList.add('animate-ping');
+        }
+      };
+    }
+
+    if (stgBtns[0]) {
+      stgBtns[0].onclick = () => {
+        stop4DSequencer();
+        highlightStageBtn(1);
+        if (currentMode === 'rna') setMode(currentGravity < 0.3 ? 'lunar' : 'earth');
+        document.getElementById('daySlider').value = 0.0;
+        updateOntogeny(0.0);
+        // Animate water filling from 0 -> 100% over 3 seconds
+        is4DSequencerPlaying = true;
+        seqElapsedSec = 0.0;
+        btnPlay4D.innerText = '⏸ Pause 4D Mission';
+      };
+    }
+    if (stgBtns[1]) {
+      stgBtns[1].onclick = () => {
+        stop4DSequencer();
+        highlightStageBtn(2);
+        if (currentMode === 'rna') setMode(currentGravity < 0.3 ? 'lunar' : 'earth');
+        if (waterSliderEl) waterSliderEl.value = 100.0;
+        updateFoamHydration(100.0);
+        document.getElementById('daySlider').value = 0.5;
+        updateOntogeny(0.5);
+        groups.streamlines.visible = true;
+        groups.moistureSlice.visible = true;
+        document.getElementById('chkStreamlines').checked = true;
+        if (document.getElementById('chkMoistureSlice')) document.getElementById('chkMoistureSlice').checked = true;
+      };
+    }
+    if (stgBtns[2]) {
+      stgBtns[2].onclick = () => {
+        stop4DSequencer();
+        highlightStageBtn(3);
+        if (currentMode === 'rna') setMode(currentGravity < 0.3 ? 'lunar' : 'earth');
+        if (waterSliderEl) waterSliderEl.value = 100.0;
+        updateFoamHydration(100.0);
+        document.getElementById('daySlider').value = 5.0;
+        updateOntogeny(5.0);
+      };
+    }
+    if (stgBtns[3]) {
+      stgBtns[3].onclick = () => {
+        stop4DSequencer();
+        highlightStageBtn(4);
+        if (waterSliderEl) waterSliderEl.value = 100.0;
+        updateFoamHydration(100.0);
+        document.getElementById('daySlider').value = 5.0;
+        updateOntogeny(5.0);
+        liquidFillLevel = 0.0;
+        setMode('rna');
+      };
+    }
+
+    // WebM Viewport Video Recorder (#btnRecord4D)
+    const btnRecord4D = document.getElementById('btnRecord4D');
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    if (btnRecord4D) {
+      btnRecord4D.onclick = () => {
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+          mediaRecorder.stop();
+          btnRecord4D.innerText = '🎥 Record';
+          btnRecord4D.classList.remove('animate-pulse', 'bg-red-600');
+          return;
+        }
+        try {
+          const stream = renderer.domElement.captureStream(30);
+          recordedChunks = [];
+          mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+          mediaRecorder.ondataavailable = (ev) => {
+            if (ev.data && ev.data.size > 0) recordedChunks.push(ev.data);
+          };
+          mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, { type: 'video/webm' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'LEAF_GBC1_4D_Digital_Twin_' + (currentGravity < 0.3 ? 'Lunar_0.166g' : 'Earth_1g') + '.webm';
+            a.click();
+          };
+          mediaRecorder.start();
+          btnRecord4D.innerText = '⏹ Stop Rec';
+          btnRecord4D.classList.add('animate-pulse', 'bg-red-600');
+        } catch (err) {
+          alert('Browser WebGL MediaRecorder not supported or blocked: ' + err.message);
+        }
+      };
+    }
 
     // -------------------------------------------------------------
     // Virtual Sensor Probe & Raycaster Click-to-Probe System
@@ -1923,6 +2396,7 @@
     };
 
     // Initial Ontogeny & Biophysics Setup Call
+    updateFoamHydration(100.0);
     updateOntogeny(5.0);
     setFlowDirection('push');
     selectPlant(plantInstances[82], null);

@@ -1137,6 +1137,76 @@
       color: var(--muted);
       margin-bottom: 0.75rem;
     }
+
+    /* 4D Cinematic Video Theater Styles */
+    .video-theater-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 1.75rem;
+    }
+    @media (max-width: 980px) {
+      .video-theater-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .video-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .video-card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-elevated);
+    }
+    .video-card-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .video-card-header h3 {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--fg);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .video-player-wrap {
+      background: #060b16;
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+    }
+    .video-player-wrap video {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+    }
+    .video-card-body {
+      padding: 1.15rem 1.25rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.58;
+      flex: 1;
+    }
+    .stage-video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.25rem;
+    }
   </style>
 </head>
 <body data-site-id="LEAF_GBC1_pot_model">
@@ -1151,7 +1221,8 @@
       <span class="brand-title">Lunar Plant Growth Chamber CFD</span>
     </div>
     <nav class="nav-links">
-      <a href="#digital-twin">3D Digital Twin</a>
+      <a href="#digital-twin">4D Digital Twin</a>
+      <a href="#cinematic-4d-videos" style="color: var(--accent2); font-weight: 700;">🎬 4D Videos</a>
       <a href="#cad-blueprints">CAD Blueprints</a>
       <a href="#species-morphometrics">Species &amp; Seeds</a>
       <a href="#governing-equations">Physics Equations</a>
@@ -1162,7 +1233,7 @@
       <a href="#asme-gci">ASME V&amp;V 20 &amp; Hotspots</a>
       <a href="#hardware-benchmark">Flight Benchmark</a>
       <a href="manuscript.html" target="_blank" style="color: var(--accent); font-weight: 600;">📖 Narrative Manuscript</a>
-      <a href="viewer_3d.html" target="_blank" class="btn-primary">Launch Fullscreen 3D Sim ↗</a>
+      <a href="viewer_3d.html" target="_blank" class="btn-primary">Launch Fullscreen 4D Sim ↗</a>
       <button id="theme-toggle" class="theme-btn" aria-label="Toggle light or dark theme" title="Toggle light / dark"></button>
     </nav>
   </header>
@@ -1172,12 +1243,13 @@
     <!-- Hero Overview -->
     <section class="hero">
       <div class="hero-eyebrow">Spaceflight Hardware Fluidics &amp; Multi-Species Gas Exchange</div>
-      <h1>LEAF GBC1 Plant Chamber: 1g Earth vs. 0.166g Lunar CFD Model</h1>
+      <h1>LEAF GBC1 Plant Chamber: 1g Earth vs. 0.166g Lunar 4D CFD Model</h1>
       <p class="lead">
-        Full 3D Navier–Stokes, Brinkman–Darcy porous media, and coupled Farquhar–von Caemmerer–Berry (FvCB) photosynthetic modeling for the mated GBC1 pot (<code>M09024F-MDL-5</code>) and lid (<code>M09025F-MDL-2</code>). Incorporates a 3-part partitioned porous substrate (<em>Y</em> = 7.62–14.62 mm), lower aeration wells (<em>Y</em> = 0–7.62 mm), asymmetric planting densities (<strong>32 <em>Brassica rapa</em> seeds</strong> in Chambers 1 &amp; 3 vs. <strong>100 <em>Arabidopsis thaliana</em> seeds</strong> in central Chamber 2), diurnal photoperiod inversion, 14-day developmental growth time-series, off-nominal fault sweeps, and harvest-phase RNAlater fixative perfusion.
+        Full 4D spatiotemporal Navier–Stokes, Brinkman–Darcy porous media, and coupled Farquhar–von Caemmerer–Berry (FvCB) photosynthetic modeling for the mated GBC1 pot (<code>M09024F-MDL-5</code>) and lid (<code>M09025F-MDL-2</code>). Incorporates a 3-part partitioned porous substrate (<em>Y</em> = 7.62–14.62 mm), lower aeration wells (<em>Y</em> = 0–7.62 mm), asymmetric planting densities (<strong>32 <em>Brassica rapa</em> seeds</strong> in Chambers 1 &amp; 3 vs. <strong>100 <em>Arabidopsis thaliana</em> seeds</strong> in central Chamber 2), diurnal photoperiod inversion, 5-day developmental growth time-series, and harvest-phase RNAlater fixative perfusion.
       </p>
       <div class="hero-actions">
-        <a href="#digital-twin" class="btn-primary">Explore Interactive 3D Digital Twin</a>
+        <a href="#digital-twin" class="btn-primary">Explore Interactive 4D Digital Twin</a>
+        <a href="#cinematic-4d-videos" class="btn-primary" style="background: var(--accent2); border-color: var(--accent2);">🎬 Watch 4D Lunar vs. 1G Videos</a>
         <a href="manuscript.html" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none;">📖 Read Refined Narrative &amp; Figures</a>
         <a href="MANUSCRIPT_LEAF_GBC1_CFD.md" target="_blank" class="btn-outline">📄 Raw Markdown</a>
         <a href="#cad-blueprints" class="btn-outline">View ABAI QC Orthographic Blueprints</a>
@@ -1229,6 +1301,169 @@
           <span style="font-size:0.78rem; color:var(--text-muted);">Drag to Orbit · Scroll to Zoom · Right-Click to Pan</span>
         </div>
         <iframe src="viewer_3d.html" class="twin-iframe" title="LEAF GBC1 3D Interactive Chamber Viewer"></iframe>
+      </div>
+    </section>
+
+    <!-- Section 1B: Cinematic 4D Mission Video Theater (Lunar 0.166g vs. Earth 1.0g Ground Control) -->
+    <section id="cinematic-4d-videos" class="section-block">
+      <div class="section-header">
+        <div>
+          <h2>1B. Cinematic 4D Spatiotemporal Mission Videos: Lunar Surface (0.166g) vs. Earth Ground Control (1.0g)</h2>
+          <p>Full-HD 1080p multi-physics 4D visualizations showing water activation of the porous foam, tube manifold airflow &amp; baffle turbulence, moisture boundary-layer gradients, 5-day seedling growth, and end-of-mission RNAlater fixative injection.</p>
+        </div>
+        <div style="display:flex; gap:0.65rem; flex-wrap:wrap;">
+          <button id="btnSyncPlay4D" class="btn-primary" onclick="syncPlay4DVideos()">▶ Play Lunar &amp; 1G Synchronized</button>
+          <a href="videos/comparison_lunar_vs_1g_4d.mp4" download class="btn-outline">⬇ Download Split-Screen MP4</a>
+        </div>
+      </div>
+
+      <!-- Primary Dual-Video Theater: Lunar 0.166g vs. Earth 1.0g Ground Control -->
+      <div class="video-theater-grid">
+        <!-- Video 1: Virtual Lunar Surface Experiment (0.166g) -->
+        <div class="video-card">
+          <div class="video-card-header">
+            <h3>🌙 Virtual Lunar Surface Experiment (0.166g · 1.62 m/s²)</h3>
+            <span class="feature-pill pill-bio">Moon Flight Model</span>
+          </div>
+          <div class="video-player-wrap">
+            <video id="vidLunar4D" controls preload="metadata" poster="videos/poster_lunar_4d.png">
+              <source src="videos/lunar_experiment_4d_cinematic.mp4" type="video/mp4" />
+              Your browser does not support HTML5 MP4 video.
+            </video>
+          </div>
+          <div class="video-card-body">
+            <p style="margin-bottom:0.6rem;">
+              <strong>What was done:</strong> Coupled 4D transient simulation of the LEAF GBC1 hardware on the lunar surface (<em>g</em> = 1.62 m/s²) across all 5 operational stages (T = −0.5 h water fill to T = +120.2 h RNAlater harvest).
+            </p>
+            <p style="margin-bottom:0.6rem;">
+              <strong>What it describes:</strong> Dominance of capillary forces (<em>Bo</em> = 2.0 × 10⁻⁵, <em>h<sub>c</sub></em> = 4,380 mm) inside the 7 mm porous foam blocks, suppressed natural thermal buoyancy (<em>Gr<sub>L</sub></em> reduced 6×), and active pump compensation (0.50 → 0.85 L/min).
+            </p>
+            <p style="margin-bottom:0.75rem;">
+              <strong>What it shows:</strong> (1) Uniform 99.1% capillary foam saturation up to the 35 µm Nytex barrier; (2) thickened moisture boundary layer (<em>&delta;<sub>bl</sub></em> = 5.1 mm) at uncompensated 0.50 L/min swept down to 3.4 mm at 0.85 L/min; (3) piston-like capillary RNAlater front saturating roots in 31.7 s and full chamber in 5.82 min.
+            </p>
+            <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+              <a href="videos/lunar_experiment_4d_cinematic.mp4" download class="btn-outline">⬇ Download Lunar 4D Video (MP4)</a>
+              <a href="videos/poster_lunar_4d.png" target="_blank" class="btn-outline">🖼 View High-Res Poster</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video 2: Virtual 1.0g Earth Ground Control -->
+        <div class="video-card">
+          <div class="video-card-header">
+            <h3>🌍 Virtual 1.0g Earth Ground Control (1.00g · 9.81 m/s²)</h3>
+            <span class="feature-pill pill-aero">Earth 1g Control</span>
+          </div>
+          <div class="video-player-wrap">
+            <video id="vidGround4D" controls preload="metadata" poster="videos/poster_ground_1g_4d.png">
+              <source src="videos/ground_control_1g_4d.mp4" type="video/mp4" />
+              Your browser does not support HTML5 MP4 video.
+            </video>
+          </div>
+          <div class="video-card-body">
+            <p style="margin-bottom:0.6rem;">
+              <strong>What was done:</strong> Identical 5-stage 4D digital twin simulation executed under terrestrial gravity (<em>g</em> = 9.81 m/s²) at baseline 0.50 L/min ventilation to serve as the synchronous ground reference.
+            </p>
+            <p style="margin-bottom:0.6rem;">
+              <strong>What it describes:</strong> Hydrostatic drainage tension inside the 7 mm foam substrate (<em>Bo</em> = 1.2 × 10⁻⁴), buoyancy-assisted natural convection plumes (<em>Gr<sub>L</sub></em> = 6× Lunar), and gravity-flattened liquid injection menisci.
+            </p>
+            <p style="margin-bottom:0.75rem;">
+              <strong>What it shows:</strong> (1) Vertical hydrostatic moisture gradient in the foam (99.2% at floor vs. 91.2% at the Nytex root barrier); (2) upward buoyant vapor plumes thinning the foliar boundary layer (<em>&delta;<sub>bl</sub></em> = 3.5 mm) at 0.50 L/min; (3) gravity-leveled RNAlater flood front rising uniformly across all three chambers while venting headspace gas out Port 2.
+            </p>
+            <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+              <a href="videos/ground_control_1g_4d_cinematic.mp4" download class="btn-outline">⬇ Download 1G Control Video (MP4)</a>
+              <a href="videos/poster_ground_1g_4d.png" target="_blank" class="btn-outline">🖼 View High-Res Poster</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Master Split-Screen Side-by-Side Comparison Video -->
+      <div class="video-card" style="margin-bottom: 1.75rem;">
+        <div class="video-card-header">
+          <h3>⚖️ Synchronized Side-by-Side 4D Comparison: Lunar Surface (0.166g) vs. Earth Ground Control (1.0g)</h3>
+          <span class="feature-pill pill-ops">Frame-Locked Dual Telemetry</span>
+        </div>
+        <div class="video-player-wrap">
+          <video controls preload="metadata" poster="videos/poster_comparison_4d.png">
+            <source src="videos/comparison_lunar_vs_1g_4d.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <div class="video-card-body" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+          <div style="max-width: 920px;">
+            <strong>Direct Gravity-Regime Divergence:</strong> Frame-locked 1080p comparison contrasting capillary vs. hydrostatic water retention in the 3-part porous foam, baffle wake eddies, boundary-layer moisture trapping under reduced buoyancy (0.166g) vs. buoyant plume stripping (1.0g), and end-of-mission RNAlater fixation.
+          </div>
+          <a href="videos/comparison_lunar_vs_1g_4d.mp4" download class="btn-primary">⬇ Download Master Comparison MP4</a>
+        </div>
+      </div>
+
+      <!-- 4-Stage Modular Highlight Video Gallery -->
+      <h3 style="font-size:1.15rem; font-weight:700; color:var(--fg); margin-bottom:0.5rem;">Stage-by-Stage 4D Experimental Breakdown</h3>
+      <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1rem;">Individual high-resolution clips isolating each critical physical phase of the 5-day LEAF GBC1 experiment:</p>
+      <div class="stage-video-grid">
+        <!-- Stage 1 -->
+        <div class="video-card">
+          <div class="video-card-header">
+            <h3 style="font-size:0.95rem;">Stage I: Water Injection &amp; Foam Activation</h3>
+            <span class="feature-pill pill-aero">T = −0.5 to 0.0 h</span>
+          </div>
+          <div class="video-player-wrap">
+            <video controls preload="metadata">
+              <source src="videos/stage1_water_foam_activation.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="video-card-body">
+            <strong>7.39 mL Port 3 Injection:</strong> Water enters via the Port 3 dipping nozzle (<em>Y</em> = 9.5 mm) in Chamber 3, wicking across the lower aeration channels into Chambers 2 and 1 up to the 35 µm Nytex mesh barrier (8.04 kPa bubble point).
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="video-card">
+          <div class="video-card-header">
+            <h3 style="font-size:0.95rem;">Stage II: Tube Airflow, Baffles &amp; Moisture</h3>
+            <span class="feature-pill pill-bio">T = 0 to 24 h</span>
+          </div>
+          <div class="video-player-wrap">
+            <video controls preload="metadata">
+              <source src="videos/stage2_airflow_turbulence_moisture.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="video-card-body">
+            <strong>Pump &amp; Baffle Eddies:</strong> Air enters Port 1 tube, generates wake turbulence eddies behind the <em>Z</em> = ±8.5 mm baffles, and sweeps the humid boundary layer above the Nytex mesh (0.50 → 0.85 L/min compensation).
+          </div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="video-card">
+          <div class="video-card-header">
+            <h3 style="font-size:0.95rem;">Stage III: 5-Day Germination &amp; Growth</h3>
+            <span class="feature-pill pill-bio">T = 24 to 120 h</span>
+          </div>
+          <div class="video-player-wrap">
+            <video controls preload="metadata">
+              <source src="videos/stage3_5day_growth_ontogeny.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="video-card-body">
+            <strong>164-Seedling Canopy Ontogeny:</strong> Seeds germinate within 24 h and expand into 32 tall <em>B. rapa</em> seedlings (11.3 mm) in Chambers 1 &amp; 3 and 100 compact <em>Arabidopsis</em> rosettes (4.8 mm) in Chamber 2, inducing the &ldquo;Dip-and-Converge&rdquo; jet.
+          </div>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="video-card">
+          <div class="video-card-header">
+            <h3 style="font-size:0.95rem;">Stage IV: RNAlater Harvest Injection</h3>
+            <span class="feature-pill pill-ops">T = 120.0 to 120.2 h</span>
+          </div>
+          <div class="video-player-wrap">
+            <video controls preload="metadata">
+              <source src="videos/stage4_rnalater_harvest_injection.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="video-card-body">
+            <strong>Bottom-Up Fixative Perfusion:</strong> Viscous RNAlater (<em>&mu;</em> = 3.2 mPa·s) is injected at 10 mL/min via Port 3 (<em>Y</em> = 9.5 mm), saturating the root zone in 31.7 s and flooding the 64.7 mL headspace in 5.82 min while venting air out Port 2.
+          </div>
+        </div>
       </div>
     </section>
 
@@ -2766,6 +3001,26 @@
       document.getElementById('lightbox-img').src = src;
       document.getElementById('lightbox-caption').textContent = title;
       dlg.showModal();
+    }
+
+    // Synchronized Playback of Lunar 0.166g and Earth 1.0g 4D Videos
+    function syncPlay4DVideos() {
+      const vLunar = document.getElementById('vidLunar4D');
+      const vGround = document.getElementById('vidGround4D');
+      const btn = document.getElementById('btnSyncPlay4D');
+      if (!vLunar || !vGround) return;
+      if (!vLunar.paused || !vGround.paused) {
+        vLunar.pause();
+        vGround.pause();
+        if (btn) btn.textContent = '▶ Play Lunar & 1G Synchronized';
+      } else {
+        if (vLunar.ended || vGround.ended || Math.abs(vLunar.currentTime - vGround.currentTime) > 0.3) {
+          vLunar.currentTime = 0;
+          vGround.currentTime = 0;
+        }
+        Promise.all([vLunar.play(), vGround.play()]).catch(() => {});
+        if (btn) btn.textContent = '⏸ Pause Synchronized 4D Playback';
+      }
     }
   </script>
 </body>

@@ -971,6 +971,7 @@
             <li><a href="#res-model-leaf">3.9 Model Lunar LEAF 5-Day (Figs 12–16)</a></li>
             <li><a href="#res-asme-gci">3.10 ASME V&amp;V 20 &amp; Hotspots (Fig 17)</a></li>
             <li><a href="#res-benchmark">3.11 Flight Hardware Radar (Fig 18)</a></li>
+            <li><a href="#res-4d-videos">3.12 4D Cinematic Mission Videos</a></li>
           </ul>
         </li>
         <li><a href="#sec-flight-rules">4. Master Flight Operating Rules</a></li>
@@ -1828,6 +1829,91 @@ abla^2 	heta = 1\)) and verified global mass conservation via the Sandberg integ
                 <ul>
                   <li>Demonstrates that passive dishes (BRIC, CARA) suffer rapid carbon depletion (\(7	ext{--}42	ext{ min}\)) and severe fogging due to zero forced convection.</li>
                   <li>LEAF GBC1 delivers <strong>\(554.5	ext{ ACH}\)</strong>, maintaining continuous &gt;99.5% ambient \(	ext{CO}_2\) replenishment, sub-second autonomous fixation (\(1.20	ext{ s}\) saturation), and active fogging prevention.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subsection 3.12: 4D Spatiotemporal Mission Modeling & Cinematic Video Suite -->
+        <div id="res-4d-videos" style="margin-top: 2.5rem;">
+          <h3 class="subsection-heading">3.12 4D Spatiotemporal Mission Modeling &amp; Cinematic Video Suite (Lunar 0.166g vs. Earth 1.0g Ground Control)</h3>
+          <p>
+            To synthesize the full multi-physics lifecycle of the 5-day LEAF GBC1 experiment, we coupled the transient 3D Navier&ndash;Stokes and Brinkman&ndash;Darcy solver with Richards capillary imbibition, sigmoidal 164-seedling developmental ontogeny, and bottom-up RNAlater displacement into a continuous <strong>4D Spatiotemporal Digital Twin</strong> (<a href="sim/generate_4d_cinematic_videos.py"><code>sim/generate_4d_cinematic_videos.py</code></a>). Two primary Full-HD (1080p) cinematic videos were rendered to compare the <strong>Virtual Lunar Surface Experiment (0.166g, 1.62 m/s²)</strong> against the <strong>Virtual 1.0g Earth Ground Control (9.81 m/s²)</strong> across all five experimental stages:
+          </p>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(360px, 1fr)); gap:1.25rem; margin:1.25rem 0;">
+            <figure class="figure-showcase" style="margin:0;">
+              <div style="background:#060b16; border-radius:8px; overflow:hidden; border:1px solid var(--line);">
+                <video controls preload="metadata" poster="videos/poster_lunar_4d.png" style="width:100%; display:block;">
+                  <source src="videos/lunar_experiment_4d_cinematic.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <figcaption>
+                <strong class="fig-num">Video 1 (Lunar 0.166g):</strong> Virtual Lunar Surface Experiment (g = 1.62 m/s²) showing uniform capillary foam activation (99.1% saturation), boundary-layer moisture trapping at 0.50 L/min vs. compensatory 0.85 L/min recovery, 5-day seedling growth, and piston-like RNAlater harvest fixation.
+                <div class="fig-links">
+                  <a href="videos/lunar_experiment_4d_cinematic.mp4" download>Download Lunar MP4 ↗</a> &middot;
+                  <a href="videos/poster_lunar_4d.png" target="_blank">Poster PNG ↗</a>
+                </div>
+              </figcaption>
+            </figure>
+
+            <figure class="figure-showcase" style="margin:0;">
+              <div style="background:#060b16; border-radius:8px; overflow:hidden; border:1px solid var(--line);">
+                <video controls preload="metadata" poster="videos/poster_ground_1g_4d.png" style="width:100%; display:block;">
+                  <source src="videos/ground_control_1g_4d_cinematic.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <figcaption>
+                <strong class="fig-num">Video 2 (Earth 1.0g Control):</strong> Virtual 1.0g Earth Ground Control (g = 9.81 m/s²) illustrating hydrostatic vertical drainage in the 7 mm foam (91.2% top vs. 99.2% floor), buoyant convective moisture plumes, and gravity-leveled RNAlater perfusion.
+                <div class="fig-links">
+                  <a href="videos/ground_control_1g_4d_cinematic.mp4" download>Download 1G Control MP4 ↗</a> &middot;
+                  <a href="videos/poster_ground_1g_4d.png" target="_blank">Poster PNG ↗</a>
+                </div>
+              </figcaption>
+            </figure>
+          </div>
+
+          <figure class="figure-showcase">
+            <div style="background:#060b16; border-radius:8px; overflow:hidden; border:1px solid var(--line);">
+              <video controls preload="metadata" poster="videos/poster_comparison_4d.png" style="width:100%; display:block;">
+                <source src="videos/comparison_lunar_vs_1g_4d.mp4" type="video/mp4" />
+              </video>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Video 3 (Synchronized Split-Screen):</strong> Frame-locked side-by-side 4D comparison between the Lunar Surface (0.166g) and Earth Ground Control (1.0g) across water fill, airflow turbulence, 5-day ontogeny, and RNAlater fixation.
+              <div class="fig-links">
+                <a href="videos/comparison_lunar_vs_1g_4d.mp4" download>Download Split-Screen MP4 ↗</a> &middot;
+                <a href="videos/stage1_water_foam_activation.mp4" download>Stage I (Water Fill) ↗</a> &middot;
+                <a href="videos/stage2_airflow_turbulence_moisture.mp4" download>Stage II (Air &amp; Turb) ↗</a> &middot;
+                <a href="videos/stage3_5day_growth_ontogeny.mp4" download>Stage III (5d Growth) ↗</a> &middot;
+                <a href="videos/stage4_rnalater_harvest_injection.mp4" download>Stage IV (RNAlater) ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <!-- 3-Pillar Card -->
+          <div class="pillar-card">
+            <div class="pillar-header">3-Pillar Research Assessment &middot; 4D Spatiotemporal Mission Modeling (Lunar 0.166g vs. Earth 1.0g)</div>
+            <div class="pillar-row pillar-modeled">
+              <div class="pillar-title">🎯 What Was Modeled</div>
+              <div class="pillar-content">
+                Time-resolved 4D (X, Y, Z, t) dynamics of (1) 7.39 mL water injection via the Port 3 dipping nozzle into the 3-part porous foam and 35 µm Nytex root barrier, (2) external tube manifold flow, baffle wake turbulence eddies, and headspace moisture boundary layers, (3) 5-day seed germination and 164-seedling canopy expansion, and (4) end-of-mission 10 mL/min RNAlater fixative flood and Port 2 gas venting.
+              </div>
+            </div>
+            <div class="pillar-row pillar-done">
+              <div class="pillar-title">⚙️ What Was Done</div>
+              <div class="pillar-content">
+                Integrated the 4-stage spatiotemporal PDE solutions across 360 Full-HD (1920 × 1080) frames for both Lunar gravity (0.166g) and Earth gravity (1.0g) alongside an upgraded interactive 4D WebGL mission sequencer in <a href="viewer_3d.html"><code>viewer_3d.html</code></a>.
+              </div>
+            </div>
+            <div class="pillar-row pillar-shows">
+              <div class="pillar-title">📊 What It Shows &amp; Describes</div>
+              <div class="pillar-content">
+                <ul>
+                  <li><strong>Capillary vs. Hydrostatic Foam Hydration:</strong> In 0.166g, Jurin capillary rise (4,380 mm) maintains 99.1% saturation right up to the Nytex seedbed, whereas 1.0g hydrostatic tension creates an 8% top-to-bottom saturation gradient (91.2% top).</li>
+                  <li><strong>Turbulence &amp; Moisture Boundary Layers:</strong> Visualizes how baffle wake eddies at Z = ±8.5 mm and compensatory ventilation (0.85 L/min) thin the lunar foliar moisture boundary layer from 5.1 mm down to 3.4 mm, matching 1.0g buoyant plume transport.</li>
+                  <li><strong>Bubble-Free RNAlater Harvest Fixation:</strong> Demonstrates bottom-up Port 3 injection (Y = 9.5 mm) saturating the root zone in 31.7 s and completely immersing all 164 seedlings in 5.82 min while venting displaced air through central Port 2.</li>
                 </ul>
               </div>
             </div>

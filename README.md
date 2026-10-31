@@ -12,8 +12,13 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 ## Quick Links
 
 - **Interactive Publication Reader (CoSE Theme & 20 Figures)**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/manuscript.html`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/manuscript.html) ([`manuscript.html`](./manuscript.html))
-- **Live GitHub Pages Research Portal**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/) ([`index.html`](./index.html))
-- **Live Interactive 3D Chamber Digital Twin & CFD Simulator**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html) ([`viewer_3d.html`](./viewer_3d.html))
+- **Live GitHub Pages Research Portal (with 4D Video Theater)**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/) ([`index.html`](./index.html))
+- **Live Interactive 4D Chamber Digital Twin & CFD Simulator**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html) ([`viewer_3d.html`](./viewer_3d.html))
+- **4D Spatiotemporal Cinematic Videos (`videos/`)**:
+  - **Virtual Lunar Surface Experiment (0.166g)**: [`videos/lunar_experiment_4d_cinematic.mp4`](./videos/lunar_experiment_4d_cinematic.mp4) ([Poster](./videos/poster_lunar_4d.png))
+  - **Virtual 1.0g Earth Ground Control (1.0g)**: [`videos/ground_control_1g_4d_cinematic.mp4`](./videos/ground_control_1g_4d_cinematic.mp4) ([Poster](./videos/poster_ground_1g_4d.png))
+  - **Synchronized Split-Screen Comparison (0.166g vs. 1.0g)**: [`videos/comparison_lunar_vs_1g_4d.mp4`](./videos/comparison_lunar_vs_1g_4d.mp4) ([Poster](./videos/poster_comparison_4d.png))
+  - **Stage Clips**: [`stage1_water_foam_activation.mp4`](./videos/stage1_water_foam_activation.mp4) · [`stage2_airflow_turbulence_moisture.mp4`](./videos/stage2_airflow_turbulence_moisture.mp4) · [`stage3_5day_growth_ontogeny.mp4`](./videos/stage3_5day_growth_ontogeny.mp4) · [`stage4_rnalater_harvest_injection.mp4`](./videos/stage4_rnalater_harvest_injection.mp4)
 - **Full Technical Manuscript (Markdown Narrative & 3-Pillar Breakdown)**: [`MANUSCRIPT_LEAF_GBC1_CFD.md`](./MANUSCRIPT_LEAF_GBC1_CFD.md)
 - **Zenodo Open Science Dataset Package**: [`zenodo/`](./zenodo/) ([`datapackage.json`](./zenodo/datapackage.json) · [`README.md`](./zenodo/README.md))
 - **Orthographic Blueprint (ABAI QC Annotated)**: [`figures/fig_orthographic_projection_annotated.png`](./figures/fig_orthographic_projection_annotated.png) | [`.svg`](./figures/fig_orthographic_projection_annotated.svg)
