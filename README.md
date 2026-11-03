@@ -1,5 +1,7 @@
 # LEAF GBC1 Lunar Plant Growth Chamber — 3D CFD & Multi-Species Biophysics Model
 
+[![npj Microgravity Paper](https://img.shields.io/badge/npj_Microgravity-Preprint_PDF_(24pp)-c0392b?style=for-the-badge)](./leaf_gbc1_npj_microgravity.pdf)
+[![LaTeX Source Package](https://img.shields.io/badge/LaTeX_Package-Overleaf_Ready_(ZIP)-27ae60?style=for-the-badge)](./leaf_gbc1_latex_package.zip)
 [![3D Digital Twin](https://img.shields.io/badge/Interactive-3D_Digital_Twin-27ae60?style=for-the-badge)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html)
 [![GitHub Pages Portal](https://img.shields.io/badge/Live_Portal-GitHub_Pages-2980b9?style=for-the-badge)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/)
 [![Narrative Manuscript](https://img.shields.io/badge/Interactive-Manuscript_Reader-3B6EA5?style=for-the-badge)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/manuscript.html)
@@ -11,6 +13,9 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 
 ## Quick Links
 
+- **Production Manuscript PDF (24 pages, npj Microgravity format)**: [**`leaf_gbc1_npj_microgravity.pdf`**](./leaf_gbc1_npj_microgravity.pdf)
+- **Overleaf & LaTeX Source Package (ZIP, 20 MB)**: [**`leaf_gbc1_latex_package.zip`**](./leaf_gbc1_latex_package.zip)
+- **Standalone LaTeX Manuscript Directory**: [`latex/`](./latex/) ([`Makefile`](./latex/Makefile) · [`compile.sh`](./latex/compile.sh))
 - **Interactive Publication Reader (CoSE Theme & 20 Figures)**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/manuscript.html`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/manuscript.html) ([`manuscript.html`](./manuscript.html))
 - **Live GitHub Pages Research Portal (with 4D Video Theater)**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/) ([`index.html`](./index.html))
 - **Live Interactive 4D Chamber Digital Twin & CFD Simulator**: [**`https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html`**](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/viewer_3d.html) ([`viewer_3d.html`](./viewer_3d.html))
@@ -207,4 +212,33 @@ python3 -m venv .venv
 # 6. Package and Verify Zenodo Open-Science Dataset Archive
 .venv/bin/python sim/export_zenodo_dataset.py
 ```
+
+---
+
+## 7. npj Microgravity LaTeX Manuscript & Overleaf Package
+
+The full manuscript is formatted in the official Springer Nature unified class (`sn-jnl.cls`) with `[pdflatex,sn-nature]` adhering to *npj Microgravity* submission guidelines.
+
+### Files in `latex/`
+- `leaf_gbc1_npj_microgravity.tex` — Main LaTeX manuscript.
+- `main.tex` — Symlink to `leaf_gbc1_npj_microgravity.tex` for Overleaf autodetection.
+- `references.bib` / `sn-bibliography.bib` — Curated BibTeX database with DOIs.
+- `sn-jnl.cls`, `sn-nature.bst`, `sn-basic.bst`, `sn-mathphys.bst` — Official class and citation styles.
+- `figures/` — Directory with all 25 publication figures and 4D mission posters.
+- `Makefile` & `compile.sh` — Automated build scripts.
+- `leaf_gbc1_npj_microgravity.pdf` — 24-page compiled publication PDF.
+
+### Local Compilation
+```bash
+cd latex
+./compile.sh
+# or using make
+make
+```
+
+### Import into Overleaf
+1. Download `leaf_gbc1_latex_package.zip` from this repository or from the GitHub Pages portal.
+2. In Overleaf, select **New Project** $\to$ **Upload Project**.
+3. Choose `leaf_gbc1_latex_package.zip`. Overleaf will automatically detect `main.tex` and compile using pdfLaTeX.
+
 
