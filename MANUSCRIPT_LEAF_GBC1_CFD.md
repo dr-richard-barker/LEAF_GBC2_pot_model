@@ -1,6 +1,6 @@
 # Computational Fluid Dynamics, Multi-Species Canopy Gas Exchange, and Harvest Fixation Architecture of the LEAF GBC1 Lunar Plant Growth Chamber
 
-**Authors:** Richard Barker et al.  
+**Author:** Richard Barker (Department of Botany and Plant Pathology, Purdue University, West Lafayette, IN 47907, USA; `barkerrj@purdue.edu`)  
 **Target Hardware:** LEAF Growth Chamber 1 (`M09024F-MDL-5` Pot Body & `M09025F-MDL-2` Lid Assembly)  
 **Interactive Digital Twin & Research Portal:** [https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/)  
 **Interactive Publication Reader:** [https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/manuscript.html](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/manuscript.html)  
