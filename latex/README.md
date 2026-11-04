@@ -3,7 +3,7 @@
 This directory contains the publication-ready LaTeX source package for the article:
 
 > **Computational fluid dynamics, multi-species canopy gas exchange, and harvest fixation architecture of the LEAF GBC1 lunar plant growth chamber**  
-> *Richard Barker (Department of Botany and Plant Pathology, Purdue University, barkerrj@purdue.edu)*  
+> *Richard Barker (Department of Agricultural and Biological Engineering, Purdue University, barkerrj@purdue.edu)*  
 > Target Journal: **npj Microgravity** (Nature Portfolio / Springer Nature)
 
 ---
