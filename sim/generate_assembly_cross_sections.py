@@ -75,6 +75,30 @@ def generate_assembly_cross_sections():
     ax1.add_patch(sub1)
     ax1.add_patch(sub2)
     ax1.add_patch(sub3)
+
+    # Solid acrylic partition baffles (Dividers 1 and 2)
+    div1 = patches.Rectangle((-9.5, 7.62), 2.0, 16.38, facecolor='#cbd5e1', edgecolor='#334155', lw=1.4, zorder=5)
+    div2 = patches.Rectangle((7.5, 7.62), 2.0, 16.38, facecolor='#cbd5e1', edgecolor='#334155', lw=1.4, zorder=5)
+    ax1.add_patch(div1)
+    ax1.add_patch(div2)
+    
+    # Divider badges
+    ax1.text(-8.5, 24.8, 'Divider 1', ha='center', va='bottom', fontsize=7.0, fontweight='bold', color='#334155',
+             bbox=dict(boxstyle='round,pad=0.15', facecolor='#f1f5f9', edgecolor='#64748b', lw=0.8))
+    ax1.text(8.5, 24.8, 'Divider 2', ha='center', va='bottom', fontsize=7.0, fontweight='bold', color='#334155',
+             bbox=dict(boxstyle='round,pad=0.15', facecolor='#f1f5f9', edgecolor='#64748b', lw=0.8))
+
+    # Flow arrows: Air is PUSHED in, skims Chamber 1 canopy, deflects UPWARDS over Divider 1 into upper plenum
+    ax1.annotate('', xy=(-12.0, 22.0), xytext=(-26.0, 22.0),
+                 arrowprops=dict(arrowstyle='->', color='#0284c7', lw=2.0, ls='-'))
+    # Upward cresting arrow over Divider 1 lip into upper plenum
+    ax1.annotate('', xy=(-3.0, 28.5), xytext=(-11.0, 22.0),
+                 arrowprops=dict(arrowstyle='->', color='#0284c7', lw=2.0, ls='-', connectionstyle="arc3,rad=-.2"))
+    # Exhaust flow rising toward Port 2
+    ax1.annotate('', xy=(0.0, 33.0), xytext=(-3.0, 28.5),
+                 arrowprops=dict(arrowstyle='->', color='#6d28d9', lw=2.0, ls='-'))
+    ax1.text(-19.0, 23.5, 'Push Flow Skim', ha='center', fontsize=7.0, color='#0284c7', fontweight='bold')
+    ax1.text(-7.0, 30.5, 'Cresting Over Baffle', ha='center', fontsize=7.0, color='#0284c7', fontweight='bold')
     
     # Lower drainage wells (Y = 0 to 7.62 mm)
     drain = patches.Rectangle((-29.5, 0.0), 59.0, 7.62, facecolor='#eaeded', alpha=0.45, edgecolor='#95a5a6', linestyle=':')
@@ -159,11 +183,11 @@ def generate_assembly_cross_sections():
                  bbox=dict(boxstyle='round,pad=0.25', facecolor='#e8f8f5', edgecolor='#16a085', lw=1.0),
                  arrowprops=dict(arrowstyle='->', color='#1f618d', lw=1.5))
                  
-    # Upper perimeter manifold channelling indication
-    ax2.annotate('', xy=(15.0, 30.5), xytext=(-15.0, 30.5),
-                 arrowprops=dict(arrowstyle='->', color='#e67e22', lw=2.2, ls='--'))
-    ax2.text(0.0, 31.8, 'Perimeter Air Distribution Manifold', ha='center', va='bottom',
-             fontsize=7.5, color='#d35400', fontweight='bold', style='italic',
+    # Upper perimeter manifold channelling indication (above baffle ribs)
+    ax2.annotate('', xy=(15.0, 31.0), xytext=(-15.0, 31.0),
+                 arrowprops=dict(arrowstyle='->', color='#e67e22', lw=2.0, ls='--', connectionstyle="arc3,rad=-.1"))
+    ax2.text(0.0, 32.6, 'Perimeter Air Distribution Manifold (Plenum Height Y > 24 mm)', ha='center', va='bottom',
+             fontsize=7.2, color='#d35400', fontweight='bold', style='italic',
              bbox=dict(boxstyle='round,pad=0.2', facecolor='#fef9e7', edgecolor='#f39c12', lw=0.8))
 
     ax2.set_xlim([-37, 37])

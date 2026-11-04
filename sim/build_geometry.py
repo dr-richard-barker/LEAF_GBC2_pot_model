@@ -113,6 +113,17 @@ def build_grid(pitch=0.001, save_path='geometry/gbc1_grid.npz'): # 1.0 mm pitch 
     grid[interior] = 1 # Air headspace
     grid[porous_mask] = 2 # Porous substrate (3 partitioned blocks)
 
+    # Strictly enforce solid internal divider walls separating Chamber 1-2 and Chamber 2-3
+    # Divider 1: Z in [-9.5 mm, -7.5 mm], from pot base shelf Y = 7.62 mm up to baffle lip & guide ribs Y = 24.0 mm
+    # Divider 2: Z in [+7.5 mm, +9.5 mm], from pot base shelf Y = 7.62 mm up to baffle lip & guide ribs Y = 24.0 mm
+    # These solid acrylic barriers prevent any horizontal air passage between compartments below the upper plenum.
+    k_div1 = (z_coords >= -0.0095) & (z_coords <= -0.0075)
+    k_div2 = (z_coords >= +0.0075) & (z_coords <= +0.0095)
+    j_baffle_lip = (y_coords >= 0.00762) & (y_coords <= 0.0240)
+    i_baffle_span = (x_coords >= -0.0145) & (x_coords <= 0.0240)
+    solid_divider_mask = (k_div1 | k_div2)[None, None, :] & j_baffle_lip[None, :, None] & i_baffle_span[:, None, None]
+    grid[solid_divider_mask] = 0 # 0 = SOLID_WALL (Dirichlet no-slip and no-penetration)
+
     # Tag Ports
     # Tag Inlet (Port 1: 3) and Outlet (Port 2: 4)
     rv_port = int(np.ceil(r_port / pitch))

@@ -1282,12 +1282,12 @@ def generate_manuscript_html():
           </figure>
 
           <figure class="pub-figure" id="fig-2">
-            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig2_velocity_fields_earth_vs_lunar.png', 'Figure 2: 2D cutaway contour fields comparing velocity streamlines, CO2 drawdown, and moisture under 1g vs 0.166g.')">
-              <img src="figures/fig2_velocity_fields_earth_vs_lunar.png" alt="Figure 2: Velocity, CO2, and H2O Fields" loading="lazy" />
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig2_velocity_fields_earth_vs_lunar.png', 'Figure 2: 2D longitudinal cutaway vector fields in PUSH MODE (forced inlet at Port 1 Z = -21.6 mm -> exhaust at Port 2 Z = 0.0 mm). Solid acrylic partition baffles (gray blocks at Z = ±8.5 mm) strictly block horizontal air passage; flow deflects upward over the baffle lip with zero penetration through solid divider walls.')">
+              <img src="figures/fig2_velocity_fields_earth_vs_lunar.png" alt="Figure 2: Velocity Vector Fields in Push Mode (Earth vs Lunar)" loading="lazy" />
               <div class="zoom-hint">🔍 Click to zoom</div>
             </div>
             <figcaption>
-              <strong class="fig-num">Figure 2:</strong> 2D cutaway contour fields comparing velocity streamlines, \(\text{CO}_2\) drawdown, and water vapor accumulation under 1g Earth versus 0.166g Lunar gravity.
+              <strong class="fig-num">Figure 2:</strong> 2D longitudinal velocity vector fields in <strong>PUSH MODE</strong> comparing 1g Earth control against 0.166g Lunar hypogravity. Pushed inlet air from Port 1 (\(Z = -21.6\text{ mm}\)) sweeps across Chamber 1 foliage, hits solid Divider 1, deflects upward over the baffle lip (\(Y = 17.3\text{--}24.0\text{ mm}\)) into the open upper plenum, and exits Port 2. Quiver arrows strictly respect physical solid boundaries with zero penetration through acrylic dividers.
               <div class="fig-links">
                 <a href="figures/fig2_velocity_fields_earth_vs_lunar.svg" target="_blank">View Vector SVG ↗</a> &middot;
                 <a href="figures/fig2_velocity_fields_earth_vs_lunar.png" target="_blank">High-Res PNG ↗</a>
@@ -1382,6 +1382,21 @@ def generate_manuscript_html():
                 <a href="figures/fig6_predicted_hormone_carbon_phenotypes.svg" target="_blank">View Vector SVG ↗</a> &middot;
                 <a href="figures/fig6_predicted_hormone_carbon_phenotypes.png" target="_blank">High-Res PNG ↗</a> &middot;
                 <a href="results/tables/gbc1_asymmetric_canopy_species_results.tsv" target="_blank">Species Fluxes TSV ↗</a>
+              </div>
+            </figcaption>
+          </figure>
+
+          <figure class="pub-figure" id="fig-19">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig19_lunar_microclimates_by_section.png', 'Figure 19: Section-Specific Biophysical Microclimate Predictions under Lunar Gravity (0.166g) vs Earth (1g) across Chambers 1, 2, and 3 in Push Mode.')">
+              <img src="figures/fig19_lunar_microclimates_by_section.png" alt="Figure 19: Section-Specific Lunar Microclimate Predictions" loading="lazy" />
+              <div class="zoom-hint">🔍 Click to zoom</div>
+            </div>
+            <figcaption>
+              <strong class="fig-num">Figure 19:</strong> Section-specific biophysical microclimate predictions under Lunar gravity (\(0.166\,g\)) versus Earth (\(1\,g\)) in <strong>PUSH MODE</strong>.
+              Shows upward cresting flow over solid dividers, \(+140\%\) foliar boundary layer expansion over the Chamber 2 <em>Arabidopsis</em> rosette lawn (\(\delta_{\text{bl}} \approx 2.36\text{ mm}\)), localized humidity entrapment (\(RH \approx 80.7\%\), \(VPD \approx 0.51\text{ kPa}\)), foliar overheating (\(\Delta T_{\text{leaf}} \approx +4.24\text{ K}\)), and predicted transcriptomic upregulation of hypoxia (<em>ADH1</em>, \(3.25\times\)), heat shock (<em>HSP70</em>, \(2.15\times\)), and ethylene response factors (<em>ACO2</em>, \(2.45\times\)). Chamber 3 displays asymmetric vegetative growth delay relative to windward Chamber 1.
+              <div class="fig-links">
+                <a href="figures/fig19_lunar_microclimates_by_section.svg" target="_blank">View Vector SVG ↗</a> &middot;
+                <a href="figures/fig19_lunar_microclimates_by_section.png" target="_blank">High-Res PNG ↗</a>
               </div>
             </figcaption>
           </figure>

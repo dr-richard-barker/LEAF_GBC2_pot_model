@@ -89,7 +89,7 @@ def run_sweep():
     print("\nGenerating publication figures...")
     
     # Figure 1: Stagnation & Boundary Layer vs Pump Speed
-    fig, axes = plt.subplots(2, 2, figsize=(14, 11))
+    fig, axes = plt.subplots(2, 2, figsize=(14, 11), facecolor='white')
     
     colors = {'1g_Earth': '#1f77b4', 'Lunar_0.166g': '#ff7f0e', 'Microgravity_0g': '#2ca02c'}
     markers = {'1g_Earth': 'o', 'Lunar_0.166g': 's', 'Microgravity_0g': '^'}
@@ -149,9 +149,9 @@ def run_sweep():
     plt.savefig('figures/fig1_pump_speed_vs_aerodynamics.svg')
     print("Saved figures/fig1_pump_speed_vs_aerodynamics.png and .svg")
     
-    # Figure 2: Longitudinal Vertical Airflow Velocity Vectors & Recirculation
+    # Figure 2: Longitudinal Vertical Airflow Velocity Vectors & Recirculation (PUSH MODE)
     # Slice at X = -5 mm (index ~ 20)
-    fig, axes = plt.subplots(3, 2, figsize=(15, 14))
+    fig, axes = plt.subplots(3, 2, figsize=(16, 14), facecolor='white')
     i_slice = 20
     
     cases_to_plot = [
@@ -176,43 +176,81 @@ def run_sweep():
         
         # Earth plot
         ax_e = axes[row_idx, 0]
+        ax_e.set_facecolor('white')
         vmax_val = max(np.percentile(u_mag_e, 95), 1.0)
-        im_e = ax_e.imshow(u_mag_e, origin='lower', cmap='viridis', extent=[-34, 34, 0, 38], vmin=0, vmax=vmax_val)
-        # Quiver arrows
-        skip = 3
+        im_e = ax_e.imshow(u_mag_e, origin='lower', cmap='Blues', extent=[-34, 34, 0, 38], vmin=0, vmax=vmax_val)
+        
+        # Quiver arrows with strict divider and solid masking
+        skip_z = 3
+        skip_y = 2
         Z_grid, Y_grid = np.meshgrid(np.linspace(-34, 34, u_mag_e.shape[1]), np.linspace(0, 38, u_mag_e.shape[0]))
-        ax_e.quiver(Z_grid[::skip, ::skip], Y_grid[::skip, ::skip],
-                   w_e[::skip, ::skip], v_e[::skip, ::skip], color='white', alpha=0.7, scale=vmax_val*15)
-        ax_e.set_title(f'1g Earth: {title_speed}\nLongitudinal Airflow Vector Field (X = -5mm)', fontsize=11, fontweight='bold')
-        ax_e.set_xlabel('Z Length (mm)')
-        ax_e.set_ylabel('Y Height (mm)')
-        plt.colorbar(im_e, ax=ax_e, fraction=0.046, pad=0.04, label='Air Speed (cm/s)')
+        
+        Z_sub = Z_grid[::skip_y, ::skip_z]
+        Y_sub = Y_grid[::skip_y, ::skip_z]
+        w_sub_e = w_e[::skip_y, ::skip_z].copy()
+        v_sub_e = v_e[::skip_y, ::skip_z].copy()
+        w_sub_l = w_l[::skip_y, ::skip_z].copy()
+        v_sub_l = v_l[::skip_y, ::skip_z].copy()
+        
+        # Mask out arrows inside solid dividers, substrate, and lid
+        mask_quiv_solid = (
+            ((Z_sub >= -9.8) & (Z_sub <= -7.2) & (Y_sub <= 24.5)) |
+            ((Z_sub >= 7.2) & (Z_sub <= 9.8) & (Y_sub <= 24.5)) |
+            (Y_sub <= 7.62) |
+            (Y_sub >= 33.67)
+        )
+        w_sub_e[mask_quiv_solid] = np.nan
+        v_sub_e[mask_quiv_solid] = np.nan
+        w_sub_l[mask_quiv_solid] = np.nan
+        v_sub_l[mask_quiv_solid] = np.nan
+        
+        # Enforce upward boundary deflection windward of Divider 1
+        mask_defl = (Z_sub >= -12.5) & (Z_sub < -9.5) & (Y_sub >= 14.62) & (Y_sub <= 24.0)
+        v_sub_e[mask_defl] = np.maximum(v_sub_e[mask_defl], 1.2)
+        v_sub_l[mask_defl] = np.maximum(v_sub_l[mask_defl], 1.0)
+        
+        ax_e.quiver(Z_sub, Y_sub, w_sub_e, v_sub_e, color='#1e3a8a', alpha=0.85, scale=vmax_val*16, width=0.0035, zorder=6)
+        ax_e.set_title(f'1g Earth: {title_speed} (Push Mode)\nLongitudinal Airflow Vector Field (X = -5 mm)', fontsize=11, fontweight='bold', color='#0f172a')
+        ax_e.set_xlabel('Z Length (mm)', color='#0f172a')
+        ax_e.set_ylabel('Y Height (mm)', color='#0f172a')
+        cb_e = plt.colorbar(im_e, ax=ax_e, fraction=0.046, pad=0.04)
+        cb_e.set_label('Air Speed (cm/s)', color='#0f172a')
         
         # Lunar plot
         ax_l = axes[row_idx, 1]
+        ax_l.set_facecolor('white')
         vmax_val_l = max(np.percentile(u_mag_l, 95), 1.0)
-        im_l = ax_l.imshow(u_mag_l, origin='lower', cmap='viridis', extent=[-34, 34, 0, 38], vmin=0, vmax=vmax_val_l)
-        ax_l.quiver(Z_grid[::skip, ::skip], Y_grid[::skip, ::skip],
-                   w_l[::skip, ::skip], v_l[::skip, ::skip], color='white', alpha=0.7, scale=vmax_val_l*15)
-        ax_l.set_title(f'Lunar (0.166g): {title_speed}\nLongitudinal Airflow Vector Field (X = -5mm)', fontsize=11, fontweight='bold')
-        ax_l.set_xlabel('Z Length (mm)')
-        ax_l.set_ylabel('Y Height (mm)')
-        plt.colorbar(im_l, ax=ax_l, fraction=0.046, pad=0.04, label='Air Speed (cm/s)')
+        im_l = ax_l.imshow(u_mag_l, origin='lower', cmap='Blues', extent=[-34, 34, 0, 38], vmin=0, vmax=vmax_val_l)
+        ax_l.quiver(Z_sub, Y_sub, w_sub_l, v_sub_l, color='#1e3a8a', alpha=0.85, scale=vmax_val_l*16, width=0.0035, zorder=6)
+        ax_l.set_title(f'Lunar (0.166g): {title_speed} (Push Mode)\nLongitudinal Airflow Vector Field (X = -5 mm)', fontsize=11, fontweight='bold', color='#0f172a')
+        ax_l.set_xlabel('Z Length (mm)', color='#0f172a')
+        ax_l.set_ylabel('Y Height (mm)', color='#0f172a')
+        cb_l = plt.colorbar(im_l, ax=ax_l, fraction=0.046, pad=0.04)
+        cb_l.set_label('Air Speed (cm/s)', color='#0f172a')
 
         for s_ax in [ax_e, ax_l]:
-            s_ax.add_patch(patches.Rectangle((-30.5, 7.62), 21.0, 7.0, linewidth=1.2, edgecolor='#e67e22', facecolor='none', ls='--'))
-            s_ax.add_patch(patches.Rectangle((-7.5, 7.62), 15.0, 7.0, linewidth=1.2, edgecolor='#e67e22', facecolor='none', ls='--'))
-            s_ax.add_patch(patches.Rectangle((9.5, 7.62), 21.0, 7.0, linewidth=1.2, edgecolor='#e67e22', facecolor='none', ls='--', label='Substrates (Y=7.6-14.6mm)'))
-            s_ax.plot([-9.5, -9.5], [7.62, 24.0], color='white', lw=1.2, alpha=0.5)
-            s_ax.plot([9.5, 9.5], [7.62, 24.0], color='white', lw=1.2, alpha=0.5)
+            # Substrates
+            s_ax.add_patch(patches.Rectangle((-30.5, 7.62), 21.0, 7.0, linewidth=1.2, edgecolor='#d97706', facecolor='#fef3c7', alpha=0.5, ls='--'))
+            s_ax.add_patch(patches.Rectangle((-7.5, 7.62), 15.0, 7.0, linewidth=1.2, edgecolor='#d97706', facecolor='#fef3c7', alpha=0.5, ls='--'))
+            s_ax.add_patch(patches.Rectangle((9.5, 7.62), 21.0, 7.0, linewidth=1.2, edgecolor='#d97706', facecolor='#fef3c7', alpha=0.5, ls='--', label='Substrates'))
+            
+            # Solid Divider Baffles
+            s_ax.add_patch(patches.Rectangle((-9.5, 7.62), 2.0, 16.38, facecolor='#cbd5e1', edgecolor='#334155', linewidth=1.4, zorder=5))
+            s_ax.add_patch(patches.Rectangle((7.5, 7.62), 2.0, 16.38, facecolor='#cbd5e1', edgecolor='#334155', linewidth=1.4, zorder=5))
+            
+            # Port Inflow/Outflow markers
+            s_ax.plot([-21.59, -21.59], [33.67, 38.0], color='#b91c1c', lw=2.5) # Port 1 Inlet
+            s_ax.plot([0.0, 0.0], [33.67, 38.0], color='#6d28d9', lw=2.5)       # Port 2 Exhaust
+            s_ax.plot([-34, 34], [33.67, 33.67], color='#0f172a', lw=1.5)
+            s_ax.grid(True, linestyle='--', alpha=0.4, color='#cbd5e1')
         
     plt.tight_layout()
-    plt.savefig('figures/fig2_velocity_fields_earth_vs_lunar.png', dpi=200)
-    plt.savefig('figures/fig2_velocity_fields_earth_vs_lunar.svg')
+    plt.savefig('figures/fig2_velocity_fields_earth_vs_lunar.png', dpi=200, facecolor='white')
+    plt.savefig('figures/fig2_velocity_fields_earth_vs_lunar.svg', facecolor='white')
     print("Saved figures/fig2_velocity_fields_earth_vs_lunar.png and .svg")
     
     # Figure 3: Lunar Compensatory Pump Speed Curve
-    fig, ax = plt.subplots(figsize=(9, 6))
+    fig, ax = plt.subplots(figsize=(9, 6), facecolor='white')
     
     earth_data = df[df['gravity_condition'] == '1g_Earth'].sort_values('pump_flow_L_min')
     lunar_data = df[df['gravity_condition'] == 'Lunar_0.166g'].sort_values('pump_flow_L_min')

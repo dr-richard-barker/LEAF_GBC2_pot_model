@@ -601,15 +601,28 @@ def render_single_frame_pil(args):
     ax_zy.scatter([21.59], [9.5], color='#0284c7', edgecolor='white', s=50, zorder=6)
 
     if state['air_active'] > 0.1 and stage in (2, 3, 4):
-        zv = np.linspace(-30.0, 30.0, 13)
-        yv = np.linspace(16.5, 31.5, 5)
+        zv = np.linspace(-30.0, 30.0, 15)
+        yv = np.linspace(16.5, 31.5, 6)
         ZV, YV = np.meshgrid(zv, yv)
         q_sc = state['air_Q_Lmin'] / 0.50
         UZ = np.where(ZV < 0, 1.2 * q_sc, -0.9 * q_sc) * (1.0 + 0.3 * np.sin(ZV * 0.3 - u * 40.0))
         UY = -0.5 * np.exp(-((ZV) / 10.0) ** 2) + 0.9 * np.exp(-((ZV) / 4.5) ** 2) * ((YV - 15.0) / 16.0)
+        
+        # Upward boundary deflection as air approaches Divider 1
+        mask_defl = (ZV >= -13.0) & (ZV < -9.5) & (YV <= 24.0)
+        UY[mask_defl] = np.maximum(UY[mask_defl], 1.2 * q_sc)
+        
+        # STRICT SOLID BAFFLE MASKING: Absolutely zero arrows inside the solid divider walls
+        mask_baffle_quiv = (
+            ((ZV >= -9.8) & (ZV <= -7.2) & (YV <= 24.5)) |
+            ((ZV >= 7.2) & (ZV <= 9.8) & (YV <= 24.5))
+        )
+        UZ[mask_baffle_quiv] = np.nan
+        UY[mask_baffle_quiv] = np.nan
+        
         if not is_lunar and not state['is_night']:
             UY += 0.45
-        ax_zy.quiver(ZV, YV, UZ, UY, color='#f8fafc', alpha=0.68, scale=18.0, width=0.004)
+        ax_zy.quiver(ZV, YV, UZ, UY, color='#f8fafc', alpha=0.75, scale=18.0, width=0.004)
 
     ax_zy.set_title("2D Longitudinal (Z-Y) Cross-Section: Foam Capillary Moisture, Boundary Layer & Velocity",
                     color='#e2e8f0', fontsize=10.5, fontweight='bold', pad=6)

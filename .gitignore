@@ -21,3 +21,11 @@ __pycache__/
 /lid_pot_overlay.png
 /lid_rotated_test.png
 /pot_lid_cross_sections.png
+
+# LaTeX auxiliary files
+latex/*.aux
+latex/*.bbl
+latex/*.blg
+latex/*.out
+latex/*.synctex.gz
+latex/*.toc

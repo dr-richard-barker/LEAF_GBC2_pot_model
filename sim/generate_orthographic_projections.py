@@ -200,6 +200,16 @@ def generate_orthographic_figure():
     # -------------------------------------------------------------------------
     # COMPARTMENTS, SPECIES & CANOPIES (COMPACT BOUNDING BOXES - ZERO OVERFLOW)
     # -------------------------------------------------------------------------
+    # Solid acrylic partition baffles (Dividers 1 and 2)
+    div1 = patches.Rectangle((-9.5, 7.62), 2.0, 16.38, facecolor='#cbd5e1', edgecolor='#334155', lw=1.4, zorder=5)
+    div2 = patches.Rectangle((7.5, 7.62), 2.0, 16.38, facecolor='#cbd5e1', edgecolor='#334155', lw=1.4, zorder=5)
+    ax_front.add_patch(div1)
+    ax_front.add_patch(div2)
+    ax_front.text(-8.5, 24.8, 'DIVIDER 1', ha='center', va='bottom', fontsize=6.8, fontweight='bold', color='#334155',
+                  bbox=dict(boxstyle='round,pad=0.15', facecolor='#f1f5f9', edgecolor='#64748b', lw=0.8))
+    ax_front.text(8.5, 24.8, 'DIVIDER 2', ha='center', va='bottom', fontsize=6.8, fontweight='bold', color='#334155',
+                  bbox=dict(boxstyle='round,pad=0.15', facecolor='#f1f5f9', edgecolor='#64748b', lw=0.8))
+
     # Compartment 1: B. rapa (32 seeds, tall foliage Y = 14.62 to 26.0 mm)
     c1_box = patches.Rectangle((-29.5, 14.62), 19.0, 11.38, facecolor='#27ae60', alpha=0.18, edgecolor='#1e8449', linestyle='--')
     ax_front.add_patch(c1_box)
@@ -303,19 +313,19 @@ def generate_orthographic_figure():
                   ha='center', va='bottom', fontsize=7.5, color='#d35400', fontweight='bold', style='italic',
                   bbox=dict(boxstyle='round,pad=0.2', facecolor='#fef9e7', edgecolor='#f39c12', lw=0.8))
 
-    # Canopy circulation streamlines ("dip-and-converge")
-    # Skim across Ch 1
-    ax_front.annotate('', xy=(-10.0, 19.5), xytext=(-17.0, 21.0), arrowprops=dict(arrowstyle='->', color='#27ae60', lw=1.8, ls='-.'))
-    # Dip into Chamber 2 plenum from Ch 1
-    ax_front.annotate('', xy=(-2.5, 31.0), xytext=(-7.0, 21.0), arrowprops=dict(arrowstyle='->', color='#8e44ad', lw=2.0))
-    # Dip into Chamber 2 plenum from Ch 3
-    ax_front.annotate('', xy=(2.5, 31.0), xytext=(7.0, 21.0), arrowprops=dict(arrowstyle='->', color='#8e44ad', lw=2.0))
-    # Skim across Ch 3
-    ax_front.annotate('', xy=(10.0, 19.5), xytext=(17.0, 21.0), arrowprops=dict(arrowstyle='->', color='#27ae60', lw=1.8, ls='-.'))
+    # Canopy circulation streamlines (PUSH MODE: Upward cresting over baffles, zero penetration through walls)
+    # Skim across Chamber 1 canopy
+    ax_front.annotate('', xy=(-12.0, 22.5), xytext=(-22.0, 22.5), arrowprops=dict(arrowstyle='->', color='#0284c7', lw=2.0, ls='-'))
+    # Upward boundary deflection cresting over Divider 1 lip
+    ax_front.annotate('', xy=(-4.0, 28.5), xytext=(-11.5, 22.5), arrowprops=dict(arrowstyle='->', color='#0284c7', lw=2.0, ls='-', connectionstyle="arc3,rad=-.22"))
+    # Rising into Port 2 Central Exhaust
+    ax_front.annotate('', xy=(0.0, 33.5), xytext=(-4.0, 28.5), arrowprops=dict(arrowstyle='->', color='#6d28d9', lw=2.0, ls='-'))
+    # Peripheral entrainment from Chamber 3 towards Port 2
+    ax_front.annotate('', xy=(3.5, 28.5), xytext=(15.0, 22.5), arrowprops=dict(arrowstyle='->', color='#0284c7', lw=2.0, ls='--', connectionstyle="arc3,rad=.22"))
 
     # Skimming flow badge with leader in upper left
-    ax_front.annotate('Canopy Skimming Flow\n(Controlled boundary layer)',
-                      xy=(-20.0, 20.0), xytext=(-31.0, 16.5),
+    ax_front.annotate('Push Skimming Flow\n(Crests over Divider 1 Baffle)',
+                      xy=(-20.0, 22.5), xytext=(-31.0, 16.5),
                       ha='right', va='center', fontsize=7.5, fontweight='bold', color='#784212', style='italic',
                       bbox=dict(boxstyle='round,pad=0.2', facecolor='#fef5e7', edgecolor='#d35400', lw=0.8),
                       arrowprops=dict(arrowstyle='->', color='#d35400', lw=1.2))
