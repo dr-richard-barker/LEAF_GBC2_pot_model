@@ -24,7 +24,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
-from sim.gbc1_cfd_engine import GBC1CFDSimulator
+from sim.gbc1_cfd_engine import GBC1CFDSimulator, gbl_correlation
 
 def generate_164_plant_coordinates():
     """
@@ -132,17 +132,13 @@ def sample_plant_microenvironment(sim, fields, plants, gravity_g):
         dC_co2_ppm = float(abs(np.mean(sub_co2)))
         dH_h2o_mmol = float(np.mean(sub_h2o))
         
-        # Boundary layer calculation
+        # Boundary layer: closed-form correlation estimate (not solver-resolved),
+        # shared with the engine (sim/gbc1_cfd_engine.gbl_correlation)
         L = p['L_char_m']
-        Gr = (gravity_g * sim.beta_T * sim.dT_leaf * (L ** 3)) / (sim.nu ** 2) if gravity_g > 0 else 0.0
-        delta_nat_m = 3.5 * L * (Gr ** -0.25) if Gr > 1.0 else 0.015
-        
-        u_eff = max(u_local_m_s, 1e-5)
-        delta_forced_m = 4.92 * np.sqrt(sim.nu * L / u_eff)
-        
-        delta_eff_m = ( (1.0 / (delta_forced_m ** 3)) + (1.0 / (delta_nat_m ** 3)) ) ** (-1.0 / 3.0)
-        delta_eff_mm = delta_eff_m * 1000.0
-        g_bl = (sim.D_CO2 / delta_eff_m) / sim.V_mol # mol m-2 s-1
+        bl = gbl_correlation(u_local_m_s, L, gravity_g, sim.dT_leaf,
+                             sim.nu, sim.D_CO2, sim.V_mol, sim.beta_T)
+        delta_eff_mm = bl['delta_mm']
+        g_bl = bl['g_bl_mol_m2_s'] # mol m-2 s-1
         
         is_stagnant = (u_local_cm_s < 0.5) # air speed below 5 mm/s
         
@@ -301,7 +297,7 @@ def main():
                       edgecolor='black', linewidth=0.6, alpha=0.9, zorder=3)
     
     cbar = plt.colorbar(sc, ax=ax_a, pad=0.02)
-    cbar.set_label('Conductance g_bl (mol m^-2 s^-1)', fontsize=10, weight='semibold')
+    cbar.set_label('g_bl, correlation estimate (mol m^-2 s^-1)', fontsize=10, weight='semibold')
     cbar.ax.tick_params(labelsize=9)
     
     # Mark chamber partitions along Z
@@ -338,7 +334,7 @@ def main():
         ax_b.scatter([p50], [0.5], color=c_col, s=40, zorder=4)
         ax_b.axvline(p50, color=c_col, linestyle=':', alpha=0.4)
         
-    ax_b.set_xlabel('Boundary Layer Conductance g_bl (mol m^-2 s^-1)', fontsize=10, weight='semibold')
+    ax_b.set_xlabel('g_bl, correlation estimate (mol m^-2 s^-1)', fontsize=10, weight='semibold')
     ax_b.set_ylabel('Cumulative Plant Fraction', fontsize=10, weight='semibold')
     ax_b.set_title('B  Foliar Conductance CDF & Percentiles (p10, p50, p90)', fontsize=11, weight='bold', loc='left')
     ax_b.axhline(0.5, color='#94a3b8', linestyle='--', lw=0.9, label='Median p50')
@@ -403,8 +399,8 @@ def main():
     ax_d.axhspan(0.0, 0.035, color='#fee2e2', alpha=0.4, label='Hypoxic / Starvation Risk')
     
     ax_d.set_xlabel('Local Foliar Air Speed (cm/s)', fontsize=10, weight='semibold')
-    ax_d.set_ylabel('Boundary Layer Conductance g_bl (mol m^-2 s^-1)', fontsize=10, weight='semibold')
-    ax_d.set_title('D  Local Boundary Layer Resistance vs Air Speed (Churchill Mixed Model)', fontsize=11, weight='bold', loc='left')
+    ax_d.set_ylabel('g_bl, correlation estimate (mol m^-2 s^-1)', fontsize=10, weight='semibold')
+    ax_d.set_title('D  Correlation g_bl vs local solver air speed (not resolved by CFD)', fontsize=11, weight='bold', loc='left')
     ax_d.legend(loc='lower right', fontsize=8.5, framealpha=0.9)
     ax_d.grid(True, linestyle=':', alpha=0.5)
 

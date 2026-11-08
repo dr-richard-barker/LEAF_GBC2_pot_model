@@ -21,7 +21,7 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from sim.gbc1_cfd_engine import GBC1CFDSimulator
+from sim.gbc1_cfd_engine import GBC1CFDSimulator, gbl_correlation
 from sim.advanced_analytics import GBC1AdvancedAnalytics
 
 
@@ -149,19 +149,13 @@ def run_developmental_timeseries():
             u_brapa_m_s = (base_cfd['compartments']['comp_1']['u_mean_cm_s'] / 100.0) * drag_factor_brapa
             u_arab_m_s = (base_cfd['compartments']['comp_2']['u_mean_cm_s'] / 100.0) * channelling_boost_arab
 
-            # 4. Boundary-layer conductance g_bl(t)
+            # 4. Boundary-layer conductance g_bl(t): closed-form correlation estimate
+            #    (not solver-resolved), shared with the engine (gbl_correlation)
             dT_leaf = 0.2 + 1.3 * f_brapa
-            Gr_brapa = (g_val * sim.beta_T * dT_leaf * (L_leaf_brapa_m ** 3)) / (sim.nu ** 2)
-            delta_nat_brapa = 3.5 * L_leaf_brapa_m * (Gr_brapa ** -0.25) if Gr_brapa > 1.0 else 0.015
-            delta_forced_brapa = 4.92 * np.sqrt(sim.nu * L_leaf_brapa_m / max(u_brapa_m_s, 1e-4))
-            delta_eff_brapa = ((1.0 / (delta_forced_brapa ** 3)) + (1.0 / (delta_nat_brapa ** 3))) ** (-1.0 / 3.0)
-            g_bl_brapa = float((sim.D_CO2 / delta_eff_brapa) / sim.V_mol)
-
-            Gr_arab = (g_val * sim.beta_T * (0.2 + 1.0 * f_arab) * (L_leaf_arab_m ** 3)) / (sim.nu ** 2)
-            delta_nat_arab = 3.5 * L_leaf_arab_m * (Gr_arab ** -0.25) if Gr_arab > 1.0 else 0.015
-            delta_forced_arab = 4.92 * np.sqrt(sim.nu * L_leaf_arab_m / max(u_arab_m_s, 1e-4))
-            delta_eff_arab = ((1.0 / (delta_forced_arab ** 3)) + (1.0 / (delta_nat_arab ** 3))) ** (-1.0 / 3.0)
-            g_bl_arab = float((sim.D_CO2 / delta_eff_arab) / sim.V_mol)
+            g_bl_brapa = gbl_correlation(max(u_brapa_m_s, 1e-4), L_leaf_brapa_m, g_val, dT_leaf,
+                                         sim.nu, sim.D_CO2, sim.V_mol, sim.beta_T)['g_bl_mol_m2_s']
+            g_bl_arab = gbl_correlation(max(u_arab_m_s, 1e-4), L_leaf_arab_m, g_val, 0.2 + 1.0 * f_arab,
+                                        sim.nu, sim.D_CO2, sim.V_mol, sim.beta_T)['g_bl_mol_m2_s']
 
             # 5. Carbon exchange: Imbibition respiration (Days 0-2) vs FvCB Photosynthesis (Days 2-14)
             if day < 2:
@@ -318,7 +312,7 @@ def run_developmental_timeseries():
     l_c2 = ax_c.plot(df_la['day'], df_la['channelling_ratio_ch2_to_ch1'], '--s', color='#1e8449', lw=2.5,
                      label='Central Plenum Channelling Ratio (Adaptive Lunar Schedule Q(t))')
     l_c3 = ax_c.plot(df_e['day'], df_e['g_bl_brapa_mol_m2_s'] * 10.0, ':^', color='#e67e22', lw=2.3,
-                     label='Earth 1g B. rapa Conductance g_bl (×10 mol m⁻² s⁻¹)')
+                     label='Earth 1g B. rapa g_bl, correlation estimate (×10 mol m⁻² s⁻¹)')
 
     ax_c.set_xlabel('Mission Elapsed Time (Days Post-Imbibition)', fontsize=11, fontweight='bold')
     ax_c.set_ylabel('Channelling Ratio |u|_Ch2/|u|_Ch1 & Scaled g_bl', fontsize=11, fontweight='bold', color='#2980b9')

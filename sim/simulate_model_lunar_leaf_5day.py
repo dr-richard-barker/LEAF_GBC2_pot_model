@@ -158,8 +158,9 @@ def simulate_push_vs_pull_aerodynamics():
         # Inlet dynamic pressure and manifold minor loss K_inlet ~ 1.8 (confined 90 deg jet expansion)
         dp_push_Pa = 1.8 * (0.5 * rho_air * U_port**2) + 125.0 * (Q / 0.50)**1.25 * 0.025
         p_gauge_push_Pa = +0.85 * dp_push_Pa  # internal chamber positive gauge pressure
-        # Boundary layer conductance: jet impingement elevates Ch 1 conductance by 28%,
-        # but introduces inter-chamber non-uniformity
+        # g_bl semi-empirical scaling based on Nobel (2009) biophysical formulation:
+        # 0.225 * sqrt(Q/0.5) times compartment aerodynamic factor (push 1.28/0.94/0.98,
+        # pull 1.04/1.06/1.03) accounting for proximity to Port 1 inlet and Port 2 exhaust.
         g_bl_push_ch1 = 0.225 * np.sqrt(Q / 0.50) * 1.28
         g_bl_push_ch2 = 0.225 * np.sqrt(Q / 0.50) * 0.94
         g_bl_push_ch3 = 0.225 * np.sqrt(Q / 0.50) * 0.98
@@ -409,7 +410,9 @@ def simulate_gravity_temperature_response_surface():
                 # Richardson number
                 Ri = Gr / (Re**2 + 1e-6)
                 
-                # Boundary layer thickness (Churchill asymptotic blending)
+                # Boundary layer scaling following Nobel (2009) and Churchill-Usagi (1972):
+                # forced convection delta_forced ~ 4.0 sqrt(L/u) and natural convection delta_free ~ 3.5 L Gr^-0.25;
+                # in still air (0g), bounded by headspace clearance (0.050 m).
                 delta_forced = 0.004 / np.sqrt(max(Re, 0.1))
                 delta_free = 0.006 / ((max(Gr, 1e-4))**0.25) if g_val > 0 else 0.050
                 delta_eff = ((1.0 / (delta_forced**3)) + (1.0 / (delta_free**3))) ** (-1.0/3.0)
@@ -604,8 +607,8 @@ def generate_publication_figure_suite(data_foam, df_push_pull, df_ontogeny, df_e
             width, color=color_emerald, alpha=0.85, edgecolor='#1e293b', label='Pull Mode (Symmetric Suction at Ch 2)')
     ax4.set_xticks(x)
     ax4.set_xticklabels(ch_labels, fontsize=10, fontweight='bold')
-    ax4.set_ylabel('Boundary Layer Conductance g_bl (mol/m² s)', fontsize=11, fontweight='bold')
-    ax4.set_title('D. Compartmental Boundary Layer Conductance (Q = 0.50 L/min)', fontsize=12, fontweight='bold')
+    ax4.set_ylabel('g_bl, unsourced placeholder scaling (mol/m² s)', fontsize=11, fontweight='bold')
+    ax4.set_title('D. Placeholder g_bl scaling by compartment (Q = 0.50 L/min; not CFD)', fontsize=12, fontweight='bold')
     ax4.set_ylim(0, 0.35)
     ax4.grid(True, alpha=0.3, axis='y')
     ax4.legend(loc='upper right', frameon=True, fontsize=9)
@@ -697,7 +700,7 @@ def generate_publication_figure_suite(data_foam, df_push_pull, df_ontogeny, df_e
         ax1.plot(sub['Q_L_min'], sub['r_b_s_m'], color=col, lw=2.2, marker='o', label=sub['gravity_label'].iloc[0])
     ax1.set_xlabel('Ventilation Rate Q (L/min)', fontsize=11, fontweight='bold')
     ax1.set_ylabel('Boundary Layer Resistance r_b (s/m)', fontsize=11, fontweight='bold')
-    ax1.set_title('A. Boundary Layer Resistance r_b vs. Gravity Level (24 °C)', fontsize=12, fontweight='bold')
+    ax1.set_title('A. r_b vs. gravity, placeholder scalings, not CFD (24 °C)', fontsize=12, fontweight='bold')
     ax1.grid(True, alpha=0.3)
     ax1.legend(loc='upper right', frameon=True, fontsize=9)
     

@@ -75,15 +75,19 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 ### 3.1 "Dip-and-Converge" Aerodynamic Channelling & Age-of-Air Uniformity
 - Forced air entering Port 1 (_Z_ = -21.6 mm) encounters tall foliage drag (_D_ = 8.28 s⁻¹) in Chamber 1, skimming across the upper manifold until reaching the step-down above the prostrate *Arabidopsis* rosette carpet in Chamber 2.
 - The **Δ_Y_ = 14.2 mm open central plenum** directly beneath Port 2 acts as a low-resistance convergence corridor where lateral streams from Chambers 1 and 3 dip downward, flush the *Arabidopsis* lawn, and exhaust upward through Port 2.
-- **Sandberg Conservation Verification**: At nominal flow _Q_ = 0.50 L/min, the numerical flux-weighted outlet mean age of air is θ_out = 7.27 s vs. theoretical τ = _V_fluid / _Q_ = 7.75 s (ratio = 0.938). Inter-chamber mean age uniformity is preserved within **< 1.0%** (Ch 1: 6.05 s, Ch 2: 6.10 s, Ch 3: 6.06 s).
+- **Sandberg Conservation Verification**: At nominal flow _Q_ = 0.50 L/min, the numerical flux-weighted outlet mean age of air is θ_out = 7.18 s vs. theoretical τ = _V_fluid / _Q_ = 7.58 s (ratio = 0.947; `results/tables/gbc1_advanced_analytics.tsv`, 1g Earth, regenerated 2026-11-07 on the current divider geometry). Inter-chamber mean age uniformity is preserved within **< 1.0%** (Ch 1: 5.95 s, Ch 2: 5.98 s, Ch 3: 5.96 s).
 
 ### 3.2 Asymmetric Multi-Species Gas Exchange (Earth 1.0g vs. Lunar 0.166g)
 
-| Regime | Pump Speed (_Q_) | Gravity (_g_) | *B. rapa* (Ch 1 & 3, 32 Seeds) _A_net | *B. rapa* Δ[CO₂] / Δ[H₂O] | *A. thaliana* (Ch 2, 100 Seeds) _A_net | *A. thaliana* Δ[CO₂] / Δ[H₂O] |
+Values from `results/tables/gbc1_asymmetric_canopy_species_results.tsv` (written by `sim/simulate_rnalater_perfusion.py`). _A_net is an FvCB estimate driven by the **correlation** boundary-layer conductance (`sim/gbc1_cfd_engine.py`, `gbl_correlation`), not by a resolved boundary layer, and the flow fields are start-up transients (each run covers 1.8 % of one headspace turnover). Δ[CO₂] / Δ[H₂O] are the solver's canopy scalars at that point in the transient.
+
+| Regime | Pump Speed (_Q_) | Gravity (_g_) | *B. rapa* (Ch 1, 32 Seeds) _A_net | *B. rapa* Δ[CO₂] / Δ[H₂O] | *A. thaliana* (Ch 2, 100 Seeds) _A_net | *A. thaliana* Δ[CO₂] / Δ[H₂O] |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Earth 1.0g Baseline** | 0.50 L/min | 9.81 m/s² | **13.04 μmol m⁻² s⁻¹** | -3.76 ppm / +7.11 mmol/m³ | **10.06 μmol m⁻² s⁻¹** | -1.31 ppm / +2.40 mmol/m³ |
-| **Lunar 0.166g Uncompensated** | 0.50 L/min | 1.62 m/s² | **10.63 μmol m⁻² s⁻¹** (81.5%) | -3.77 ppm / +7.12 mmol/m³ | **8.43 μmol m⁻² s⁻¹** (83.8%) | -1.32 ppm / +2.42 mmol/m³ |
-| **Lunar 0.166g Compensated** | **0.85 L/min** | 1.62 m/s² | **10.66 μmol m⁻² s⁻¹** | **-2.35 ppm / +4.50 mmol/m³** (-37%) | **8.44 μmol m⁻² s⁻¹** | **-0.85 ppm / +1.59 mmol/m³** (-37%) |
+| **Earth 1.0g** | 0.50 L/min | 9.81 m/s² | **13.57 μmol m⁻² s⁻¹** | -3.76 ppm / +7.11 mmol/m³ | **10.25 μmol m⁻² s⁻¹** | -1.31 ppm / +2.40 mmol/m³ |
+| **Lunar 0.166g** | 0.50 L/min | 1.62 m/s² | **12.24 μmol m⁻² s⁻¹** (90.2 % of Earth) | -3.77 ppm / +7.12 mmol/m³ | **9.12 μmol m⁻² s⁻¹** (88.9 %) | -1.32 ppm / +2.42 mmol/m³ |
+| **Lunar 0.166g, higher flow** | 0.85 L/min | 1.62 m/s² | **12.29 μmol m⁻² s⁻¹** (+0.4 % vs 0.50 L/min) | -2.35 ppm / +4.50 mmol/m³ | **9.13 μmol m⁻² s⁻¹** (+0.1 %) | -0.85 ppm / +1.59 mmol/m³ |
+
+While short-duration transient sweeps captured early start-up dynamics where forced terms remained small, steady-state biophysical microclimate modeling across the 3 partitioned chambers (`sim/simulate_section_microclimates.py`, Figure 19) establishes that maintaining a daytime forced positive-pressure push flow of **_Q_day = 0.50–0.85 L/min** drives canopy velocities of 1.5–3.8 cm/s, restricts boundary layer thickness to 2.3–3.5 mm, and maintains _g_bl ≥ 0.12–0.18 mol m⁻² s⁻¹, compensating for the 83.4% reduction in lunar natural convection.
 
 ### 3.3 Diurnal Photoperiod Inversion & Lunar Nocturnal Pump Setback
 - During the **8h dark skotoperiod**, LED arrays extinguish, leaves radiatively cool (Δ_T_ = -0.3 K), and mitochondrial dark respiration emits dense CO₂ (_S_CO2 = +6.0 μmol m⁻³ s⁻¹).
@@ -100,7 +104,7 @@ Computational Fluid Dynamics (CFD), multi-species gas exchange, 14-day developme
 - **Adaptive Lunar Pump Schedule**: Stepping _Q_day from 0.25 → 0.50 → 0.65 → 0.85 L/min across Days 0–14 reduces *B. rapa* boundary-layer drawdown by **41%** (Δ[CO₂] from -3.98 ppm to -2.35 ppm at Day 14) while root biomass compaction (ε: 0.50 → 0.34) raises Day 14 RNAlater injection Δ_P_ from 0.73 kPa to 4.04 kPa (safely below the 5.0 kPa seal limit).
 
 ### 3.6 Off-Nominal Spacecraft Sensitivity & Fault-Tolerance Sweeps
-- **Elevated Spacecraft Cabin CO₂ (420–5,000 ppm)**: Cabin CO₂ ≥ 2,000 ppm saturates FvCB carboxylation at the TPU plateau (_A_net ≈ 29.9–31.6 μmol m⁻² s⁻¹ in *B. rapa*), masking Lunar carbon limitation, **but** induces 50% stomatal closure (_g_s: 0.165 → 0.082 mol m⁻² s⁻¹ at 4,000 ppm), reducing evaporative cooling and elevating Lunar leaf temperature to Δ_T_leaf = +3.05 °C at 0.50 L/min vs. +2.19 °C at 0.85 L/min.
+- **Elevated Spacecraft Cabin CO₂ (420–5,000 ppm)**: Cabin CO₂ ≥ 2,000 ppm saturates FvCB carboxylation at the TPU plateau (_A_net ≈ 30.2–31.7 μmol m⁻² s⁻¹ in *B. rapa* at lunar g, 0.50 L/min; `results/tables/gbc1_off_nominal_sensitivity.tsv`), masking Lunar carbon limitation, **but** induces 50% stomatal closure (_g_s: 0.165 → 0.082 mol m⁻² s⁻¹ at 4,000 ppm), reducing evaporative cooling and elevating Lunar leaf temperature to Δ_T_leaf = +3.05 °C at 0.50 L/min vs. +2.19 °C at 0.85 L/min.
 - **Root-Induced Substrate Compaction (ε = 0.50 → 0.20)**: If root density compresses substrate porosity below ε = 0.32, stepping RNAlater injection down from 10 mL/min to 5 mL/min maintains Δ_P_ < 3.5 kPa.
 - **Pump Brownout Grace Window**: Complete pump outage (_Q_ ≤ 0.04 L/min) has a **grace window of _t_grace = 10.4–18.5 min** before transpired humidity reaches 92% RH condensation onset on the lid window.
 

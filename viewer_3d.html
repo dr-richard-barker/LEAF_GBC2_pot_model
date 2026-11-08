@@ -375,7 +375,7 @@
               <div id="probeAirSpeed" class="font-mono font-bold text-sky-400">0.08 cm/s</div>
             </div>
             <div class="bg-slate-950/60 dark:bg-slate-950/60 light:bg-slate-100 p-1.5 rounded">
-              <div class="text-[10px] text-slate-400">Conductance g_bl</div>
+              <div class="text-[10px] text-slate-400">g_bl (correlation, illustrative)</div>
               <div id="probeGbl" class="font-mono font-bold text-emerald-400">0.048 mol/m²s</div>
             </div>
             <div class="bg-slate-950/60 dark:bg-slate-950/60 light:bg-slate-100 p-1.5 rounded">
@@ -2205,13 +2205,16 @@
       const D_CO2 = 1.60e-5;
       const V_mol = 0.0245;
       
+      // Illustrative only: uLocal above is a typed-in scaling, not a solver field, and g_bl is the
+      // closed-form correlation of sim/gbc1_cfd_engine.py gbl_correlation (still-air term at every g).
       const Gr = (currentGravity * 9.81 * beta_T * 1.5 * Math.pow(L, 3)) / Math.pow(nu, 2);
-      const delta_nat_m = (Gr > 1.0) ? 3.5 * L * Math.pow(Gr, -0.25) : 0.015;
+      const delta_diff_m = 0.015; // ASSUMED still-air diffusion length (same as the engine)
+      const inv3_nat = (Gr > 0) ? Math.pow(3.5 * L * Math.pow(Gr, -0.25), -3) : 0.0;
       
       const u_eff = Math.max(uLocal_m_s, 1e-5);
       const delta_forced_m = 4.92 * Math.sqrt(nu * L / u_eff);
       
-      const delta_eff_m = Math.pow(Math.pow(delta_forced_m, -3) + Math.pow(delta_nat_m, -3), -1.0 / 3.0);
+      const delta_eff_m = Math.pow(Math.pow(delta_forced_m, -3) + inv3_nat + Math.pow(delta_diff_m, -3), -1.0 / 3.0);
       const delta_eff_mm = delta_eff_m * 1000.0;
       const g_bl = (D_CO2 / delta_eff_m) / V_mol;
       

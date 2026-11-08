@@ -1,6 +1,6 @@
 # LEAF GBC1 npj Microgravity LaTeX Manuscript Package
 
-This directory contains the publication-ready LaTeX source package for the article:
+This directory contains the production LaTeX source package formatted in modern double-column *npj Microgravity* style (`iicol`) for the article:
 
 > **Computational fluid dynamics, multi-species canopy gas exchange, and harvest fixation architecture of the LEAF GBC1 lunar plant growth chamber**  
 > *Richard Barker (Department of Agricultural and Biological Engineering, Purdue University, barkerrj@purdue.edu)*  

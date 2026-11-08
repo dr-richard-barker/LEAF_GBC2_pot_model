@@ -15,6 +15,14 @@ Grids evaluated:
 Refinement ratios:
   r21 = h2 / h1 = 1.3333 (> 1.30, ASME compliant)
   r32 = h3 / h2 = 1.5000 (> 1.30, ASME compliant)
+
+CAVEAT (2026-11-07): each grid runs a fixed number of explicit steps with a CFL time step
+(dt proportional to dx), so the three grids are compared at DIFFERENT simulated times
+(written to the t_sim_*_s columns), all far shorter than the headspace turnover time V/Q.
+The table therefore does not measure discretization error of a converged solution. The
+boundary-layer conductance g_bl and thickness delta_bl are no longer included: they come
+from a closed-form correlation (gbc1_cfd_engine.gbl_correlation), so a GCI on them says
+nothing about the grid.
 """
 
 import os
@@ -151,19 +159,18 @@ def run_gci_verification():
             print(f"  Executing CFD on {label} grid ({pitch*1000:.2f} mm)...", end="", flush=True)
             t0 = time.time()
             sim = GBC1CFDSimulator(grid_data[label])
-            # For 0.75 mm fine grid, max_steps = 350 reaches steady-state
+            # Fixed step counts (as originally run). These do NOT reach a steady state:
+            # see t_sim_s vs turnover_s in the output.
             steps = 350 if label == 'fine' else 300
             res, _ = sim.run_case(Q_L_min=Q_flow, gravity_g=g_accel, max_steps=steps, mode=flow_mode)
             dt_sim = time.time() - t0
-            print(f" done in {dt_sim:.2f}s (dP = {res['delta_P_Pa']:.3f} Pa, g_bl = {res['g_bl_mean_mol_m2_s']:.3f} mol/m2/s)")
+            print(f" done in {dt_sim:.2f}s (dP = {res['delta_P_Pa']:.3f} Pa, t_sim = {res['t_sim_s']:.3f} s of {res['turnover_s']:.2f} s turnover)")
             sim_results[label] = res
             
         # Target quantities to analyze
         quantities = [
             ('delta_P_Pa', 'Chamber Pressure Drop (Pa)'),
             ('flow_uniformity_gamma', 'Ventilation Uniformity Index gamma (-)'),
-            ('g_bl_mean_mol_m2_s', 'Canopy Mean Boundary Layer Conductance (mol/m2/s)'),
-            ('delta_bl_mean_mm', 'Boundary Layer Thickness delta_bl (mm)'),
             ('dC_CO2_mean_ppm', 'Canopy CO2 Draw-down Delta_C (ppm)'),
             ('dC_H2O_mean_mmol', 'Canopy Humidity Accumulation Delta_q (mmol/mol)'),
             ('U_mean_headspace_cm_s', 'Mean Headspace Air Speed (cm/s)')
@@ -197,7 +204,11 @@ def run_gci_verification():
                 'e_ext_pct': round(gci['e_ext_pct'], 2),
                 'gci_fine_pct': round(gci['gci_fine_pct'], 2),
                 'gci_med_pct': round(gci['gci_med_pct'], 2),
-                'asymptotic_ratio': round(gci['asymptotic_ratio'], 3)
+                'asymptotic_ratio': round(gci['asymptotic_ratio'], 3),
+                't_sim_fine_s': round(sim_results['fine']['t_sim_s'], 4),
+                't_sim_med_s': round(sim_results['med']['t_sim_s'], 4),
+                't_sim_coarse_s': round(sim_results['coarse']['t_sim_s'], 4),
+                'turnover_med_s': round(sim_results['med']['turnover_s'], 3)
             })
 
     df = pd.DataFrame(table_rows)

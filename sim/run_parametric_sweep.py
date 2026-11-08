@@ -59,6 +59,10 @@ def run_sweep():
                 'comp1_g_bl': res['compartments']['comp_1']['g_bl_mol_m2_s'],
                 'comp2_g_bl': res['compartments']['comp_2']['g_bl_mol_m2_s'],
                 'comp3_g_bl': res['compartments']['comp_3']['g_bl_mol_m2_s'],
+                'g_bl_method': 'correlation estimate (not solver-resolved)',
+                't_sim_s': res['t_sim_s'],
+                'turnover_s': res['turnover_s'],
+                't_sim_over_turnover': res['t_sim_over_turnover'],
             }
             records.append(row)
             
@@ -115,8 +119,8 @@ def run_sweep():
                 color=colors[g_label], marker=markers[g_label], lw=2.5, ms=7, label=labels[g_label])
     ax.set_xscale('log')
     ax.set_xlabel('Pump Flow Rate Q (L/min)', fontsize=12)
-    ax.set_ylabel('Boundary Layer Conductance g_bl (mol m⁻² s⁻¹)', fontsize=12)
-    ax.set_title('B. Boundary Layer Conductance (g_bl)', fontsize=13, fontweight='bold')
+    ax.set_ylabel('g_bl, correlation estimate (mol m⁻² s⁻¹)', fontsize=12)
+    ax.set_title('B. g_bl (closed-form correlation, not solver-resolved)', fontsize=13, fontweight='bold')
     ax.grid(True, which='both', alpha=0.3)
     ax.legend(frameon=True, fontsize=10)
     
@@ -139,8 +143,8 @@ def run_sweep():
                 color=colors[g_label], marker=markers[g_label], lw=2.5, ms=7, label=labels[g_label])
     ax.set_xscale('log')
     ax.set_xlabel('Pump Flow Rate Q (L/min)', fontsize=12)
-    ax.set_ylabel('Boundary Layer Thickness δ (mm)', fontsize=12)
-    ax.set_title('D. Diffusive Boundary Layer Thickness (δ)', fontsize=13, fontweight='bold')
+    ax.set_ylabel('δ, correlation estimate (mm)', fontsize=12)
+    ax.set_title('D. Boundary-layer thickness δ (correlation)', fontsize=13, fontweight='bold')
     ax.grid(True, which='both', alpha=0.3)
     ax.legend(frameon=True, fontsize=10)
     
@@ -249,40 +253,41 @@ def run_sweep():
     plt.savefig('figures/fig2_velocity_fields_earth_vs_lunar.svg', facecolor='white')
     print("Saved figures/fig2_velocity_fields_earth_vs_lunar.png and .svg")
     
-    # Figure 3: Lunar Compensatory Pump Speed Curve
-    fig, ax = plt.subplots(figsize=(9, 6), facecolor='white')
-    
+    # Figure 3: can any lunar pump flow match the Earth g_bl? (rebuilt 2026-11-07)
+    # The previous version log-interpolated Earth g_bl onto the lunar g_bl(Q) curve, which is
+    # flat and not monotonic, so np.interp returned meaningless "required lunar flows". This
+    # version only reports what the sweep table shows.
+    fig, ax = plt.subplots(figsize=(9.5, 6), facecolor='white')
     earth_data = df[df['gravity_condition'] == '1g_Earth'].sort_values('pump_flow_L_min')
     lunar_data = df[df['gravity_condition'] == 'Lunar_0.166g'].sort_values('pump_flow_L_min')
-    
-    earth_Q_vals = earth_data['pump_flow_L_min'].values
-    earth_gbl_vals = earth_data['g_bl_mol_m2_s'].values
-    lunar_Q_vals = lunar_data['pump_flow_L_min'].values
-    lunar_gbl_vals = lunar_data['g_bl_mol_m2_s'].values
-    
-    # To match Earth g_bl at low pump speed, what Q on Moon is required?
-    # Log-log interpolation
-    lunar_Q_needed = np.exp(np.interp(np.log(earth_gbl_vals), np.log(lunar_gbl_vals), np.log(lunar_Q_vals)))
-    
-    ax.plot(earth_Q_vals, earth_Q_vals, 'k--', lw=2, label='1:1 Line (Zero Gravity Penalty)')
-    ax.plot(earth_Q_vals, lunar_Q_needed, 'r-o', lw=2.5, ms=8, label='Required Lunar Pump Flow Rate')
-    
+    ax.plot(earth_data['pump_flow_L_min'], earth_data['g_bl_mol_m2_s'], color='#2a78d6', marker='o', lw=2, ms=8, label='1g Earth')
+    ax.plot(lunar_data['pump_flow_L_min'], lunar_data['g_bl_mol_m2_s'], color='#eb6834', marker='s', lw=2, ms=8, label='Lunar 0.166g')
+    lunar_max = float(lunar_data['g_bl_mol_m2_s'].max())
+    earth_min = float(earth_data['g_bl_mol_m2_s'].min())
+    t_ratio_05 = float(lunar_data.loc[np.isclose(lunar_data['pump_flow_L_min'], 0.5), 't_sim_over_turnover'].iloc[0])
+    if lunar_max < earth_min:
+        verdict = (f'No lunar flow in {lunar_data.pump_flow_L_min.min():g}-{lunar_data.pump_flow_L_min.max():g} L/min '
+                   f'reaches the Earth g_bl\n(lunar max {lunar_max:.4f} < Earth min {earth_min:.4f} mol m$^{{-2}}$ s$^{{-1}}$).')
+    else:
+        verdict = 'Some lunar flows reach the lowest Earth g_bl in this sweep.'
+    ax.text(0.03, 0.97, verdict + '\n\ng_bl is a closed-form correlation fed by the solver\'s canopy speed.\n'
+            f'The solver runs 400 steps: at 0.5 L/min that is {100 * t_ratio_05:.1f} % of one headspace\n'
+            'turnover, so canopy speeds are start-up transients and the forced term\n'
+            'stays negligible. This figure cannot size a compensatory pump flow.',
+            transform=ax.transAxes, va='top', fontsize=9.5,
+            bbox=dict(boxstyle='round,pad=0.5', facecolor='#f7f7f5', edgecolor='#e4e3df'))
     ax.set_xscale('log')
-    ax.set_yscale('log')
-    ax.set_xlabel('Baseline Earth 1g Pump Flow Rate Q_Earth (L/min)', fontsize=12)
-    ax.set_ylabel('Required Lunar Pump Flow Rate Q_Lunar (L/min)', fontsize=12)
-    ax.set_title('Lunar Convection Penalty: Compensatory Pump Sizing Curve', fontsize=13, fontweight='bold')
+    ax.set_ylim(0, max(earth_data['g_bl_mol_m2_s'].max(), lunar_max) * 1.6)
+    ax.set_xlabel('Pump Flow Rate Q (L/min)', fontsize=12)
+    ax.set_ylabel('g_bl, correlation estimate (mol m⁻² s⁻¹)', fontsize=12)
+    ax.set_title('Earth vs lunar g_bl across the pump sweep (correlation, not CFD)', fontsize=13, fontweight='bold')
     ax.grid(True, which='both', alpha=0.3)
-    ax.legend(frameon=True, fontsize=11)
-    
-    penalty_ratio = lunar_Q_needed[0] / earth_Q_vals[0]
-    ax.text(0.08, 0.78, f'Lunar Convection Deficit:\nAt low ventilation (Q = 0.05 - 0.1 L/min),\nLunar hardware requires {penalty_ratio:.1f}x higher pump flow\nto equal 1g Earth boundary-layer conductance.',
-            transform=ax.transAxes, bbox=dict(boxstyle='round,pad=0.6', facecolor='#ffffcc', edgecolor='#cccc99'), fontsize=10)
-            
+    ax.legend(frameon=False, fontsize=11, loc='lower right')
     plt.tight_layout()
     plt.savefig('figures/fig3_lunar_compensatory_pump_curve.png', dpi=200)
     plt.savefig('figures/fig3_lunar_compensatory_pump_curve.svg')
     print("Saved figures/fig3_lunar_compensatory_pump_curve.png and .svg")
+    print(verdict)
     
     print("\nAll simulations and figures completed successfully!")
     return df

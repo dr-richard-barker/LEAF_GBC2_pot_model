@@ -21,6 +21,12 @@ In Lunar Hypogravity (0.166g):
   elevating leaf temperature (+1.84 K), and accumulating ethylene/CO2.
 - Chamber 1 (windward) vs Chamber 3 (leeward) Brassica rapa exhibit asymmetric development.
 
+Biophysical Formulation: solve_flow_field() prescribes the streamline potential
+flow and wake recirculations with no-penetration boundary conditions at dividers.
+Buoyant plume velocities u_nat (0.018 m/s Earth / 0.007 m/s Moon) are derived from
+Churchill-Usagi (1972) natural convection scaling. Boundary-layer thickness and conductance
+use Nobel's (2009) biophysical equations: delta = 4.0 sqrt(L/u) and g_bl = 0.32 sqrt(u/L).
+
 Outputs:
 - figures/fig19_lunar_microclimates_by_section.png
 - figures/fig19_lunar_microclimates_by_section.svg
@@ -235,7 +241,8 @@ def compute_section_microclimates():
     VPD_earth = e_sat * (1.0 - RH_earth / 100.0)
     VPD_lunar = e_sat * (1.0 - RH_lunar / 100.0)
     
-    # Foliar Boundary Layer Conductance g_bl (mol m-2 s-1)
+    # Foliar Boundary Layer Conductance g_bl (mol m-2 s-1): Nobel (2009) biophysical scaling
+    # g_bl = 0.32 sqrt(u_eff / Lc) for flat laminar leaves in cross-flow.
     g_bl_earth = 0.32 * np.sqrt(u_eff_earth / Lc_array)
     g_bl_lunar = 0.32 * np.sqrt(u_eff_lunar / Lc_array)
     
@@ -422,8 +429,8 @@ def compute_section_microclimates():
                   ha='center', fontsize=8.0, fontweight='bold', color='#334155',
                   arrowprops=dict(arrowstyle='->', color='#334155', lw=1.1))
 
-    ax_a.set_title("A. Longitudinal Airflow Velocity & Boundary Deflection in PUSH MODE (Lunar Gravity 0.166g)\n"
-                   "Arrows crest over solid dividers into upper plenum; zero airflow penetration through acrylic partition baffles.",
+    ax_a.set_title("A. Prescribed (illustrative, not solved) airflow pattern in PUSH MODE (Lunar Gravity 0.166g)\n"
+                   "Velocity field written as analytic functions with typed-in amplitudes; not a CFD solution.",
                    fontsize=11.5, fontweight='bold', color='#0f172a', pad=10)
     ax_a.set_xlabel("Axial Length Z (mm) [Chamber 1 Windward | Chamber 2 Central Wake | Chamber 3 Leeward]", fontsize=9.5, color='#0f172a')
     ax_a.set_ylabel("Elevation Y (mm)", fontsize=9.5, color='#0f172a')
@@ -446,7 +453,7 @@ def compute_section_microclimates():
     ax_b.axvspan(-9.5, -7.5, color='#94a3b8', alpha=0.35, label='Solid Divider Baffles')
     ax_b.axvspan(7.5, 9.5, color='#94a3b8', alpha=0.35)
     
-    ax_b.set_title("B. Foliar Boundary Layer Thickness (delta_bl) Along Longitudinal Axis", fontsize=10.5, fontweight='bold', color='#0f172a')
+    ax_b.set_title("B. delta_bl along Z from a prescribed (not solved) velocity field", fontsize=10.5, fontweight='bold', color='#0f172a')
     ax_b.set_xlabel("Axial Length Z (mm)", fontsize=9.0, color='#0f172a')
     ax_b.set_ylabel("Boundary Layer delta_bl (mm)", fontsize=9.0, color='#0f172a')
     ax_b.set_xlim(-32.0, 32.0)

@@ -1,15 +1,61 @@
 """
-High-Performance, Physically Rigorous 3D CFD Simulation Engine for LEAF GBC1 Plant Pot.
+Explicit 3D voxel flow/species model of the LEAF GBC1 plant pot.
 Features:
   - Semi-implicit Darcy-Brinkman porous media substrate resistance
   - Boussinesq thermal & solutal buoyancy
-  - Churchill mixed-convection boundary layer conductance (forced + natural)
   - Conservative multi-species advection-diffusion (CO2, H2O)
+  - Leaf boundary-layer conductance g_bl from a CLOSED-FORM CORRELATION (see
+    gbl_correlation below). g_bl is NOT resolved by this solver: the solved field
+    enters only through the compartment-mean canopy speed used by the forced term.
+
+Run-length caveat (reported by run_case as t_sim_s / turnover_s): run_case takes a
+fixed number of explicit steps (default 400) with a CFL time step, which covers
+0.01-1.1 s of simulated time against a headspace turnover V/Q of 0.8-63 s
+(Q = 4.0-0.05 L/min). The returned fields are start-up transients, not steady states.
 """
 import numpy as np
 import os
 import json
 import time
+
+# --- Leaf boundary-layer conductance: correlation estimate ------------------------
+# Still-air diffusion length used as a third asymptote in the blend. Derived from
+# the 17.78 mm net headspace clearance (substrate top Y = 14.62 mm to lid underside
+# Y = 32.40 mm), minus mature canopy crown height (~2-3 mm), leaving 15 mm still-air gap.
+DELTA_DIFF_M = 0.015
+HEADSPACE_HEIGHT_M = 0.03240 - 0.01462
+
+
+def gbl_correlation(u_m_s, L_m, gravity_m_s2, dT_K, nu, D, V_mol, beta_T):
+    """Leaf boundary-layer conductance to CO2 from closed-form scalings (not a CFD output).
+
+    delta_forced = 4.92 sqrt(nu L / u)            (laminar flat plate, Blasius delta_99)
+    delta_nat    = 3.5 L Gr^-1/4, Gr = g beta dT L^3 / nu^2   (Churchill-Usagi 1972 / Nobel 2009)
+                   -> infinite (no contribution) when g = 0
+    delta_diff   = DELTA_DIFF_M                    (assumed still-air limit, every g)
+    1/delta_eff^3 = 1/delta_forced^3 + 1/delta_nat^3 + 1/delta_diff^3
+    g_bl = D / (delta_eff V_mol)                   (mol m-2 s-1)
+
+    The still-air term is applied at every gravity level, so g_bl can only rise with g
+    and with u. (The previous code used 15 mm *in place of* natural convection when
+    Gr <= 1, which made g_bl at 0 g exceed g_bl at lunar g.)
+    """
+    u = max(float(u_m_s), 1e-12)
+    Re_L = u * L_m / nu
+    delta_forced = 4.92 * np.sqrt(nu * L_m / u)
+    Gr_L = (gravity_m_s2 * beta_T * dT_K * L_m ** 3) / nu ** 2 if gravity_m_s2 > 0 else 0.0
+    delta_nat = 3.5 * L_m * Gr_L ** -0.25 if Gr_L > 0 else np.inf
+    inv3 = delta_forced ** -3 + (0.0 if np.isinf(delta_nat) else delta_nat ** -3) + DELTA_DIFF_M ** -3
+    delta_eff = inv3 ** (-1.0 / 3.0)
+    return {
+        'g_bl_mol_m2_s': float((D / delta_eff) / V_mol),
+        'delta_mm': float(delta_eff * 1000.0),
+        'delta_forced_mm': float(delta_forced * 1000.0),
+        'delta_nat_mm': float(delta_nat * 1000.0) if np.isfinite(delta_nat) else float('inf'),
+        'Re_L': float(Re_L),
+        'Gr_L': float(Gr_L),
+        'delta_forced_exceeds_headspace': bool(delta_forced > HEADSPACE_HEIGHT_M),
+    }
 
 class GBC1CFDSimulator:
     def __init__(self, grid_file='geometry/gbc1_grid.npz'):
@@ -251,33 +297,26 @@ class GBC1CFDSimulator:
         for c_idx, mask_c in enumerate(canopy_masks, 1):
             # Characteristic dimension: L = 20 mm for B. rapa, 8 mm for Arabidopsis
             L_leaf_c = 0.008 if c_idx == 2 else 0.020
-            
-            # Natural convection Grashof number:
-            Gr_c = (gravity_g * self.beta_T * self.dT_leaf * (L_leaf_c ** 3)) / (self.nu ** 2) if gravity_g > 0 else 0.0
-            delta_nat_m = 3.5 * L_leaf_c * (Gr_c ** -0.25) if Gr_c > 1.0 else 0.015
-            
+
             if np.sum(mask_c) > 0:
                 dC_CO2_c = float(np.abs(np.mean(c_CO2[mask_c])))
                 dC_H2O_c = float(np.mean(c_H2O[mask_c]))
                 u_c = float(np.mean(u_mag[mask_c]))
-                
-                # Forced convection thickness: delta_forced = 4.92 * sqrt(nu * L / u)
-                u_eff = max(u_c, 1e-5)
-                delta_forced_m = 4.92 * np.sqrt(self.nu * L_leaf_c / u_eff)
-                
-                # Mixed convection asymptotic blending (Churchill):
-                delta_eff_m = ( (1.0 / (delta_forced_m ** 3)) + (1.0 / (delta_nat_m ** 3)) ) ** (-1.0 / 3.0)
-                delta_eff_mm = float(delta_eff_m * 1000.0)
-                
-                # Boundary layer conductance: g_bl = (D_CO2 / delta) / V_mol (mol m-2 s-1)
-                g_bl = float((self.D_CO2 / delta_eff_m) / self.V_mol)
-                
+
+                # Correlation estimate (not solver-resolved); see gbl_correlation
+                bl = gbl_correlation(u_c, L_leaf_c, gravity_g, self.dT_leaf,
+                                     self.nu, self.D_CO2, self.V_mol, self.beta_T)
+
                 comp_metrics[f'comp_{c_idx}'] = {
                     'u_mean_cm_s': float(u_c * 100),
                     'dC_CO2_ppm': dC_CO2_c,
                     'dC_H2O_mmol': dC_H2O_c,
-                    'delta_mm': delta_eff_mm,
-                    'g_bl_mol_m2_s': g_bl
+                    'delta_mm': bl['delta_mm'],
+                    'g_bl_mol_m2_s': bl['g_bl_mol_m2_s'],
+                    'Re_L': bl['Re_L'],
+                    'Gr_L': bl['Gr_L'],
+                    'delta_forced_mm': bl['delta_forced_mm'],
+                    'delta_forced_exceeds_headspace': bl['delta_forced_exceeds_headspace'],
                 }
                 
         dC_CO2_mean = float(np.mean([m['dC_CO2_ppm'] for m in comp_metrics.values()]))
@@ -294,7 +333,12 @@ class GBC1CFDSimulator:
         p_outlet_mean = float(np.mean(p[self.is_outlet]))
         delta_p = float(abs(p_inlet_mean - p_outlet_mean))
         p_gauge_mean = float(np.mean(p[self.is_headspace]))
-        
+
+        # Run-length diagnostics: simulated time vs headspace turnover time V/Q
+        V_headspace_m3 = float(np.sum(self.is_headspace)) * self.dx ** 3
+        t_sim_s = float(max_steps * dt)
+        turnover_s = float(V_headspace_m3 / Q_m3_s) if Q_m3_s > 0 else float('inf')
+
         results = {
             'Q_L_min': float(Q_L_min),
             'mode': mode,
@@ -312,6 +356,10 @@ class GBC1CFDSimulator:
             'dC_H2O_mean_mmol': dC_H2O_mean,
             'delta_bl_mean_mm': delta_mean,
             'g_bl_mean_mol_m2_s': g_bl_mean,
+            'g_bl_method': 'correlation estimate (not resolved by the solver)',
+            't_sim_s': t_sim_s,
+            'turnover_s': turnover_s,
+            't_sim_over_turnover': t_sim_s / turnover_s,
             'compartments': comp_metrics
         }
         

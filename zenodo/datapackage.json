@@ -55,7 +55,7 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "description": "ASME V&V 20-2009 standard 3-grid convergence index verification study across 1.50, 1.00, and 0.75 mm pitches."
+      "description": "Three-grid convergence index study across 1.50, 1.00 and 0.75 mm voxel pitches. Grids are compared at different simulated times (t_sim_* columns), all short of the headspace turnover, so this does not establish grid independence."
     },
     {
       "name": "gbc1_foliar_surface_distribution",
@@ -79,7 +79,7 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "description": "Multi-system spaceflight hardware comparative benchmark across NASA BRIC, CARA, VEGGIE, and LEAF GBC1."
+      "description": "Long-format hardware comparison (BRIC, CARA, VEGGIE, LEAF GBC1) built only from solver output: LunarLeaf-CFD T8/T11/T19/T20 and the deepspace-seed-twin GBC1 LBM run (see data/external/README.md in the repository). Unsourced or unrun quantities are NaN with a status column."
     }
   ]
 }

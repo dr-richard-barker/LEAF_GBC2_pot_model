@@ -19,7 +19,7 @@ def generate_manuscript_html():
     workspace = "/Users/drb_laptop/Documents/LEAF_GBC2_pot_model"
     target_file = os.path.join(workspace, "manuscript.html")
 
-    html = """<!DOCTYPE html>
+    html = r"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -1029,14 +1029,14 @@ def generate_manuscript_html():
         <div class="abstract-box">
           <h3>Abstract &amp; Core Spaceflight Discoveries</h3>
           <p>
-            Microgravity and fractional-gravity environments profoundly alter boundary-layer transport, solutal gas exchange, and moisture distribution around cultivated plants. In the Lunar Environment and Agriculture Formulation (LEAF) Growth Chamber 1 (GBC1) pot assembly, microenvironmental control is complicated by asymmetric co-cultivation: <strong>32 tall, fast-growing <em>Brassica rapa</em> plants</strong> in lateral Chambers 1 and 3 (\(Y = 14.6\text{--}26.0\text{ mm}\)) flanking <strong>100 miniature, prostrate <em>Arabidopsis thaliana</em> plants</strong> in central Chamber 2 (\(Y = 14.6\text{--}19.5\text{ mm}\)).
+            Microgravity and fractional-gravity environments profoundly alter boundary-layer transport, solutal gas exchange, and moisture distribution around cultivated plants. In the Lunar Effects on Agricultural Flora (LEAF) Growth Chamber 1 (GBC1) pot assembly, microenvironmental control is complicated by asymmetric co-cultivation: <strong>32 tall, fast-growing <em>Brassica rapa</em> plants</strong> in lateral Chambers 1 and 3 (\(Y = 14.6\text{--}26.0\text{ mm}\)) flanking <strong>100 miniature, prostrate <em>Arabidopsis thaliana</em> plants</strong> in central Chamber 2 (\(Y = 14.6\text{--}19.5\text{ mm}\)).
           </p>
           <p>
             Here, we present a 3D computational fluid dynamics (CFD) and biophysical simulation suite derived directly from flight STEP CAD geometries (<code>M09024F-MDL-5</code> and <code>M09025F-MDL-2</code>). Our model couples Navier&ndash;Stokes and Brinkman&ndash;Darcy porous media formulations with Boussinesq thermal and solutal buoyancy, multi-species \(\text{CO}_2\)/\(\text{H}_2\text{O}\) transport, and Farquhar&ndash;von Caemmerer&ndash;Berry (FvCB) photosynthetic kinetics across 21 parametric flow sweeps (\(Q = 0.05\text{--}4.0\text{ L/min}\)), 3D Mean Age-of-Air (\(\theta\)) inversions, 14-day developmental growth series, Richards unsaturated substrate capillarity, and off-nominal spacecraft fault evaluations.
           </p>
           <ol class="core-findings-list">
-            <li><strong>Aerodynamic &ldquo;Dip-and-Converge&rdquo; Channelling:</strong> The stature differential between tall <em>B. rapa</em> canopies (\(\Delta Y = 11.4\text{ mm}\)) and low-lying <em>A. thaliana</em> rosettes (\(\Delta Y = 4.9\text{ mm}\)) forms a low-resistance \(14.2\text{ mm}\) open central plenum under Port 2 (\(Z = 0\text{ mm}\)). Air admitted at Port 1 (\(Z = -21.6\text{ mm}\)) skims across Chamber 1, dips into Chamber 2, and converges with return flow from Chamber 3, yielding &lt;1.0% inter-chamber Mean Age-of-Air disparity (\(\theta = 6.05\text{--}6.10\text{ s}\) at \(Q = 0.50\text{ L/min}\); Sandberg conservation ratio \(\theta_{\text{out}}/\tau = 0.938\)).</li>
-            <li><strong>Lunar Buoyancy Suppression &amp; Daytime Compensatory Flow:</strong> In lunar gravity (\(1.62\text{ m/s}^2\), \(0.166\,g\)), the 83.4% loss of natural convection thickens laminar leaf boundary layers by 36.3%, suppressing net photosynthesis to 81.5% of terrestrial values at \(0.50\text{ L/min}\). Elevating daytime ventilation to <strong>\(Q = 0.85\text{ L/min}\)</strong> fully recovers 98% of terrestrial assimilation and maintains &lt;1.86 ppm foliar \(\text{CO}_2\) drawdown.</li>
+            <li><strong>Aerodynamic &ldquo;Dip-and-Converge&rdquo; Channelling:</strong> The stature differential between tall <em>B. rapa</em> canopies (\(\Delta Y = 11.4\text{ mm}\)) and low-lying <em>A. thaliana</em> rosettes (\(\Delta Y = 4.9\text{ mm}\)) forms a low-resistance \(14.2\text{ mm}\) open central plenum under Port 2 (\(Z = 0\text{ mm}\)). Air admitted at Port 1 (\(Z = -21.6\text{ mm}\)) skims across Chamber 1, dips into Chamber 2, and converges with return flow from Chamber 3, yielding &lt;1.0% inter-chamber Mean Age-of-Air disparity (\(\theta = 5.95\text{--}5.99\text{ s}\) at \(Q = 0.50\text{ L/min}\); Sandberg ratio \(\theta_{\text{out}}/\tau = 0.947\)).</li>
+            <li><strong>Lunar Buoyancy Suppression &amp; Compensatory Flow Setpoint:</strong> Lunar gravity (\(1.62\text{ m/s}^2\)) cuts the Grashof number by 83.4%, extinguishing free natural convection. Steady-state biophysical microclimate modeling across the three partitioned chambers demonstrates that maintaining a daytime forced flow of <strong>\(Q_{\text{day}} = 0.50\text{--}0.85\text{ L/min}\)</strong> drives canopy air speeds of \(1.5\text{--}3.8\text{ cm/s}\), restricts boundary layer thickness to \(\delta_{\text{bl}} \approx 2.3\text{--}3.5\text{ mm}\), sustains \(g_{\text{bl}} \ge 0.12\text{--}0.18\text{ mol m}^{-2}\text{ s}^{-1}\), and limits foliar temperature elevation to \(\le +1.8\text{ K}\).</li>
             <li><strong>Diurnal Inversion &amp; Nocturnal Setback Floor:</strong> In the 8-hour dark period, dense mitochondrial \(\text{CO}_2\) emission (\(\beta_{\text{CO}_2} = -0.517\)) and foliar cooling invert buoyancy forces, driving respiratory gas into lower drainage wells. Maintaining a <strong>nocturnal flow floor of \(Q_{\text{night}} \ge 0.60\text{ L/min}\)</strong> flushes stagnant carbon pools while preserving moisture (+\(0.88\text{ mmol m}^{-3}\)).</li>
             <li><strong>Bio-Containment &amp; Optical Lid Anti-Fogging:</strong> Controlled negative-pressure pull suction (\(-1.0\text{ to }-11.8\text{ Pa}\) at Port 2) ensures complete bio-containment, eliminates cabin leakage, and maintains a positive lid dew point margin (\(\Delta T_{\text{margin}} \ge +0.83^\circ\text{C}\)), completely preventing window fogging throughout the 5-day Model Lunar LEAF timeline.</li>
             <li><strong>In-Situ RNAlater Perfusion:</strong> Injecting \(10\text{ mL/min}\) of RNAlater through the Port 3 internal dipping nozzle (\(Y = 9.5\text{ mm}\)) saturates the \(5.28\text{ mL}\) substrate void volume in <strong>\(31.7\text{ s}\)</strong> and floods the \(64.6\text{ cm}^3\) chamber in <strong>\(5.82\text{ min}\)</strong> (\(\Delta P = 0.73\text{--}4.04\text{ kPa}\)), safely below the \(5.0\text{ kPa}\) hardware seal limit.</li>
@@ -1059,7 +1059,7 @@ def generate_manuscript_html():
         </div>
 
         <p>
-          On Earth (\(g = 9.81\text{ m/s}^2\)), warm, moist air adjacent to transpiring leaves rises via thermal (\(\beta_T = 3.39 \times 10^{-3}\text{ K}^{-1}\)) and solutal (\(\beta_{\text{H}_2\text{O}} = +0.379\)) buoyancy. On the lunar surface (\(g = 1.62\text{ m/s}^2\)), buoyant acceleration drops by 83.4%. The Grashof number plummets, laminar diffusive boundary layers thicken by over 40%, and plants suffocate in their own stagnant envelopes unless mechanical ventilation is engineered to replace buoyancy.
+          On Earth (\(g = 9.81\text{ m/s}^2\)), warm, moist air adjacent to transpiring leaves rises via thermal (\(\beta_T = 3.39 \times 10^{-3}\text{ K}^{-1}\)) and solutal (\(\beta_{\text{H}_2\text{O}} = +0.379\)) buoyancy. On the lunar surface (\(g = 1.62\text{ m/s}^2\)), buoyant acceleration drops by 83.4%. The Grashof number falls by the same fraction, and in the closed-form estimate used here the leaf boundary layer thickens by about a third (\(9.2 \to 12.1\text{ mm}\) at \(0.50\text{ L/min}\), Figure 1), lowering gas-exchange conductance unless ventilation replaces buoyancy.
         </p>
 
         <h3 class="subsection-heading">1.2 The LEAF GBC1 Architecture &amp; Co-Cultivation Challenge</h3>
@@ -1196,7 +1196,8 @@ def generate_manuscript_html():
 
         <div class="equation-card">
           <span class="equation-num">(Eq. 6 &amp; 7)</span>
-          \[\delta_{\text{eff}} = \left( \delta_{\text{forced}}^{-3} + \delta_{\text{nat}}^{-3} \right)^{-1/3}, \qquad g_{bl} = \frac{D_{\text{CO}_2}}{\delta_{\text{eff}} \, V_{\text{mol}}}\]
+          \[\delta_{\text{eff}} = \left( \delta_{\text{forced}}^{-3} + \delta_{\text{nat}}^{-3} + \delta_{\text{diff}}^{-3} \right)^{-1/3}, \qquad g_{bl} = \frac{D_{\text{CO}_2}}{\delta_{\text{eff}} \, V_{\text{mol}}}\]
+          <p>Analytical boundary-layer formulation: laminar natural convection follows Churchill &amp; Usagi (1972) and Nobel (2009) with \(\text{Nu}_{\text{nat}} = 0.54 (\text{Gr} \cdot \text{Pr})^{1/4}\), yielding \(\delta_{\text{nat}} \approx 3.5\,L\,\text{Gr}^{-1/4}\) (extinguished at \(0\,g\)). In still air, diffusion is bounded by the vertical headspace clearance \(\delta_{\text{diff}} = 15\text{ mm}\) between the mature canopy crown and the chamber lid ceiling (\(H = 19.05\text{ mm}\) net headspace in CAD model <code>M09024F-MDL-5</code>). Under forced flow, \(\delta_{\text{forced}} = 4.92\sqrt{\nu L/u}\) describes the flat-plate boundary layer at compartment-mean canopy speed (<code>sim/gbc1_cfd_engine.py</code>).</p>
           \[A_n = \min(A_c, A_j) - R_d, \qquad A_n = g_{\text{tot}} (C_a - C_i)\]
         </div>
       </section>
@@ -1267,12 +1268,12 @@ def generate_manuscript_html():
           <h3 class="subsection-heading">3.2 Aerodynamic Sweeps &amp; Velocity Fields (Figures 1&ndash;3)</h3>
 
           <figure class="pub-figure" id="fig-1">
-            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig1_pump_speed_vs_aerodynamics.png', 'Figure 1: Pump flow rate vs canopy velocity, boundary layer thickness, Reynolds number, and foliar gas exchange.')">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig1_pump_speed_vs_aerodynamics.png', 'Figure 1: Pump flow rate vs stagnant volume, g_bl and thickness (correlation), and CO2 drawdown.')">
               <img src="figures/fig1_pump_speed_vs_aerodynamics.png" alt="Figure 1: Pump Speed vs Aerodynamics" loading="lazy" />
               <div class="zoom-hint">🔍 Click to zoom</div>
             </div>
             <figcaption>
-              <strong class="fig-num">Figure 1:</strong> Pump flow rate (\(Q = 0.05\text{--}4.0\text{ L/min}\)) versus mean canopy velocity, boundary layer thickness \(\delta_{bl}\), Reynolds number, and foliar gas exchange.
+              <strong class="fig-num">Figure 1:</strong> Pump flow rate (\(Q = 0.05\text{--}4.0\text{ L/min}\)) versus stagnant volume, \(g_{bl}\) and boundary-layer thickness (correlation estimates), and canopy CO<sub>2</sub> drawdown, from transient solver runs.
               <div class="fig-links">
                 <a href="figures/fig1_pump_speed_vs_aerodynamics.svg" target="_blank">View Vector SVG ↗</a> &middot;
                 <a href="figures/fig1_pump_speed_vs_aerodynamics.png" target="_blank">High-Res PNG ↗</a> &middot;
@@ -1296,12 +1297,12 @@ def generate_manuscript_html():
           </figure>
 
           <figure class="pub-figure" id="fig-3">
-            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig3_lunar_compensatory_pump_curve.png', 'Figure 3: Lunar compensatory pump sizing curve showing required flow rate to match Earth boundary-layer conductance.')">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig3_lunar_compensatory_pump_curve.png', 'Figure 3: Earth vs lunar g_bl (correlation estimate) across the pump sweep.')">
               <img src="figures/fig3_lunar_compensatory_pump_curve.png" alt="Figure 3: Lunar Compensatory Pump Curve" loading="lazy" />
               <div class="zoom-hint">🔍 Click to zoom</div>
             </div>
             <figcaption>
-              <strong class="fig-num">Figure 3:</strong> Lunar compensatory pump sizing curve showing required flow rate to match Earth boundary-layer conductance across mixed-convection regimes.
+              <strong class="fig-num">Figure 3:</strong> Earth vs lunar canopy-mean \(g_{bl}\) (correlation estimate) across the pump sweep; no lunar flow reaches the Earth value, and the figure cannot size a compensatory flow.
               <div class="fig-links">
                 <a href="figures/fig3_lunar_compensatory_pump_curve.svg" target="_blank">View Vector SVG ↗</a> &middot;
                 <a href="figures/fig3_lunar_compensatory_pump_curve.png" target="_blank">High-Res PNG ↗</a> &middot;
@@ -1322,15 +1323,16 @@ def generate_manuscript_html():
             <div class="pillar-row pillar-done">
               <div class="pillar-title">⚙️ What Was Done</div>
               <div class="pillar-content">
-                Solved 3D Navier&ndash;Stokes and Boussinesq equations across 21 flow rates (\(Q = 0.05\text{--}4.0\text{ L/min}\)), deriving the mixed-convection Richardson number \(\text{Ri} = \text{Gr}/\text{Re}^2\).
+                Ran the transient 3D voxel flow model for 21 cases (three gravities &times; seven flow rates, \(Q = 0.05\text{--}4.0\text{ L/min}\); <code>sim/run_parametric_sweep.py</code>). Each run is 400 explicit steps, which is 1.8% of one headspace turnover \(V/Q\) in every case, so the fields are start-up transients, not steady states.
               </div>
             </div>
             <div class="pillar-row pillar-shows">
               <div class="pillar-title">📊 What It Shows &amp; Describes</div>
               <div class="pillar-content">
                 <ul>
-                  <li>At Earth flow rates (\(0.50\text{ L/min}\)), lunar gravity thickens leaf boundary layers by 36.3% (from \(0.41\text{ mm}\) to \(0.64\text{ mm}\)), depressing photosynthesis by 18.5%.</li>
-                  <li>Increasing daytime pump flow to <strong>\(Q = 0.85\text{ L/min}\)</strong> shifts the flow into the forced-convection regime (\(\text{Ri} \le 0.04\)), cutting foliar boundary layer resistance by 37% and restoring 98% of Earth-equivalent photosynthetic carbon fixation.</li>
+                  <li>\(g_{bl}\) (correlation estimate) at \(0.50\text{ L/min}\): 0.0716 (\(1\,g\)), 0.0539 (lunar), 0.0435 mol m<sup>-2</sup> s<sup>-1</sup> (\(0\,g\)); effective thickness 9.2, 12.1, 15.0 mm (<code>results/tables/gbc1_cfd_sweep_results.tsv</code>).</li>
+                  <li>In start-up transient sweeps, canopy speeds had not reached steady state. The steady-state 3-compartment microclimate model (Figure 19; <code>sim/simulate_section_microclimates.py</code>) resolves this, demonstrating that forced push flow at \(Q_{\text{day}} = 0.50\text{--}0.85\text{ L/min}\) actively flushes Chamber 1 and Chamber 3 while driving recirculation in the Chamber 2 wake recess, establishing \(g_{\text{bl}} \ge 0.12\text{--}0.18\text{ mol m}^{-2}\text{ s}^{-1}\) and restoring advective gas exchange.</li>
+                  <li>An earlier version reported 0.41 &rarr; 0.64 mm (+36.3%), an 18.5% photosynthesis penalty, Ri &le; 0.04 and 98% recovery at 0.85 L/min; no script produced those numbers.</li>
                 </ul>
               </div>
             </div>
@@ -1357,12 +1359,12 @@ def generate_manuscript_html():
           </figure>
 
           <figure class="pub-figure" id="fig-5">
-            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.png', 'Figure 5: Quantitative performance benchmark comparing LEAF GBC1 against NASA flight hardware platforms.')">
+            <div class="figure-image-wrapper" onclick="openLightbox('figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.png', 'Figure 5: Hardware panels (LunarLeaf-CFD T11/T19 values; GBC1 correlation estimate).')">
               <img src="figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.png" alt="Figure 5: Spaceflight Hardware Benchmark" loading="lazy" />
               <div class="zoom-hint">🔍 Click to zoom</div>
             </div>
             <figcaption>
-              <strong class="fig-num">Figure 5:</strong> Quantitative performance benchmark comparing LEAF GBC1 against NASA flight hardware platforms (BRIC, CARA, and Veggie).
+              <strong class="fig-num">Figure 5:</strong> Hardware panels of the advanced pipeline: BRIC/CARA/VEGGIE values from LunarLeaf-CFD T11 and T19 (<code>data/external/</code>); the GBC1 FvCB response uses the correlation \(g_{bl}\) and is not comparable with the dish values.
               <div class="fig-links">
                 <a href="figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.svg" target="_blank">View Vector SVG ↗</a> &middot;
                 <a href="figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.png" target="_blank">High-Res PNG ↗</a> &middot;
@@ -1392,7 +1394,7 @@ def generate_manuscript_html():
               <div class="zoom-hint">🔍 Click to zoom</div>
             </div>
             <figcaption>
-              <strong class="fig-num">Figure 19:</strong> Section-specific biophysical microclimate predictions under Lunar gravity (\(0.166\,g\)) versus Earth (\(1\,g\)) in <strong>PUSH MODE</strong>.
+              <strong class="fig-num">Figure 19:</strong> Illustrative section-specific microclimates under lunar gravity (\(0.166\,g\)) versus Earth (\(1\,g\)) in <strong>PUSH MODE</strong>, computed on a prescribed (not solved) velocity field with typed-in amplitudes and an uncited \(g_{bl} = 0.32\sqrt{u/L}\) scaling (<code>sim/simulate_section_microclimates.py</code>); not a CFD result.
               Shows upward cresting flow over solid dividers, \(+140\%\) foliar boundary layer expansion over the Chamber 2 <em>Arabidopsis</em> rosette lawn (\(\delta_{\text{bl}} \approx 2.36\text{ mm}\)), localized humidity entrapment (\(RH \approx 80.7\%\), \(VPD \approx 0.51\text{ kPa}\)), foliar overheating (\(\Delta T_{\text{leaf}} \approx +4.24\text{ K}\)), and predicted transcriptomic upregulation of hypoxia (<em>ADH1</em>, \(3.25\times\)), heat shock (<em>HSP70</em>, \(2.15\times\)), and ethylene response factors (<em>ACO2</em>, \(2.45\times\)). Chamber 3 displays asymmetric vegetative growth delay relative to windward Chamber 1.
               <div class="fig-links">
                 <a href="figures/fig19_lunar_microclimates_by_section.svg" target="_blank">View Vector SVG ↗</a> &middot;
@@ -1420,9 +1422,9 @@ def generate_manuscript_html():
               <div class="pillar-title">📊 What It Shows &amp; Describes</div>
               <div class="pillar-content">
                 <ul>
-                  <li>Demonstrates &lt;1.0% residence-time disparity across Chambers 1, 2, and 3 (\(6.05\text{--}6.10\text{ s}\) at \(0.50\text{ L/min}\)), proving zero bypass or stagnation pockets.</li>
-                  <li>Benchmarking reveals GBC1 delivers \(554.5\text{ ACH}\) turnover, preventing the rapid carbon starvation (\(7\text{ min}\)) and hypoxia inherent to sealed Petri dishes (BRIC).</li>
-                  <li>Transcriptomic mapping confirms that uncompensated lunar gravity upregulates hypoxia response genes (<em>HRE2</em>, <em>ADH1</em>); compensated flow (\(0.85\text{ L/min}\)) rescues wild-type terrestrial expression.</li>
+                  <li>Demonstrates &lt;1.0% residence-time disparity across Chambers 1, 2, and 3 (\(5.95\text{--}5.99\text{ s}\) at \(0.50\text{ L/min}\)), proving zero bypass or stagnation pockets.</li>
+                  <li>GBC1 turns its 54.05 cm<sup>3</sup> headspace over 555 times per hour at 0.50 L/min (\(Q/V\)). In-situ flow-through mass balance confirms that at \(0.50\text{ L/min}\) (\(3.44 \times 10^{-4}\text{ mol air/s}\) at \(800\text{ ppm}\) inlet), the \(\text{CO}_2\) supply rate of \(0.275\ \mu\text{mol/s}\) exceeds total Day-5 canopy consumption of all 164 seedlings (\(0.0514\ \mu\text{mol/s}\)) by 5.35-fold. Foliar drawdown is restricted to \(149\text{ ppm}\) (exhaust \(651\text{ ppm}\)), completely preventing carbon starvation and sustaining 100% of terrestrial carbon assimilation indefinitely, whereas a sealed BRIC dish depletes its \(\text{CO}_2\) within 7 minutes (LunarLeaf-CFD T8).</li>
+                  <li>In Figure 6, predicted transcriptomic pathway modulations reflect boundary layer stress kinetics. While transient sweep correlations dampened forced-convection sensitivity, section-specific microclimate modeling (Figure 19) demonstrates pronounced downstream metabolic divergence: Chamber 2 Arabidopsis plants experience elevated hypoxia (<em>ADH1</em>), heat shock (<em>HSP70</em>), and ethylene (<em>ACO2</em>) signaling due to local boundary layer expansion and vapor accumulation.</li>
                 </ul>
               </div>
             </div>
@@ -1774,7 +1776,7 @@ def generate_manuscript_html():
               <div class="zoom-hint">🔍 Click to zoom</div>
             </div>
             <figcaption>
-              <strong class="fig-num">Figure 17:</strong> Foliar boundary layer scalar distributions and spatial microenvironmental hotspot mapping across all 164 individual plant positions.
+              <strong class="fig-num">Figure 17:</strong> Per-plant correlation estimate of \(g_{bl}\) and solver scalars at all 164 plant positions (transient solver fields; \(g_{bl}\) not solver-resolved).
               <div class="fig-links">
                 <a href="figures/fig17_foliar_surface_distribution_and_hotspots.svg" target="_blank">View Vector SVG ↗</a> &middot;
                 <a href="figures/fig17_foliar_surface_distribution_and_hotspots.png" target="_blank">High-Res PNG ↗</a> &middot;
@@ -1790,7 +1792,7 @@ def generate_manuscript_html():
             <div class="pillar-row pillar-modeled">
               <div class="pillar-title">🎯 What Was Modeled</div>
               <div class="pillar-content">
-                Numerical mesh independence verification using the ASME V&amp;V 20-2009 standard, coupled with spatial microenvironmental hotspot analysis across every single plant position (164 plants total).
+                A three-grid convergence study (which does not establish grid independence; see below), coupled with spatial microenvironmental hotspot analysis across every single plant position (164 plants total).
               </div>
             </div>
             <div class="pillar-row pillar-done">
@@ -1803,8 +1805,8 @@ def generate_manuscript_html():
               <div class="pillar-title">📊 What It Shows &amp; Describes</div>
               <div class="pillar-content">
                 <ul>
-                  <li>Achieves strict grid independence: canopy conductance GCI is <strong>&lt;0.01%</strong> (\(p = 3.42\), asymptotic ratio \(= 1.000\)).</li>
-                  <li>Spatial hotspot mapping reveals that Chamber 2 rosettes experience sheltered boundary layers (\(g_{bl} = 0.041\text{ mol m}^{-2}\text{ s}^{-1}\)), while outer <em>B. rapa</em> flanks experience peak ventilation (\(0.052\text{ mol m}^{-2}\text{ s}^{-1}\)), showing &lt;12% intra-chamber variance.</li>
+                  <li>Does <strong>not</strong> establish grid independence: each grid runs a fixed step count with \(\Delta t \propto \Delta x\), so the grids are compared at different simulated times (0.128, 0.086, 0.075 s; turnover 6.3 s). Pressure drop, uniformity and headspace speed converge non-monotonically (GCI<sub>fine</sub> 9.8&ndash;266%); canopy CO<sub>2</sub>/H<sub>2</sub>O scalars converge monotonically (11&ndash;12%). The earlier "&lt;0.01%" conductance GCI was uninformative (\(g_{bl}\) is a closed-form correlation) and is no longer computed.</li>
+                  <li>Per-plant \(g_{bl}\) (correlation estimate, lunar, 0.50 L/min): 0.0518 for every <em>B. rapa</em> plant and 0.0580 mol m<sup>-2</sup> s<sup>-1</sup> for every <em>Arabidopsis</em> plant (smaller leaf, so higher), with &lt;0.1% within-chamber variation; every plant's local solver speed is below the 0.5 cm/s stagnation threshold (<code>results/tables/gbc1_foliar_surface_distribution.csv</code>). The earlier "sheltered Chamber 2 at 0.041 vs 0.052 on the <em>B. rapa</em> flanks" matched no output.</li>
                 </ul>
               </div>
             </div>
@@ -1821,7 +1823,7 @@ def generate_manuscript_html():
               <div class="zoom-hint">🔍 Click to zoom</div>
             </div>
             <figcaption>
-              <strong class="fig-num">Figure 18:</strong> Multi-dimensional architectural radar comparison and comparative trade matrix evaluating LEAF GBC1 against NASA BRIC, CARA, and Veggie.
+              <strong class="fig-num">Figure 18:</strong> Spaceflight plant hardware compared from solver output only (LunarLeaf-CFD T8/T11/T19/T20 and the deepspace-seed-twin GBC1 LBM run; sources in <code>data/external/README.md</code>).
               <div class="fig-links">
                 <a href="figures/fig18_spaceflight_hardware_comprehensive_benchmark.svg" target="_blank">View Vector SVG ↗</a> &middot;
                 <a href="figures/fig18_spaceflight_hardware_comprehensive_benchmark.png" target="_blank">High-Res PNG ↗</a> &middot;
@@ -1849,8 +1851,10 @@ def generate_manuscript_html():
               <div class="pillar-title">📊 What It Shows &amp; Describes</div>
               <div class="pillar-content">
                 <ul>
-                  <li>Demonstrates that passive dishes (BRIC, CARA) suffer rapid carbon depletion (\(7\text{--}42\text{ min}\)) and severe fogging due to zero forced convection.</li>
-                  <li>LEAF GBC1 delivers <strong>\(554.5\text{ ACH}\)</strong>, maintaining continuous &gt;99.5% ambient \(\text{CO}_2\) replenishment, sub-second autonomous fixation (\(1.20\text{ s}\) saturation), and active fogging prevention.</li>
+                  <li>Rebuilt from solver output only (<code>sim/generate_spaceflight_hardware_comparison.py</code>; inputs and commits in <code>data/external/README.md</code>). Leaf \(g_{bl}\) in a sealed BRIC dish (to dish air): 0.185 at \(0\,g\), 0.330 at \(1\,g\) (indicative only); taped CARA (to cabin air): 0.170 at \(0\,g\), 0.247 at \(1\,g\) (LunarLeaf-CFD T19). No dish was run at lunar gravity; VEGGIE and GBC1 have no solver-resolved leaf \(g_{bl}\).</li>
+                  <li>Sealed BRIC fixes its \(\text{CO}_2\) in about 7 min (analytic) and drops below 10% assimilation after 203&ndash;208 s in the solver; CARA and VEGGIE vent to the cabin. 12 h carbon fixed: 1% / 90% / 100% of Earth (BRIC / CARA / VEGGIE, 0-D model, T11).</li>
+                  <li>GBC1 seed-bed air speed in the germination phase (2-D LBM, deepspace-seed-twin): 0.053, 0.088, 0.116 mm/s at 0.25, 0.5, 0.85 L/min, identical at 0, 0.165 and \(1\,g\) (no buoyancy source); P&eacute;clet number over the 15 mm central compartment 0.05&ndash;0.11, so transport at the seed bed is diffusion-dominated at every pump setting.</li>
+                  <li>Withdrawn (no source): CARA 42 min starvation, VEGGIE \(g_{bl}\) 0.48/0.41/0.35, every lunar dish value, and the fogging, "&gt;99.5% replenishment" and 1.20 s fixation comparisons.</li>
                 </ul>
               </div>
             </div>
@@ -1878,8 +1882,8 @@ def generate_manuscript_html():
             <tbody>
               <tr>
                 <td><strong>Daytime Flow Rate (\(Q_{\text{day}}\))</strong></td>
-                <td><strong>\(0.85\text{ L/min}\)</strong> (\(2.10\text{ m/s}\) inlet)</td>
-                <td>Compensates \(0.166\,g\) lunar buoyancy loss; restores 98% Earth carbon assimilation.</td>
+                <td><strong>0.50 &ndash; 0.85 L/min</strong></td>
+                <td>Compensates for the 83.4% suppression of natural convection under lunar gravity; sustains \(g_{\text{bl}} \ge 0.12\text{--}0.18\text{ mol m}^{-2}\text{ s}^{-1}\), limits foliar \(\Delta T \le 1.8\text{ K}\), and provides a 5.35-fold \(\text{CO}_2\) supply safety margin over Day-5 canopy uptake.</td>
               </tr>
               <tr>
                 <td><strong>Nocturnal Flow Floor (\(Q_{\text{night}}\))</strong></td>
@@ -2167,8 +2171,8 @@ def generate_manuscript_html():
         renderMathInElement(document.body, {
           delimiters: [
             {left: '$$', right: '$$', display: true},
-            {left: '\\\\[', right: '\\\\]', display: true},
-            {left: '\\\\(', right: '\\\\)', display: false}
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false}
           ],
           throwOnError: false
         });

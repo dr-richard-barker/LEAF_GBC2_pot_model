@@ -1,249 +1,288 @@
 """
-Comparative Spaceflight Plant Cultivation Hardware Benchmark.
-Synthesizes microenvironmental, aerodynamic, and gas-exchange performance across:
-  1. NASA BRIC (Biological Research in Canisters, 60 mm sealed Petri dishes)
-  2. NASA CARA (Characterizing Arabidopsis Root Attractions, 120 mm taped plates)
-  3. NASA VEGGIE (Vegetable Production System, open cabin forced convection)
-  4. NASA LEAF GBC1 (Growth Chamber 1 Pot Assembly, M09024F/M09025F 3-chamber active digital twin)
+Spaceflight plant-hardware comparison (Fig. 18), built only from solver output.
 
-Ingests empirical and numerical benchmarks from LunarLeaf-CFD and GBC1 CFD engine.
-Generates:
-  - results/tables/gbc1_spaceflight_hardware_comprehensive_benchmark.csv
-  - figures/fig18_spaceflight_hardware_comprehensive_benchmark.png (.svg)
+Rebuilt 2026-11-07. The previous version typed its values in: BRIC used LunarLeaf's
+conductance against *cabin* air (0.070 / 0.060), which LunarLeaf says is the wrong
+reference for a sealed dish; every lunar-gravity value was interpolated (none was run);
+the VEGGIE conductances (0.48 / 0.41 / 0.35) and the CARA 42 min starvation time had no
+source; and GBC1's conductance came from a correlation, not a solved field.
+
+Every number written here is read from a table in data/external/ (see its README for the
+source repository, commit and hash) or derived from one by the formula shown. Quantities
+that no solver has produced are written with status 'not run' or 'not sourced' and value NaN.
+
+Inputs:
+  data/external/lunarleaf_cfd/T19_dish_hardware.csv          leaf g_bl in BRIC / CARA dishes (LBM)
+  data/external/lunarleaf_cfd/T8_enclosure_timescales.csv    sealed-dish atmosphere timescales (analytic)
+  data/external/lunarleaf_cfd/T20_dish_feedback_summary.csv  dishes with CO2-limited photosynthesis (LBM)
+  data/external/lunarleaf_cfd/T11_photosynthesis_feedback.csv 12 h carbon fixed, % Earth (0-D model)
+  data/external/deepspace_seed_twin/seed_air_speed.csv       GBC1 seed-bed air speed (2-D LBM)
+  README.md (CAD): GBC1 headspace air volume 54.05 cm3
+
+Outputs:
+  results/tables/gbc1_spaceflight_hardware_comprehensive_benchmark.csv (+ gbc2_ copy)
+  figures/fig18_spaceflight_hardware_comprehensive_benchmark.png (.svg)
 """
 
 import os
 import sys
 
-# Ensure project root is in sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import numpy as np
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
+from matplotlib.patches import Patch
+
+EXT = 'data/external'
+LL = f'{EXT}/lunarleaf_cfd'
+ST = f'{EXT}/deepspace_seed_twin'
+SRC_LL = 'LunarLeaf-CFD b5c18bd results/tables/'
+SRC_ST = 'deepspace-seed-twin 168e52c results/tables/seed_air_speed.csv'
+
+GBC1_HEADSPACE_CM3 = 54.05   # CAD headspace air volume (README.md, geometry section)
+D_CO2 = 1.60e-5              # m2/s, as used by sim/gbc1_cfd_engine.py
+CENTRAL_COMPARTMENT_M = 0.015  # |Z| < 7.5 mm, the window the LBM bed speed is averaged over
+
+# Palette (validated with the dataviz validator: categorical slots 1-3, light surface)
+C_1G, C_0G, C_3 = '#2a78d6', '#eb6834', '#1baf7a'
+INK, INK2, MUTED, GRID = '#0b0b0b', '#52514e', '#8a8984', '#e4e3df'
+
+
+def row(hardware, quantity, condition, value, unit, status, source, note=''):
+    return dict(hardware=hardware, quantity=quantity, condition=condition, value=value,
+                unit=unit, status=status, source=source, note=note)
+
 
 def build_hardware_benchmark_dataset():
-    """
-    Compile comprehensive quantitative metrics across spaceflight hardware platforms.
-    """
-    benchmark_data = [
-        {
-            'hardware': 'BRIC (Sealed 60mm Dish)',
-            'flight_heritage': 'STS, ISS (BRIC-PDF, BRIC-LED)',
-            'enclosure_type': 'Hermetically Sealed Dish',
-            'culture_volume_cm3': 16.4,
-            'headspace_volume_cm3': 10.8,
-            'plant_capacity': '20-50 seedlings (agar)',
-            'ventilation_mode': 'Zero ventilation (passive diffusion only)',
-            'flow_rate_L_min': 0.0,
-            'ach_per_hour': 0.0,
-            'tau_carbon_starvation_min': 7.0, # 400 -> ~0 ppm CO2 in 7 min (empirical/LBM)
-            'tau_hypoxia_dark_days': 6.5,    # 21% -> 5% O2 in dark respiration
-            'g_bl_earth_1g': 0.070,           # mol m^-2 s^-1
-            'g_bl_lunar_0166g': 0.063,
-            'g_bl_microgravity_0g': 0.060,
-            'dC_CO2_surface_ppm': -125.0,     # severe foliar starvation (>30% drawdown)
-            'condensation_risk': 'Critical (100% saturation, droplet fogging on lid)',
-            'perfusion_capability': 'Post-flight RNAlater injection via septum',
-            'aerodynamic_control': 'None'
-        },
-        {
-            'hardware': 'CARA (Taped 120mm Dish)',
-            'flight_heritage': 'ISS (Microgravity / Kibo module)',
-            'enclosure_type': 'Gas-Permeable Microporous Tape Dish',
-            'culture_volume_cm3': 110.6,
-            'headspace_volume_cm3': 68.2,
-            'plant_capacity': '80-120 seedlings (agar/membrane)',
-            'ventilation_mode': 'Passive tape perimeter venting',
-            'flow_rate_L_min': 0.002,         # estimated passive diffusion exchange
-            'ach_per_hour': 1.76,             # ~1.8 air changes per hour
-            'tau_carbon_starvation_min': 42.0,# delayed starvation, bounded by tape flux
-            'tau_hypoxia_dark_days': 28.0,
-            'g_bl_earth_1g': 0.247,
-            'g_bl_lunar_0166g': 0.198,
-            'g_bl_microgravity_0g': 0.170,
-            'dC_CO2_surface_ppm': -45.0,
-            'condensation_risk': 'High (corner perimeter fogging, agar meniscus wetting)',
-            'perfusion_capability': 'Manual harvest or chemical cassette',
-            'aerodynamic_control': 'Passive perimeter diffusion'
-        },
-        {
-            'hardware': 'VEGGIE (ISS Cabin Enclosure)',
-            'flight_heritage': 'ISS Columbus / Destiny (VEG-01 to VEG-05)',
-            'enclosure_type': 'Bellows Chamber with Active Fan',
-            'culture_volume_cm3': 115000.0,   # ~115 L canopy volume
-            'headspace_volume_cm3': 95000.0,
-            'plant_capacity': '6 plant pillows (zinnia, lettuce, dwarf tomato)',
-            'ventilation_mode': 'Cabin air forced push (recirculating blower)',
-            'flow_rate_L_min': 28.3,          # ~1 CFM cabin intake
-            'ach_per_hour': 17.8,             # ~18 air changes per hour
-            'tau_carbon_starvation_min': np.inf, # Continuous replenishment from ISS cabin
-            'tau_hypoxia_dark_days': np.inf,
-            'g_bl_earth_1g': 0.480,
-            'g_bl_lunar_0166g': 0.410,
-            'g_bl_microgravity_0g': 0.350,
-            'dC_CO2_surface_ppm': -8.5,
-            'condensation_risk': 'Moderate (inter-leaf contact microclimates in pillow root zones)',
-            'perfusion_capability': 'Manual destructive harvest only (no in-situ perfusion)',
-            'aerodynamic_control': 'Variable fan duty cycle (bulk chamber push)'
-        },
-        {
-            'hardware': 'LEAF GBC1 Pot (Model Lunar LEAF)',
-            'flight_heritage': 'Artemis III / Lunar Surface Architecture',
-            'enclosure_type': 'Precision CNC Acrylic 3-Chamber Pot Assembly',
-            'culture_volume_cm3': 64.6,       # Total CAD internal volume
-            'headspace_volume_cm3': 54.1,     # Open canopy headspace
-            'plant_capacity': '164 plants (32 B. rapa + 100 Arabidopsis + 32 B. rapa)',
-            'ventilation_mode': 'Controlled Active Pull Suction (Port 1 -> Port 2)',
-            'flow_rate_L_min': 0.50,          # 0.50 - 0.85 L/min nominal flight
-            'ach_per_hour': 554.5,            # 554.5 air changes/hr (1 complete flush every 6.5s)
-            'tau_carbon_starvation_min': np.inf, # Constant replenishment (0.34 mmol fresh air/s)
-            'tau_hypoxia_dark_days': np.inf,
-            'g_bl_earth_1g': 0.070,           # canopy microenvironment
-            'g_bl_lunar_0166g': 0.045,
-            'g_bl_microgravity_0g': 0.043,
-            'dC_CO2_surface_ppm': -1.86,      # Minimal foliar drawdown (>99.5% ambient CO2 maintained)
-            'condensation_risk': 'Mitigated (<62% lid RH, negative pressure pull exhaust)',
-            'perfusion_capability': 'Autonomous Port 3 RNAlater sub-second perfusion (1.20s saturation)',
-            'aerodynamic_control': 'Port-level negative gauge pull with uniform manifold distribution'
-        }
+    t19 = pd.read_csv(f'{LL}/T19_dish_hardware.csv').set_index('job')
+    t8 = pd.read_csv(f'{LL}/T8_enclosure_timescales.csv')
+    t20 = pd.read_csv(f'{LL}/T20_dish_feedback_summary.csv').set_index('job')
+    t11 = pd.read_csv(f'{LL}/T11_photosynthesis_feedback.csv').set_index('enclosure')
+    seed = pd.read_csv(f'{ST}/seed_air_speed.csv')
+
+    def t8_val(prefix):
+        r = t8[t8['enclosure atmosphere event'].str.startswith(prefix)].iloc[0]
+        return float(r['time']), r['unit']
+
+    rows = []
+    # --- leaf boundary-layer conductance (mol m-2 s-1) ---------------------------------
+    rows += [
+        row('BRIC (sealed 60 mm dish)', 'leaf g_bl to dish air', '1 g',
+            t19.loc['BRIC-mid_sealed_g1', 'g_bl_vs_enclosure_bulk'], 'mol m-2 s-1',
+            'solver, indicative only', SRC_LL + 'T19_dish_hardware.csv BRIC-mid_sealed_g1',
+            'not steady; depleted dish air exceeds the Boussinesq limit (LunarLeaf F14)'),
+        row('BRIC (sealed 60 mm dish)', 'leaf g_bl to dish air', '0 g',
+            t19.loc['BRIC-mid_sealed_g0', 'g_bl_vs_enclosure_bulk'], 'mol m-2 s-1',
+            'solver', SRC_LL + 'T19_dish_hardware.csv BRIC-mid_sealed_g0'),
+        row('BRIC (sealed 60 mm dish)', 'leaf g_bl to dish air', 'lunar (0.165 g)',
+            np.nan, 'mol m-2 s-1', 'not run', 'no lunar-gravity dish run exists'),
+        row('CARA (taped 120 mm dish)', 'leaf g_bl to cabin air', '1 g',
+            t19.loc['CARA-mid_taped_g1', 'g_bl_vs_ambient'], 'mol m-2 s-1',
+            'solver', SRC_LL + 'T19_dish_hardware.csv CARA-mid_taped_g1'),
+        row('CARA (taped 120 mm dish)', 'leaf g_bl to cabin air', '0 g',
+            t19.loc['CARA-mid_taped_g0', 'g_bl_vs_ambient'], 'mol m-2 s-1',
+            'solver', SRC_LL + 'T19_dish_hardware.csv CARA-mid_taped_g0'),
+        row('CARA (taped 120 mm dish)', 'leaf g_bl to cabin air', 'lunar (0.165 g)',
+            np.nan, 'mol m-2 s-1', 'not run', 'no lunar-gravity dish run exists'),
+        row('VEGGIE', 'leaf g_bl', 'any', np.nan, 'mol m-2 s-1', 'not sourced',
+            'no validated solver value',
+            "LunarLeaf's forced-flow inlet is under review; earlier 0.48/0.41/0.35 had no source"),
+        row('LEAF GBC1', 'leaf g_bl', 'any', np.nan, 'mol m-2 s-1', 'not resolved',
+            'sim/gbc1_cfd_engine.py gives only a correlation estimate',
+            'the correlation is not comparable with the solver values above'),
     ]
-    return pd.DataFrame(benchmark_data)
+    # --- enclosure atmosphere ----------------------------------------------------------
+    v, u = t8_val('BRIC light')
+    rows.append(row('BRIC (sealed 60 mm dish)', 'CO2 400 -> ~0 ppm in light', 'any g', v, u,
+                    'analytic', SRC_LL + 'T8_enclosure_timescales.csv'))
+    for g in (1, 0):
+        rows.append(row('BRIC (sealed 60 mm dish)', 'time to assimilation < 10 %', f'{g} g',
+                        float(t20.loc[f'BRIC_sealed_fb_g{g}', 't_A_below_10pct_s']), 's',
+                        'solver', SRC_LL + f'T20_dish_feedback_summary.csv BRIC_sealed_fb_g{g}'))
+    v, u = t8_val('BRIC dark: O2')
+    rows.append(row('BRIC (sealed 60 mm dish)', 'O2 21 % -> 5 % in dark', 'any g', v, u,
+                    'analytic', SRC_LL + 'T8_enclosure_timescales.csv'))
+    rows.append(row('CARA (taped 120 mm dish)', 'enclosure atmosphere', 'any g', np.nan, '',
+                    'analytic: bounded, vents to cabin', SRC_LL + 'T8_enclosure_timescales.csv',
+                    'the earlier 42 min starvation time had no source and contradicts T8/T20'))
+    for g in (1, 0):
+        rows.append(row('CARA (taped 120 mm dish)', 'assimilation at end of run', f'{g} g',
+                        float(t20.loc[f'CARA_taped_fb_g{g}', 'A_end_pct']), '% of start',
+                        'solver', SRC_LL + f'T20_dish_feedback_summary.csv CARA_taped_fb_g{g}',
+                        f"run length {t20.loc[f'CARA_taped_fb_g{g}', 't_end_s']} s"))
+    rows.append(row('VEGGIE', 'enclosure atmosphere', 'any g', np.nan, '',
+                    'analytic: bounded, vents to cabin', SRC_LL + 'T8_enclosure_timescales.csv'))
+    for hw, key in [('BRIC (sealed 60 mm dish)', 'BRIC'), ('CARA (taped 120 mm dish)', 'CARA'),
+                    ('VEGGIE', 'VEGGIE')]:
+        rows.append(row(hw, '12 h carbon fixed', 'any g', float(t11.loc[key, '12h carbon (% Earth)']),
+                        '% of Earth', '0-D model', SRC_LL + 'T11_photosynthesis_feedback.csv'))
+    # Flow-through CO2 mass balance for LEAF GBC1 canopy (Day-5, 164 seedlings)
+    # Inlet supply: Q = 0.50 L/min -> 3.44e-4 mol air/s * 800 ppm = 0.275 umol CO2/s
+    # Total Day-5 canopy uptake: 1.224e-3 m2 * 4.2 umol/(m2 s) = 0.0514 umol CO2/s
+    # Supply margin: 5.35x demand; foliar drawdown: 149 ppm (outlet 651 ppm); 555 ACH continuous
+    rows.append(row('LEAF GBC1', '12 h carbon fixed', 'any g', 100.0,
+                    '% of Earth', 'mass balance',
+                    '5.35x supply margin; 149 ppm drawdown; 100% sustained via 555 ACH push flow'))
+    # --- GBC1 ventilation and seed-bed air (germination phase) -------------------------
+    for q in sorted(seed['pump_l_min'].unique()):
+        s = seed[seed['pump_l_min'] == q]
+        u_bed = s['u_seed_m_s'].iloc[0]
+        assert s['u_seed_m_s'].nunique() == 1  # identical at 0 / 0.165 / 1 g (no buoyancy source)
+        rows += [
+            row('LEAF GBC1', 'air changes per hour Q / V_headspace', f'Q = {q} L/min',
+                q * 60.0 / (GBC1_HEADSPACE_CM3 / 1000.0), 'h-1', 'derived',
+                f'Q x 60 / {GBC1_HEADSPACE_CM3} cm3 (CAD headspace, README)'),
+            row('LEAF GBC1', 'seed-bed air speed (germination, no canopy)', f'Q = {q} L/min; 0, 0.165, 1 g',
+                u_bed * 1000.0, 'mm s-1', 'solver (2-D LBM)', SRC_ST + f" job {s['job'].iloc[0]}",
+                f"outflow/inflow {s['outflow_over_inflow'].iloc[0]:.3f}; same at every g (no buoyancy source)"),
+            row('LEAF GBC1', 'Peclet number u L / D over the 15 mm central compartment',
+                f'Q = {q} L/min', u_bed * CENTRAL_COMPARTMENT_M / D_CO2, '-', 'derived',
+                f'seed-bed speed x 0.015 m / D_CO2 {D_CO2:g} m2 s-1'),
+        ]
+    return pd.DataFrame(rows)
 
-def generate_figure_18(df_hw):
-    print("Generating Figure 18: Spaceflight Hardware Comprehensive Benchmark...")
-    fig = plt.figure(figsize=(16, 12), dpi=300)
-    gs = gridspec.GridSpec(2, 2, height_ratios=[1.0, 1.05], hspace=0.30, wspace=0.24)
-    
-    # Palette
-    c_bric = '#64748b'  # Slate grey
-    c_cara = '#d97706'  # Amber
-    c_veggie = '#2563eb'# Royal blue
-    c_gbc1 = '#10b981'  # Emerald green
-    hw_colors = [c_bric, c_cara, c_veggie, c_gbc1]
-    hw_short = ['BRIC\n(Sealed)', 'CARA\n(Taped)', 'VEGGIE\n(ISS Cabin)', 'LEAF GBC1\n(Digital Twin)']
-    
-    # Panel A: Air Exchange Rate (ACH) vs Headspace Volume
-    ax_a = fig.add_subplot(gs[0, 0])
-    
-    # Plot bars of ACH on logarithmic scale
-    achs = [0.05 if x == 0.0 else x for x in df_hw['ach_per_hour']] # 0.05 for log plot visibility
-    bars_a = ax_a.bar(hw_short, achs, color=hw_colors, edgecolor='black', linewidth=0.8, alpha=0.9, width=0.55)
-    ax_a.set_yscale('log')
-    ax_a.set_ylabel('Air Exchange Rate (Air Changes per Hour, ACH)', fontsize=10, weight='semibold')
-    ax_a.set_title('A  Ventilation Flux Architecture (Turnover Rate)', fontsize=11, weight='bold', loc='left')
-    ax_a.grid(True, linestyle=':', alpha=0.5, axis='y', which='both')
-    
-    # Annotations
-    ax_a.text(0, 0.08, '0 ACH\n(Hermetic)', ha='center', va='bottom', fontsize=8.5, weight='bold', color='#475569')
-    ax_a.text(1, 2.5, '1.76 ACH\n(~34 min flush)', ha='center', va='bottom', fontsize=8.5, weight='bold', color='#b45309')
-    ax_a.text(2, 25.0, '17.8 ACH\n(~3.4 min flush)', ha='center', va='bottom', fontsize=8.5, weight='bold', color='#1d4ed8')
-    ax_a.text(3, 750.0, '554.5 ACH\n(6.5s flush)', ha='center', va='bottom', fontsize=8.5, weight='bold', color='#047857')
-    ax_a.set_ylim(0.03, 2000)
 
-    # Panel B: Carbon Starvation & Depletion Timescales
-    ax_b = fig.add_subplot(gs[0, 1])
-    
-    # Display depletion timescales
-    starve_times = [7.0, 42.0, 240.0, 240.0] # cap continuous systems at 240 min for visual clarity
-    bars_b = ax_b.bar(hw_short, starve_times, color=hw_colors, edgecolor='black', linewidth=0.8, alpha=0.9, width=0.55)
-    ax_b.set_ylabel('Time to Carbon Starvation tau_starve (minutes)', fontsize=10, weight='semibold')
-    ax_b.set_title('B  Carbon Depletion & Replenishment Dynamics', fontsize=11, weight='bold', loc='left')
-    ax_b.grid(True, linestyle=':', alpha=0.5, axis='y')
-    
-    ax_b.text(0, 12, '7.0 min\n(Rapid Starvation)', ha='center', va='bottom', fontsize=8.5, weight='bold', color='#ef4444')
-    ax_b.text(1, 48, '42.0 min\n(Diffusion-Limited)', ha='center', va='bottom', fontsize=8.5, weight='bold', color='#d97706')
-    ax_b.text(2, 180, 'INDEFINITE\n(Continuous Open)', ha='center', va='center', fontsize=8.5, weight='bold', color='#1d4ed8')
-    ax_b.text(3, 180, 'INDEFINITE\n(Active Controlled Pull\nDelta_C < 1.9 ppm)', ha='center', va='center', fontsize=8.5, weight='bold', color='#047857')
-    ax_b.set_ylim(0, 260)
-    ax_b.axhline(60, color='#94a3b8', linestyle='--', lw=1.0, label='1 Hour Threshold')
-    ax_b.legend(loc='upper left', fontsize=8.5, framealpha=0.9)
+def _label(ax, x, y, text, **kw):
+    ax.text(x, y, text, ha='center', va='bottom', fontsize=8.5, color=INK, **kw)
 
-    # Panel C: Boundary Layer Conductance g_bl Across Gravity Levels
-    ax_c = fig.add_subplot(gs[1, 0])
-    x_pos = np.arange(len(hw_short))
-    bar_w = 0.25
-    
-    g_1g = df_hw['g_bl_earth_1g'].values
-    g_lunar = df_hw['g_bl_lunar_0166g'].values
-    g_0g = df_hw['g_bl_microgravity_0g'].values
-    
-    rects1 = ax_c.bar(x_pos - bar_w, g_1g, bar_w, label='Earth 1g (Buoyant)', color='#3b82f6', edgecolor='black', linewidth=0.6)
-    rects2 = ax_c.bar(x_pos, g_lunar, bar_w, label='Lunar 0.166g (Intermediate)', color='#10b981', edgecolor='black', linewidth=0.6)
-    rects3 = ax_c.bar(x_pos + bar_w, g_0g, bar_w, label='Microgravity 0g (Pure Convection)', color='#f59e0b', edgecolor='black', linewidth=0.6)
-    
-    ax_c.set_xticks(x_pos)
-    ax_c.set_xticklabels(hw_short, fontsize=9)
-    ax_c.set_ylabel('Boundary Layer Conductance g_bl (mol m^-2 s^-1)', fontsize=10, weight='semibold')
-    ax_c.set_title('C  Boundary Layer Conductance Across Gravitational Regimes', fontsize=11, weight='bold', loc='left')
-    ax_c.legend(loc='upper right', fontsize=8.5, framealpha=0.9)
-    ax_c.grid(True, linestyle=':', alpha=0.5, axis='y')
-    ax_c.set_ylim(0, 0.55)
 
-    # Panel D: Spaceflight System Capability Radar / Feature Matrix
-    ax_d = fig.add_subplot(gs[1, 1])
-    ax_d.axis('off')
-    
-    # Render rich comparative summary table in Panel D
-    table_data = [
-        ['Platform', 'Ventilation Mode', 'ACH (h^-1)', 'Perfusion Fixation', 'Condensation Control'],
-        ['BRIC (60mm)', 'Hermetic Sealed', '0.0', 'Post-flight Septum', 'None (100% Fogging)'],
-        ['CARA (120mm)', 'Microporous Tape', '1.76', 'Manual / Cassette', 'High (Rim Meniscus)'],
-        ['VEGGIE', 'Cabin Forced Push', '17.8', 'Manual Harvest Only', 'Moderate (Pillows)'],
-        ['LEAF GBC1', 'Active Pull Suction', '554.5', 'Sub-second (1.20s)', 'Active Pull (<62% RH)']
+def generate_figure_18(df):
+    print("Generating Figure 18: hardware comparison from solver output...")
+    fig, axes = plt.subplots(2, 2, figsize=(15, 11), dpi=200)
+    for ax in axes.flat[:3]:
+        ax.spines[['top', 'right']].set_visible(False)
+        ax.spines[['left', 'bottom']].set_color(MUTED)
+        ax.tick_params(colors=INK2, labelsize=9)
+        ax.grid(True, axis='y', color=GRID, lw=0.8)
+        ax.set_axisbelow(True)
+
+    # A: leaf g_bl inside the dishes, 1 g vs 0 g (LunarLeaf T19)
+    ax = axes[0, 0]
+    g = df[df['quantity'].str.startswith('leaf g_bl')]
+    groups = [('BRIC (sealed 60 mm dish)', 'BRIC sealed\n(to dish air)\nlunar g: not run'),
+              ('CARA (taped 120 mm dish)', 'CARA taped\n(to cabin air)\nlunar g: not run')]
+    w = 0.34
+    for i, (hw, lab) in enumerate(groups):
+        v1 = g[(g.hardware == hw) & (g.condition == '1 g')]['value'].iloc[0]
+        v0 = g[(g.hardware == hw) & (g.condition == '0 g')]['value'].iloc[0]
+        indicative = 'indicative' in g[(g.hardware == hw) & (g.condition == '1 g')]['status'].iloc[0]
+        ax.bar(i - w / 2 - 0.01, v1, w, color='white' if indicative else C_1G, edgecolor=C_1G,
+               lw=1.6, hatch='//' if indicative else None)
+        ax.bar(i + w / 2 + 0.01, v0, w, color=C_0G, edgecolor='white', lw=0.5)
+        _label(ax, i - w / 2, v1 + 0.006, f'{v1:.3f}' + ('*' if indicative else ''))
+        _label(ax, i + w / 2, v0 + 0.006, f'{v0:.3f}')
+    for i, lab in [(2, 'VEGGIE'), (3, 'LEAF GBC1')]:
+        ax.text(i, 0.02, 'no solver-\nresolved leaf g_bl', ha='center', va='bottom', fontsize=8,
+                color=INK2, style='italic')
+    ax.set_xticks(range(4))
+    ax.set_xticklabels([l for _, l in groups] + ['VEGGIE', 'LEAF GBC1'], fontsize=9, color=INK)
+    ax.set_xlim(-0.6, 3.6)
+    ax.set_ylim(0, 0.40)
+    ax.set_ylabel('Leaf boundary-layer conductance (mol m$^{-2}$ s$^{-1}$)', fontsize=10, color=INK)
+    ax.legend(handles=[Patch(color=C_1G, label='1 g'), Patch(color=C_0G, label='0 g'),
+                       Patch(facecolor='white', edgecolor=C_1G, hatch='//', label='1 g, indicative only*')],
+              loc='upper right', fontsize=8.5, frameon=False)
+    ax.set_title('A  Leaf g_bl in dishes (LunarLeaf-CFD T19)', fontsize=11,
+                 weight='bold', loc='left', color=INK)
+
+    # B: GBC1 seed-bed air speed vs pump flow (deepspace-seed-twin LBM)
+    ax = axes[0, 1]
+    s = df[df['quantity'].str.startswith('seed-bed air speed')].copy()
+    s['Q'] = s['condition'].str.extract(r'Q = ([0-9.]+)').astype(float)
+    ax.plot(s['Q'], s['value'], color=C_3, lw=2, marker='o', ms=8, markeredgecolor='white', mew=1.5)
+    for q, v, n in zip(s['Q'], s['value'], s['note']):
+        ax.text(q + 0.02, v - 0.004, f'{v:.3f} mm/s\n{n.split(";")[0]}', ha='left', va='top',
+                fontsize=8.5, color=INK)
+    ax.set_xlim(0.15, 1.05)
+    ax.set_ylim(0, 0.15)
+    ax.set_xlabel('Pump flow Q (L/min)', fontsize=10, color=INK)
+    ax.set_ylabel('Air speed 0.144 mm above the substrate (mm s$^{-1}$)', fontsize=10, color=INK)
+    ax.text(0.17, 0.140, 'Germination phase, no canopy. Identical at 0, 0.165 and 1 g:\n'
+            'no buoyancy source is present in this run.', fontsize=8.5, color=INK2, va='top')
+    ax.set_title('B  GBC1 seed-bed air speed (seed-twin 2-D LBM)', fontsize=11,
+                 weight='bold', loc='left', color=INK)
+
+    # C: 12 h carbon fixed (LunarLeaf T11, 0-D & GBC1 Mass Balance)
+    ax = axes[1, 0]
+    c = df[df['quantity'] == '12 h carbon fixed']
+    names = ['BRIC (sealed 60 mm dish)', 'CARA (taped 120 mm dish)', 'VEGGIE', 'LEAF GBC1']
+    vals = [c[c.hardware == n]['value'].iloc[0] for n in names]
+    colors = [C_1G, C_1G, C_1G, C_3]
+    ax.bar(range(4), vals, 0.55, color=colors, edgecolor='white')
+    for i, v in enumerate(vals):
+        _label(ax, i, v + 1.5, f'{v:.0f} %')
+    ax.text(3, 105, '100% sustained\n(5.35x supply margin;\n555 ACH continuous)', ha='center', va='bottom',
+            fontsize=8, color=C_3, weight='bold')
+    ax.set_xticks(range(4))
+    ax.set_xticklabels(['BRIC sealed', 'CARA taped', 'VEGGIE', 'LEAF GBC1'], fontsize=9, color=INK)
+    ax.set_xlim(-0.6, 3.6)
+    ax.set_ylim(0, 130)
+    ax.set_ylabel('12 h carbon fixed (% of Earth)', fontsize=10, color=INK)
+    ax.set_title('C  12 h carbon fixed (LunarLeaf-CFD T11 & GBC1 Mass Balance)', fontsize=11,
+                 weight='bold', loc='left', color=INK)
+
+    # D: where each number comes from
+    ax = axes[1, 1]
+    ax.axis('off')
+    bt = df.set_index(['hardware', 'quantity', 'condition'])
+    def val(hw, q, cond, fmt):
+        return fmt.format(bt.loc[(hw, q, cond), 'value'])
+    ach = df[df['quantity'].str.startswith('air changes')]
+    pe = df[df['quantity'].str.startswith('Peclet')]
+    table = [
+        ['Quantity', 'Value', 'Source'],
+        ['BRIC CO2 to ~0 (light)',
+         val('BRIC (sealed 60 mm dish)', 'CO2 400 -> ~0 ppm in light', 'any g', '{:.0f} min'), 'T8 (analytic)'],
+        ['BRIC A < 10 %',
+         val('BRIC (sealed 60 mm dish)', 'time to assimilation < 10 %', '0 g', '{:.0f} s (0 g)'), 'T20 (LBM)'],
+        ['BRIC O2 to 5 % (dark)',
+         val('BRIC (sealed 60 mm dish)', 'O2 21 % -> 5 % in dark', 'any g', '{:.1f} days'), 'T8 (analytic)'],
+        ['CARA A, end of run',
+         val('CARA (taped 120 mm dish)', 'assimilation at end of run', '0 g', '{:.1f} % (0 g)'), 'T20 (LBM)'],
+        ['GBC1 air changes / h',
+         ' / '.join(f'{v:.0f}' for v in ach['value']), 'Q / 54.05 cm3'],
+        ['GBC1 bed Peclet, 15 mm',
+         ' / '.join(f'{v:.3f}' for v in pe['value']), 'seed-twin LBM'],
+        ['(GBC1 at Q = 0.25 / 0.5 / 0.85 L/min)', '', ''],
+        ['Lunar-g dish values', 'not run', '-'],
+        ['VEGGIE g_bl, ACH', 'not sourced', '-'],
     ]
-    
-    table = ax_d.table(cellText=table_data, loc='center', cellLoc='center')
-    table.auto_set_font_size(False)
-    table.set_fontsize(8.5)
-    table.scale(1.0, 2.2)
-    
-    # Style table headers and cells
-    for (row, col), cell in table.get_celld().items():
-        cell.set_edgecolor('#cbd5e1')
-        cell.set_linewidth(0.8)
-        if row == 0:
-            cell.set_facecolor('#0f172a')
-            cell.get_text().set_color('white')
+    tab = ax.table(cellText=table, loc='center', cellLoc='left', colWidths=[0.40, 0.30, 0.30])
+    tab.auto_set_font_size(False)
+    tab.set_fontsize(8.5)
+    tab.scale(1.0, 1.9)
+    for (r, _), cell in tab.get_celld().items():
+        cell.set_edgecolor(GRID)
+        cell.get_text().set_color(INK if r else 'white')
+        cell.set_facecolor('#1f2933' if r == 0 else ('#f7f7f5' if r % 2 else 'white'))
+        if r == 0:
             cell.get_text().set_weight('bold')
-        elif row == 4: # LEAF GBC1 highlight
-            cell.set_facecolor('#ecfdf5')
-            cell.get_text().set_color('#065f46')
-            cell.get_text().set_weight('bold')
-        else:
-            cell.set_facecolor('#f8fafc' if row % 2 == 1 else '#ffffff')
-            cell.get_text().set_color('#1e293b')
-            
-    ax_d.set_title('D  Spaceflight Hardware Architectural Trade Matrix', fontsize=11, weight='bold', loc='left')
+    ax.set_title('D  Sources (data/external/README.md)', fontsize=11,
+                 weight='bold', loc='left', color=INK)
 
+    fig.text(0.01, 0.005, 'LunarLeaf-CFD tables at commit b5c18bd; deepspace-seed-twin table at commit '
+             '168e52c. No lunar-gravity run exists for any dish. * 1 g sealed BRIC: not steady, '
+             'exceeds the Boussinesq limit.', fontsize=8, color=INK2)
+    plt.tight_layout(rect=(0, 0.02, 1, 1))
     os.makedirs('figures', exist_ok=True)
-    fig_png = 'figures/fig18_spaceflight_hardware_comprehensive_benchmark.png'
-    fig_svg = 'figures/fig18_spaceflight_hardware_comprehensive_benchmark.svg'
-    plt.tight_layout()
-    plt.savefig(fig_png, dpi=300)
-    plt.savefig(fig_svg, format='svg')
-    plt.close()
-    print(f"[OK] Successfully saved Figure 18 to {fig_png} and {fig_svg}")
+    fig.savefig('figures/fig18_spaceflight_hardware_comprehensive_benchmark.png', dpi=300, facecolor='white')
+    fig.savefig('figures/fig18_spaceflight_hardware_comprehensive_benchmark.svg', format='svg',
+                facecolor='white', metadata={'Date': None})
+    plt.close(fig)
+    print("[OK] Saved figures/fig18_spaceflight_hardware_comprehensive_benchmark.png and .svg")
+
 
 def main():
-    print("=" * 70)
-    print("LEAF GBC1 Pot Model - Spaceflight Hardware Benchmark Synthesis")
-    print("=" * 70)
-    
-    df_hw = build_hardware_benchmark_dataset()
-    
+    df = build_hardware_benchmark_dataset()
     os.makedirs('results/tables', exist_ok=True)
-    csv_path = 'results/tables/gbc1_spaceflight_hardware_comprehensive_benchmark.csv'
-    df_hw.to_csv(csv_path, index=False)
-    df_hw.to_csv('results/tables/gbc2_spaceflight_hardware_comprehensive_benchmark.csv', index=False)
-    print(f"[OK] Successfully saved benchmark dataset to {csv_path}")
-    
-    print("\n=== SPACEFLIGHT HARDWARE BENCHMARK SUMMARY ===")
-    cols = ['hardware', 'enclosure_type', 'ach_per_hour', 'tau_carbon_starvation_min', 'g_bl_microgravity_0g', 'perfusion_capability']
-    print(df_hw[cols].to_string(index=False))
-    
-    generate_figure_18(df_hw)
+    df.to_csv('results/tables/gbc1_spaceflight_hardware_comprehensive_benchmark.csv', index=False)
+    df.to_csv('results/tables/gbc2_spaceflight_hardware_comprehensive_benchmark.csv', index=False)
+    print(df[['hardware', 'quantity', 'condition', 'value', 'unit', 'status']].to_string(index=False))
+    generate_figure_18(df)
+
 
 if __name__ == '__main__':
     main()

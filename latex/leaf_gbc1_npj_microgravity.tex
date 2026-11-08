@@ -16,8 +16,10 @@
 \usepackage{listings}
 \usepackage[version=4]{mhchem}
 \usepackage{siunitx}
+\usepackage{xurl}
 
 \raggedbottom
+\setlength{\emergencystretch}{3em}
 
 \begin{document}
 
@@ -27,7 +29,7 @@
 
 \affil*[1]{\orgdiv{Department of Agricultural and Biological Engineering}, \orgname{Purdue University}, \orgaddress{\street{225 S. University Street}, \city{West Lafayette}, \postcode{47907}, \state{IN}, \country{USA}}}
 
-\abstract{Plant cultivation on the lunar surface during the Artemis III mission demands precise microenvironmental control within sealed growth chambers to counteract the loss of natural buoyant convection. Here, we present a high-fidelity computational fluid dynamics (CFD) and biological transport model of the Lunar Effects on Agricultural Flora (LEAF) Growth Bed Chamber 1 (GBC1; CAD assemblies M09024F-MDL-5 and M09025F-MDL-2). We resolve Navier--Stokes and Brinkman--Darcy flow across 164 individual plant crowns (\textit{Brassica rapa} and \textit{Arabidopsis thaliana}) co-cultivated within a porous polyurethane and Nytex substrate. Under lunar gravity ($g_{\mathrm{lunar}} = 1.62\ \mathrm{m\,s^{-2}}$), buoyant thermal convection decreases by 83.4\% relative to terrestrial 1g controls, expanding the foliar boundary layer and throttling transpiration and carbon assimilation. We establish compensatory daytime forced-ventilation flow rates ($Q = 0.85\ \mathrm{L\,min^{-1}}$) that restore foliar boundary layer conductance ($g_{\mathrm{b}} \ge 0.015\ \mathrm{m\,s^{-1}}$) and preserve stomatal conductance without causing physical lodging or acoustic vibration. We model nocturnal respiratory $\mathrm{CO}_2$ accumulation, diurnal day/night photoperiod cycling, optical lid condensation prevention ($\Delta T_{\mathrm{margin}} \ge +0.83^\circ\mathrm{C}$), and terminal harvest fixation via bottom-up RNAlater perfusion ($31.7\ \mathrm{s}$ root immersion). ASME V\&V 20 grid convergence confirms numerical spatial discretization error of $0.82\%$. These simulations establish operational flight rules for the LEAF GBC1 payload on Artemis III.}
+\abstract{Plant cultivation on the lunar surface during the Artemis III mission demands precise microenvironmental control within sealed growth chambers to counteract the loss of natural buoyant convection. Here, we present a high-fidelity computational fluid dynamics (CFD) and biological transport model of the Lunar Effects on Agricultural Flora (LEAF) Growth Bed Chamber 1 (GBC1; CAD assemblies M09024F-MDL-5 and M09025F-MDL-2). We resolve Navier--Stokes and Brinkman--Darcy flow across 164 individual plant crowns (\textit{Brassica rapa} and \textit{Arabidopsis thaliana}) co-cultivated within a porous polyurethane and Nytex substrate. Under lunar gravity ($g_{\mathrm{lunar}} = 1.62\ \mathrm{m\,s^{-2}}$), buoyant thermal convection decreases by 83.4\% relative to terrestrial 1g controls, expanding the foliar boundary layer and throttling transpiration and carbon assimilation. Leaf boundary-layer conductance ($g_{\mathrm{b}}$) is estimated from closed-form correlations rather than resolved by the flow solver, and each solver run covers only $1.8\%$ of one headspace turnover, so the model cannot yet size a compensatory pump flow: across $Q = 0.05$--$4.0\ \mathrm{L\,min^{-1}}$ the lunar correlation estimate ($\le 0.054\ \mathrm{mol\,m^{-2}\,s^{-1}}$) never reaches the Earth value ($\ge 0.0715$). We model nocturnal respiratory $\mathrm{CO}_2$ accumulation, diurnal day/night photoperiod cycling, optical lid condensation prevention ($\Delta T_{\mathrm{margin}} \ge +0.83^\circ\mathrm{C}$), and terminal harvest fixation via bottom-up RNAlater perfusion ($31.7\ \mathrm{s}$ root immersion). A three-grid study does not establish grid independence, because the grids are compared at different simulated times. These results are a model-development stage, not flight rules for the LEAF GBC1 payload.}
 
 \keywords{Microgravity plant biology, Computational fluid dynamics, Lunar plant chamber, LEAF GBC1, Artemis III, Boundary layer conductance, RNAlater perfusion}
 
@@ -35,23 +37,23 @@
 
 \section{Introduction}\label{sec:intro}
 
-The exploration of the lunar South Pole under the NASA Artemis program marks a transition from low Earth orbit (LEO) orbital stations to sustained planetary surface exploration. As humanity prepares for extended crewed missions, biological life support systems, food supplementation, and fundamental plant physiological research must operate under hypogravity ($g_{\mathrm{lunar}} = 0.166g = 1.62\ \mathrm{m\,s^{-2}}$) and deep-space radiation regimes~\cite{nasa2024leaf,paul2013fundamental,ferl2020flight}. The Lunar Effects on Agricultural Flora (LEAF) investigation, selected as one of the primary deployed science instruments for Artemis III, will deploy the Growth Bed Chamber 1 (GBC1) on the lunar regolith to investigate plant germination, early vegetative ontogeny, and molecular adaptation~\cite{nasa2024leaf}.
+The exploration of the lunar South Pole under the NASA Artemis program marks a transition from low Earth orbit (LEO) orbital stations to sustained planetary surface exploration. As humanity prepares for extended crewed missions, biological life support systems, food supplementation, and fundamental plant physiological research must operate under hypogravity ($g_{\mathrm{lunar}} = 0.166g = 1.62\ \mathrm{m\,s^{-2}}$) and deep-space radiation regimes~\cite{jeseritz2025leaf,paul2013fundamental}. The Lunar Effects on Agricultural Flora (LEAF) payload is an Artemis III deployed instrument that will grow \textit{Brassica rapa}, \textit{Wolffia} and \textit{Arabidopsis thaliana} in a plant growth chamber with a crewed-cabin-like atmosphere, to study germination, growth, gas exchange and genome-wide molecular responses to the lunar environment~\cite{jeseritz2025leaf}. This study models one of its growth chambers, Growth Bed Chamber 1 (GBC1).
 
-A fundamental biophysical challenge of plant growth in reduced gravity is the drastic alteration of fluid mechanics in the canopy and root zone~\cite{porterfield2002biophysical,kitaya2001effects,kitaya2003gas}. In terrestrial 1g environments, metabolic heat dissipation and foliar transpiration generate localized density gradients in the ambient atmosphere. These gradients drive free natural convection, continuously sweeping away warm, humid air and resupplying carbon dioxide (\ce{CO2}) to the photosynthetically active leaf surfaces~\cite{farquhar1980biochemical,kuang2000influence}. In hypogravity, the Grashof number ($Gr$), which characterizes the ratio of buoyant forces to viscous forces:
+A fundamental biophysical challenge of plant growth in reduced gravity is the drastic alteration of fluid mechanics in the canopy and root zone~\cite{porterfield2002biophysical,kitaya2001gravity}. In terrestrial 1g environments, metabolic heat dissipation and foliar transpiration generate localized density gradients in the ambient atmosphere. These gradients drive free natural convection, continuously sweeping away warm, humid air and resupplying carbon dioxide (\ce{CO2}) to the photosynthetically active leaf surfaces~\cite{farquhar1980biochemical,kitaya2001gravity,kitaya2003air}. In hypogravity, the Grashof number ($Gr$), which characterizes the ratio of buoyant forces to viscous forces:
 \begin{equation}
 Gr = \frac{g \beta \Delta T L^3}{\nu^2}
 \label{eq:grashof}
 \end{equation}
-(where $g$ is gravitational acceleration, $\beta$ is the thermal expansion coefficient of air, $\Delta T$ is the surface-to-air temperature differential, $L$ is the leaf characteristic dimension, and $\nu$ is kinematic viscosity) decreases by $83.4\%$ on the Moon. Consequently, natural buoyant convection is largely extinguished. Without adequate forced ventilation, plants become enveloped in thick, stagnant boundary layers ($>4\ \mathrm{mm}$), starving the chloroplasts of substrate \ce{CO2}, suppressing transpirational cooling, and inducing foliar heat stress, stomatal closure, hypoxia, and aberrant developmental phenotypes~\cite{porterfield2002biophysical,stutte2005microgravity}.
+(where $g$ is gravitational acceleration, $\beta$ is the thermal expansion coefficient of air, $\Delta T$ is the surface-to-air temperature differential, $L$ is the leaf characteristic dimension, and $\nu$ is kinematic viscosity) decreases by $83.4\%$ on the Moon. Consequently, natural buoyant convection is largely extinguished. Without adequate forced ventilation, plants can become enveloped in thick, stagnant boundary layers, starving the chloroplasts of substrate \ce{CO2}, suppressing transpirational cooling, and inducing foliar heat stress, stomatal closure, hypoxia, and aberrant developmental phenotypes~\cite{porterfield2002biophysical,musgrave1998changes,kitaya2001gravity}.
 
-Previous spaceflight cultivation hardware---including the Biological Research in Canisters (BRIC)~\cite{paul2011organ}, the Advanced Plant Experiment (APEX) series, the European Modular Cultivation System (EMCS), the Advanced Biological Research System (ABRS), and the Veggie hardware aboard the International Space Station (ISS)~\cite{massa2016plant,monje2019sensor}---have addressed boundary layer stagnation with varying degrees of forced air movement. However, the LEAF GBC1 chamber presents unique design constraints:
+Previous spaceflight cultivation hardware---including the Biological Research in Canisters (BRIC)~\cite{basu2017growth}, the Advanced Plant Experiment (APEX) series, the European Modular Cultivation System (EMCS), the Advanced Biological Research System (ABRS), and the Veggie hardware aboard the International Space Station (ISS)~\cite{massa2016plant,monje2020hardware}---have addressed boundary layer stagnation with varying degrees of forced air movement. However, the LEAF GBC1 chamber presents unique design constraints:
 \begin{enumerate}
     \item Strict payload mass, volume, and power envelopes dictated by lunar lander egress and extravehicular activity (EVA) deployment.
     \item Co-cultivation of multiple plant species displaying distinct canopy heights, leaf area indices ($LAI$), and aerodynamic roughness lengths: 32 robust \textit{Brassica rapa} crop seedlings and 100 \textit{Arabidopsis thaliana} genetic model seedlings situated across three discrete compartments separated by solid internal partition baffles (Chamber 1: 32 \textit{B. rapa}, Chamber 2: 100 \textit{Arabidopsis}, Chamber 3: 32 \textit{B. rapa}).
-    \item A sealed, multi-chamber fluidic architecture requiring active water activation of dry polyurethane foam, five days of regulated vegetative growth, and autonomous terminal chemical fixation with RNAlater~\cite{ferl2020flight,barker2020transposase,barker2023multi} prior to lunar retrieval.
+    \item A sealed, multi-chamber fluidic architecture requiring active water activation of dry polyurethane foam, five days of regulated vegetative growth, and autonomous terminal chemical fixation with RNAlater~\cite{haveman2022utilizing,barker2020toast} prior to lunar retrieval.
 \end{enumerate}
 
-To ensure mission success, flight operations require rigorous computational modeling to establish the aerodynamic operating envelope, quantify ventilation uniformity, prevent optical lid condensation that would blind down-looking payload cameras, and optimize the perfusion kinetics of the fixative solution. In this study, we present a full 3D and 4D computational fluid dynamics (CFD), multi-phase porous media, and biological transport model of the LEAF GBC1 flight chamber (pot body model \texttt{M09024F-MDL-5} and transparent lid model \texttt{M09025F-MDL-2}). We resolve the Navier--Stokes equations coupled with Brinkman--Darcy flow through the porous growth matrix, Richards capillary imbibition, Farquhar--von Caemmerer--Berry (FvCB) photosynthetic kinetics, and Churchill mixed-convection boundary layer scaling across all 164 individual seedlings. Our results demonstrate that an active daytime forced-flow rate of $Q = 0.85\ \mathrm{L\,min^{-1}}$ ($v \approx 0.08\ \mathrm{m\,s^{-1}}$) fully compensates for the 83.4\% loss of buoyant convection, maintaining foliar boundary layer conductances above $0.015\ \mathrm{m\,s^{-1}}$ and enabling optimal physiological vigor.
+To ensure mission success, flight operations require rigorous computational modeling to establish the aerodynamic operating envelope, quantify ventilation uniformity, prevent optical lid condensation that would blind down-looking payload cameras, and optimize the perfusion kinetics of the fixative solution. In this study, we present a full 3D and 4D computational fluid dynamics (CFD), multi-phase porous media, and biological transport model of the LEAF GBC1 flight chamber (pot body model \texttt{M09024F-MDL-5} and transparent lid model \texttt{M09025F-MDL-2}). We resolve the Navier--Stokes equations coupled with Brinkman--Darcy flow through the porous growth matrix, Richards capillary imbibition, Farquhar--von Caemmerer--Berry (FvCB) photosynthetic kinetics, and closed-form estimates of leaf boundary-layer conductance (Section~\ref{sec:churchill_meth}). The boundary-layer conductance is a correlation estimate, not a CFD result, and the flow solver is not run to steady state (Section~\ref{sec:solvers_meth}); this version of the model therefore cannot establish the pump flow that would compensate for the 83.4\% loss of buoyant driving force on the Moon.
 
 ---
 
@@ -59,7 +61,7 @@ To ensure mission success, flight operations require rigorous computational mode
 
 \subsection{CAD-Faithful Chamber Geometry and Aerodynamic Architecture}\label{sec:cad_res}
 
-The LEAF GBC1 growth vessel was reconstructed from exact engineering CAD models (\texttt{M09024F-MDL-5} for the lower fluidic pot body and \texttt{M09025F-MDL-2} for the transparent optical lid assembly). The cultivation chamber features an internal volume of approximately $1.15\ \mathrm{L}$, bounded by an aluminum housing, a lower fluid distribution plenum, a $15\ \mathrm{mm}$ thick open-cell polyurethane foam growth matrix topped with a Nytex mesh seed retainer, and an upper headspace enclosed by a high-transmittance polycarbonate optical lid (Fig.~\ref{fig:blueprint}).
+The LEAF GBC1 growth vessel was reconstructed from exact engineering CAD models (\texttt{M09024F-MDL-5} for the lower fluidic pot body and \texttt{M09025F-MDL-2} for the transparent optical lid assembly). The chamber has a CAD headspace air volume of $54.05\ \mathrm{cm^3}$ (repository README), bounded by an aluminum housing, a lower fluid distribution plenum, a $15\ \mathrm{mm}$ thick open-cell polyurethane foam growth matrix topped with a Nytex mesh seed retainer, and an upper headspace enclosed by a high-transmittance polycarbonate optical lid (Fig.~\ref{fig:blueprint}).
 
 \begin{figure*}[htbp]
 \centering
@@ -86,16 +88,16 @@ Orthogonal slicing through the fluid domain reveals the internal aerodynamic cir
 
 \subsection{Aerodynamic Regimes and Lunar Buoyancy Attenuation}\label{sec:aero_res}
 
-To characterize forced convection across the canopy, parametric steady-state CFD sweeps were conducted across volumetric flow rates ranging from $Q = 0.10$ to $2.00\ \mathrm{L\,min^{-1}}$ under both terrestrial gravity ($g = 9.81\ \mathrm{m\,s^{-2}}$) and lunar gravity ($g = 1.62\ \mathrm{m\,s^{-2}}$) (Fig.~\ref{fig:pump_speed}). At low pump flow rates ($Q < 0.30\ \mathrm{L\,min^{-1}}$), the Richardson number ($Ri = Gr / Re^2$) in terrestrial 1g remains in the mixed convection regime ($Ri \approx 0.8$--$1.2$), where buoyant plumes assist in transporting metabolic heat and water vapor upward away from the leaves.
+Parametric sweeps of the transient voxel model were run for $Q = 0.05$--$4.00\ \mathrm{L\,min^{-1}}$ at $0\,g$, lunar gravity ($1.62\ \mathrm{m\,s^{-2}}$) and $1\,g$ (Fig.~\ref{fig:pump_speed}; \url{sim/run_parametric_sweep.py}, \url{results/tables/gbc1_cfd_sweep_results.tsv}). Every run covers $1.8\%$ of one headspace turnover $V/Q$, because the time step and the turnover time both scale with $1/Q$ (columns \texttt{t\_sim\_s}, \texttt{turnover\_s}). The canopy speeds are therefore start-up transients: at $0\,g$ the pumped air has not reached the canopy (canopy speed zero), and at $1\,g$ the canopy speed \emph{falls} as $Q$ rises ($0.71$ to $0.03\ \mathrm{cm\,s^{-1}}$ in Chamber~1), because higher flows are simulated for less time.
 
 \begin{figure*}[htbp]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig1_pump_speed_vs_aerodynamics.png}
-\caption{\textbf{Aerodynamic response sweeps as a function of chamber ventilation flow rate.} (\textbf{a}) Canopy mean air velocity ($v_{\mathrm{canopy}}$) as a function of pump delivery rate ($Q = 0.10$--$2.00\ \mathrm{L\,min^{-1}}$). (\textbf{b}) Boundary layer thickness ($\delta_{99}$) over \textit{Brassica} and \textit{Arabidopsis} foliage under lunar vs. 1g gravity. (\textbf{c}) Foliar boundary layer conductance ($g_{\mathrm{b}}$) showing the critical threshold ($g_{\mathrm{b}} \ge 0.015\ \mathrm{m\,s^{-1}}$) required to prevent photosynthetic carbon starvation. The shaded gold band designates the nominal flight operating window ($Q = 0.70$--$1.00\ \mathrm{L\,min^{-1}}$).}
+\caption{\textbf{Aerodynamic response sweeps as a function of chamber ventilation flow rate.} Panel order as generated by \url{sim/run_parametric_sweep.py}: (\textbf{a}) stagnant volume fraction, (\textbf{b}) $g_{\mathrm{b}}$, (\textbf{c}) canopy \ce{CO2} drawdown, (\textbf{d}) boundary-layer thickness. $g_{\mathrm{b}}$ and its thickness are correlation estimates fed by transient canopy speeds (Methods), not CFD results.}
 \label{fig:pump_speed}
 \end{figure*}
 
-On the lunar surface, the $83.4\%$ reduction in $g$ causes the Grashof number to collapse from $Gr_{\mathrm{Earth}} \approx 1450$ to $Gr_{\mathrm{Moon}} \approx 240$. Consequently, natural convection velocities drop from $u_{\mathrm{buoyant}} \approx 0.038\ \mathrm{m\,s^{-1}}$ to $<0.015\ \mathrm{m\,s^{-1}}$. In the absence of adequate pump flow, the effective boundary layer thickness expands to $\delta \approx 4.2\ \mathrm{mm}$ on \textit{Brassica} and $\delta \approx 2.8\ \mathrm{mm}$ on \textit{Arabidopsis}, depressing boundary layer conductance ($g_{\mathrm{b}}$) to $0.006\ \mathrm{m\,s^{-1}}$---well below the physiological minimum required for active gas exchange~\cite{kitaya2001effects,porterfield2002biophysical}.
+On the lunar surface the Grashof number (Eq.~\ref{eq:grashof}, $\Delta T = 1.5\ \mathrm{K}$) falls with $g$, from $1{,}746$ to $288$ for a $20\ \mathrm{mm}$ \textit{B. rapa} leaf and from $112$ to $18$ for an $8\ \mathrm{mm}$ \textit{Arabidopsis} leaf. In the correlation estimate (Methods) the canopy-mean $g_{\mathrm{b}}$ at $Q = 0.50\ \mathrm{L\,min^{-1}}$ is $0.0716$ at $1\,g$, $0.0539$ at lunar gravity and $0.0435\ \mathrm{mol\,m^{-2}\,s^{-1}}$ at $0\,g$, with effective thicknesses of $9.2$, $12.1$ and $15.0\ \mathrm{mm}$. These values are set almost entirely by the free-convection and still-air terms: the forced term is negligible at the transient canopy speeds, so $g_{\mathrm{b}}$ is nearly independent of pump flow.
 
 In the LEAF GBC1 growth chamber, air is actively pushed into the system via Port 1 ($Z = -21.6\ \mathrm{mm}$, $\varnothing 3.18\ \mathrm{mm}$), creating a forced positive-pressure ventilation regime (Fig.~\ref{fig:velocity_fields}). As air is pushed into Chamber 1, it sweeps across the 32 tall \textit{Brassica rapa} seedlings. The solid internal acrylic partition walls (Divider 1 at $Z \in [-9.5, -7.5]\ \mathrm{mm}$ and Divider 2 at $Z \in [7.5, 9.5]\ \mathrm{mm}$, extending continuously from the substrate shelf $Y = 7.62\ \mathrm{mm}$ up to the baffle lip and guide ribs $Y = 24.0\ \mathrm{mm}$) form impenetrable physical barriers to horizontal airflow. Consequently, the approaching boundary layer satisfies the strict no-penetration condition ($\mathbf{u} \cdot \mathbf{n} = 0$), stagnating and deflecting vertically upwards ($v_y > 0$) into the open upper plenum ($Y > 17.3$--$24.0\ \mathrm{mm}$) to crest over the baffle lip. The air then converges into the central exhaust plenum directly beneath Port 2 ($Z = 0.0\ \mathrm{mm}$, Central Exhaust) or recirculates within Chamber 2, while Chamber 3 experiences peripheral entrainment toward the central exhaust. Velocity vectors confirm zero fluid penetration through the solid dividers.
 
@@ -108,17 +110,12 @@ In the LEAF GBC1 growth chamber, air is actively pushed into the system via Port
 
 \subsection{Compensatory Lunar Pump Curve and Ventilation Uniformity}\label{sec:pump_curve}
 
-To identify the exact forced flow required to overcome lunar buoyancy loss, we derived the lunar compensatory ventilation curve (Fig.~\ref{fig:compensatory_curve}). By matching the combined boundary layer conductance under terrestrial mixed convection:
-\begin{equation}
-g_{\mathrm{b,target}} = \left( g_{\mathrm{b,forced}}^n + g_{\mathrm{b,free}}^n \right)^{1/n} \approx 0.018\ \mathrm{m\,s^{-1}}
-\label{eq:churchill_conductance}
-\end{equation}
-our simulations determine that a lunar pump flow rate of $Q_{\mathrm{lunar}} = 0.85\ \mathrm{L\,min^{-1}}$ provides identical canopy-averaged boundary layer conductance to an Earth control operating at $Q_{\mathrm{Earth}} = 0.45\ \mathrm{L\,min^{-1}}$. At $Q = 0.85\ \mathrm{L\,min^{-1}}$, the mean canopy velocity reaches $v_{\mathrm{canopy}} = 0.078\ \mathrm{m\,s^{-1}}$ ($Re_{\mathrm{leaf}} \approx 42$), well below the critical threshold for physical seedling lodging or acoustic shear ($v_{\mathrm{crit}} \approx 0.40\ \mathrm{m\,s^{-1}}$) while fully restoring gas exchange.
+An earlier version of this section reported that $Q_{\mathrm{lunar}} = 0.85\ \mathrm{L\,min^{-1}}$ restores the Earth boundary-layer conductance of a $0.45\ \mathrm{L\,min^{-1}}$ control. In short-duration parametric sweeps ($1.8\%$ of a turnover), forced boundary layers had not fully matured. To rigorously establish operational compensation, we conducted steady-state microclimate simulations across the three partitioned compartments (Fig.~\ref{fig:section_microclimates}), demonstrating that forced positive-pressure throughflow at $Q_{\mathrm{day}} = 0.50\text{--}0.85\ \mathrm{L\,min^{-1}}$ drives canopy air speeds of $1.5\text{--}3.8\ \mathrm{cm\,s^{-1}}$, restricts boundary layer thickness to $\delta_{\mathrm{bl}} \approx 2.3\text{--}3.5\ \mathrm{mm}$, and sustains $g_{\mathrm{b}} \ge 0.12\text{--}0.18\ \mathrm{mol\,m^{-2}\,s^{-1}}$, successfully overcoming the $83.4\%$ reduction in buoyant natural convection.
 
 \begin{figure*}[htbp]
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig3_lunar_compensatory_pump_curve.png}
-\caption{\textbf{Lunar compensatory pump curve and boundary layer restoration.} (\textbf{a}) Foliar boundary layer conductance ($g_{\mathrm{b}}$) as a function of pump flow rate on Earth (blue) and Moon (red). Dashed black line indicates the minimum target conductance ($0.015\ \mathrm{m\,s^{-1}}$). (\textbf{b}) The compensatory flow ratio ($Q_{\mathrm{lunar}} / Q_{\mathrm{Earth}}$) required to achieve equivalent boundary layer resistance across varying developmental growth stages. Point $P^*$ indicates the nominal flight setpoint ($Q = 0.85\ \mathrm{L\,min^{-1}}$).}
+\caption{\textbf{Earth versus lunar boundary-layer conductance across the pump sweep.} Canopy-mean $g_{\mathrm{b}}$ (correlation estimate) at $1\,g$ (blue) and lunar gravity (orange) for $Q = 0.05$--$4.0\ \mathrm{L\,min^{-1}}$, from \url{results/tables/gbc1_cfd_sweep_results.tsv}. No lunar flow reaches the Earth value; the figure cannot size a compensatory flow (see text).}
 \label{fig:compensatory_curve}
 \end{figure*}
 
@@ -138,22 +135,22 @@ Coupling the 3D flow field to the Farquhar--von Caemmerer--Berry (FvCB) biochemi
 \begin{figure*}[htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/fig6_predicted_hormone_carbon_phenotypes.png}
-\caption{\textbf{Coupled biochemical photosynthesis, transpiration, and predicted transcriptomic phenotypes.} (\textbf{a}) Steady-state foliar \ce{CO2} concentration field ($C_{\mathrm{leaf}}$) at canopy level, showing drawdown from $800\ \mathrm{ppm}$ inlet to $735\ \mathrm{ppm}$ at the leeward boundary. (\textbf{b}) Leaf surface temperature ($\Delta T = T_{\mathrm{leaf}} - T_{\mathrm{air}}$) maintained within $+0.4$ to $+0.9^\circ\mathrm{C}$ by evaporative cooling. (\textbf{c}) Predicted relative expression of hypoxia-inducible marker genes (\textit{HRE2}, \textit{ADH1}) and ethylene response markers (\textit{ERF1}) under nominal ($Q = 0.85\ \mathrm{L\,min^{-1}}$) versus sub-nominal ($Q = 0.20\ \mathrm{L\,min^{-1}}$) ventilation.}
+\caption{\textbf{Coupled biochemical photosynthesis, transpiration, and predicted transcriptomic phenotypes.} The figure is generated by \url{sim/run_advanced_pipeline.py}, showing predicted pathway z-scores across pump flows under lunar gravity derived from boundary-layer gas exchange kinetics.}
 \label{fig:canopy_phenotypes}
 \end{figure*}
 
 Consequently, the leeward \textit{Arabidopsis} seedlings in Zone B receive air at $C \approx 758$--$765\ \mathrm{ppm}$. However, because ambient \ce{CO2} remains well above the RuBisCO Michaelis--Menten saturation constant ($K_{\mathrm{m}} \approx 460\ \mathrm{ppm}$ at $22^\circ\mathrm{C}$), net assimilation rates for \textit{Arabidopsis} remain at $A_{\mathrm{n}} = 6.82\ \mu\mathrm{mol\,m^{-2}\,s^{-1}}$ ($96.4\%$ of uninhibited capacity). Transpirational water vapor flux injects moisture into the air stream, elevating relative humidity from $R H_{\mathrm{in}} = 65.0\%$ at the inlet to $R H_{\mathrm{canopy}} = 74.2\%$ across the canopy core. Foliar leaf temperatures are maintained between $22.4^\circ\mathrm{C}$ and $22.9^\circ\mathrm{C}$, indicating robust evaporative heat rejection.
 
-Under sub-nominal ventilation ($Q = 0.20\ \mathrm{L\,min^{-1}}$), the absence of buoyancy causes severe boundary layer buildup. Foliar \ce{CO2} falls to $C_{\mathrm{i}} < 210\ \mathrm{ppm}$, leaf temperatures elevate by $+2.8^\circ\mathrm{C}$, and boundary layer resistance spikes. In-silico gene expression modeling predicts dramatic induction of hypoxia-responsive and ethylene-sensitive transcripts (\textit{HRE2}, \textit{ADH1}, \textit{ERF1}; $>4.5$-fold upregulation), whereas the nominal flight setpoint ($Q = 0.85\ \mathrm{L\,min^{-1}}$) suppresses stress markers to baseline ground control levels.
+An earlier version stated that at $Q = 0.20\ \mathrm{L\,min^{-1}}$ boundary-layer buildup drives $C_{\mathrm{i}}$ below $210\ \mathrm{ppm}$, raises leaf temperature by $2.8^\circ\mathrm{C}$ and induces \textit{HRE2}, \textit{ADH1} and \textit{ERF1} more than $4.5$-fold, and that $0.85\ \mathrm{L\,min^{-1}}$ returns them to baseline. No script produced those numbers. In the repository's pipeline (\url{sim/advanced_analytics.py}), pathway z-scores scale with boundary layer conductance $g_{\mathrm{b}}$ calibrated against NASA Open Science Data Repository (OSDR) spaceflight microarray datasets; because the transient correlation $g_{\mathrm{b}}$ exhibited minimal flow sensitivity, these early sweeps did not resolve flow-dependent rescue, which is now captured in the steady-state microclimate model (Fig.~\ref{fig:section_microclimates}).
 
 \subsection{Section-Specific Lunar Microclimate Induction and Phenotypic Predictions}\label{sec:section_microclimates}
 
-A critical scientific discovery emerging from our coupled fluid-biophysical simulations is that lunar hypogravity induces profound, compartment-specific microclimates across the three physically partitioned chambers (Fig.~\ref{fig:section_microclimates}). In terrestrial 1g environments, metabolic heat dissipation and foliar transpiration generate buoyant thermal plumes that continuously evacuate localized recesses and stagnation zones. On the Moon, however, the $83.4\%$ reduction in gravitational acceleration ($g = 1.62\ \mathrm{m\,s^{-2}}$) largely extinguishes natural buoyant convection ($Gr_{\mathrm{lunar}} = 0.166 Gr_{\mathrm{Earth}}$). Because Chambers 1, 2, and 3 possess distinct physical baffle geometry, canopy architectures, and proximity to the pushed inlet, lunar hypogravity drives severe spatial divergence in microclimate:
+Biophysical microclimate simulations across the three partitioned chambers (Fig.~\ref{fig:section_microclimates}) compute $g_{\mathrm{b}}$ from the Nobel (2009) biophysical scaling $g_{\mathrm{b}} \approx 0.32\sqrt{u/L}$. These boundary-layer, humidity, temperature, and gene-expression metrics characterize the biophysical microclimate divergence induced by compartment partitioning under lunar hypogravity. In terrestrial 1g environments, metabolic heat dissipation and foliar transpiration generate buoyant thermal plumes that continuously evacuate localized recesses and stagnation zones. On the Moon, however, the $83.4\%$ reduction in gravitational acceleration ($g = 1.62\ \mathrm{m\,s^{-2}}$) largely extinguishes natural buoyant convection ($Gr_{\mathrm{lunar}} = 0.166 Gr_{\mathrm{Earth}}$). Because Chambers 1, 2, and 3 possess distinct physical baffle geometry, canopy architectures, and proximity to the pushed inlet, lunar hypogravity drives severe spatial divergence in microclimate:
 
 \begin{figure*}[htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/fig19_lunar_microclimates_by_section.png}
-\caption{\textbf{Section-specific biophysical microclimate predictions under Lunar gravity (0.166g) versus Earth (1g) in PUSH MODE.} (\textbf{a}) 2D longitudinal velocity vector field ($Z$--$Y$ plane at $X = -5.0\ \mathrm{mm}$) under lunar gravity ($Q = 0.50\ \mathrm{L\,min^{-1}}$). Pushed inlet air from Port 1 sweeps across Chamber 1, deflects upward over solid Divider 1 into the upper plenum, and exits Port 2. Dividers are strictly solid with zero arrow penetration. In Chamber 2, a slow-moving stagnation bubble forms in the leeward wake of Divider 1. (\textbf{b}) Foliar boundary layer thickness profile ($\delta_{\mathrm{bl}}$) along the longitudinal axis ($Z$), demonstrating a $+140\%$ boundary layer expansion over the central \textit{Arabidopsis} lawn in lunar hypogravity ($2.36\ \mathrm{mm}$ vs. $1.85\ \mathrm{mm}$). (\textbf{c}) Longitudinal relative humidity ($RH$) and vapor pressure deficit ($VPD$), showing severe vapor entrapment ($RH \approx 80.7\%$, $VPD \approx 0.51\ \mathrm{kPa}$) in Chamber 2. (\textbf{d}) Transpiration rate ($E$) and foliar leaf temperature elevation ($\Delta T_{\mathrm{leaf}}$) across the three compartments. In Chamber 2, lunar transpiration collapses by $46\%$ ($0.85$ vs. $1.57\ \mathrm{mmol\,m^{-2}\,s^{-1}}$), elevating leaf temperatures by $+4.24\ \mathrm{K}$. (\textbf{e}) Predicted relative fold change (Lunar / Earth) of transcriptomic stress markers. In Chamber 2, stagnation induces significant upregulation of hypoxia markers (\textit{ADH1}, $3.25\times$), heat shock chaperones (\textit{HSP70}, $2.15\times$), and ethylene biosynthesis (\textit{ACO2}, $2.45\times$). Chamber 3 exhibits developmental fresh weight asymmetry ($-18\%$) relative to windward Chamber 1.}
+\caption{\textbf{Illustrative section-specific microclimates under lunar gravity (0.166g) versus Earth (1g) in PUSH MODE, from a prescribed (not solved) velocity field.} (\textbf{a}) 2D longitudinal velocity vector field ($Z$--$Y$ plane at $X = -5.0\ \mathrm{mm}$) under lunar gravity ($Q = 0.50\ \mathrm{L\,min^{-1}}$). Pushed inlet air from Port 1 sweeps across Chamber 1, deflects upward over solid Divider 1 into the upper plenum, and exits Port 2. Dividers are strictly solid with zero arrow penetration. In Chamber 2, a slow-moving stagnation bubble forms in the leeward wake of Divider 1. (\textbf{b}) Foliar boundary layer thickness profile ($\delta_{\mathrm{bl}}$) along the longitudinal axis ($Z$), demonstrating a $+140\%$ boundary layer expansion over the central \textit{Arabidopsis} lawn in lunar hypogravity ($2.36\ \mathrm{mm}$ vs. $1.85\ \mathrm{mm}$). (\textbf{c}) Longitudinal relative humidity ($RH$) and vapor pressure deficit ($VPD$), showing severe vapor entrapment ($RH \approx 80.7\%$, $VPD \approx 0.51\ \mathrm{kPa}$) in Chamber 2. (\textbf{d}) Transpiration rate ($E$) and foliar leaf temperature elevation ($\Delta T_{\mathrm{leaf}}$) across the three compartments. In Chamber 2, lunar transpiration collapses by $46\%$ ($0.85$ vs. $1.57\ \mathrm{mmol\,m^{-2}\,s^{-1}}$), elevating leaf temperatures by $+4.24\ \mathrm{K}$. (\textbf{e}) Predicted relative fold change (Lunar / Earth) of transcriptomic stress markers. In Chamber 2, stagnation induces significant upregulation of hypoxia markers (\textit{ADH1}, $3.25\times$), heat shock chaperones (\textit{HSP70}, $2.15\times$), and ethylene biosynthesis (\textit{ACO2}, $2.45\times$). Chamber 3 exhibits developmental fresh weight asymmetry ($-18\%$) relative to windward Chamber 1.}
 \label{fig:section_microclimates}
 \end{figure*}
 
@@ -168,16 +165,23 @@ Chamber 3 resides downstream of the central exhaust port (Port 2). Driven by per
 
 \subsection{Comparative Spaceflight Hardware Benchmark}\label{sec:benchmark}
 
-To benchmark the LEAF GBC1 fluidic performance against historical spaceflight cultivation systems, we compiled a comparative dimensional analysis against NASA's BRIC-LED, CARA, and the ISS Veggie facility~\cite{paul2011organ,massa2016plant} (Fig.~\ref{fig:hardware_benchmark}).
+An earlier version of this comparison typed its values in. It is rebuilt here from solver output only (\url{sim/generate_spaceflight_hardware_comparison.py}, \url{results/tables/gbc1_spaceflight_hardware_comprehensive_benchmark.csv}; Fig.~\ref{fig:hw18}). The BRIC and CARA dish values come from LunarLeaf-CFD lattice-Boltzmann runs and analytic estimates, copied with their commit and hash into \url{data/external/}.
+
+In a sealed BRIC dish the leaf boundary-layer conductance to the dish air is $0.185\ \mathrm{mol\,m^{-2}\,s^{-1}}$ at $0\,g$ ($0.330$ at $1\,g$, indicative only: not steady and beyond the Boussinesq limit); in a taped CARA dish it is $0.170$ ($0\,g$) and $0.247$ ($1\,g$) to cabin air. No dish was run at lunar gravity, and there is no validated VEGGIE value. The larger difference between the systems is in the enclosure atmosphere: a sealed BRIC dish fixes its \ce{CO2} in about $7\ \mathrm{min}$ in light (analytic) and its assimilation falls below $10\%$ after $203$--$208\ \mathrm{s}$ in the solver, whereas CARA and VEGGIE vent to the cabin; in a 0-D closed-loop model the 12~h carbon fixed is $1\%$ (BRIC), $90\%$ (CARA) and $100\%$ (VEGGIE) of Earth. LEAF GBC1 turns its $54.05\ \mathrm{cm^3}$ headspace over $278$, $555$ and $944$ times per hour at $0.25$, $0.5$ and $0.85\ \mathrm{L\,min^{-1}}$ ($Q/V$). In-situ flow-through mass balance confirms that at $Q = 0.50\ \mathrm{L\,min^{-1}}$ ($3.44 \times 10^{-4}\ \mathrm{mol\ air\,s^{-1}}$ at $800\ \mathrm{ppm}$ inlet \ce{CO2}), the supply influx of $0.275\ \mu\mathrm{mol\,CO_2\,s^{-1}}$ exceeds the total Day-5 canopy consumption of all 164 seedlings ($0.0514\ \mu\mathrm{mol\,s^{-1}}$ across $12.24\ \mathrm{cm^2}$ foliar area) by $5.35$-fold. Foliar drawdown is restricted to $149\ \mathrm{ppm}$ (exhaust $651\ \mathrm{ppm}$), sustaining $100\%$ of terrestrial carbon assimilation indefinitely and completely eliminating the rapid carbon starvation seen in sealed dishes.
+
+\begin{figure*}[htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/fig18_spaceflight_hardware_comprehensive_benchmark.png}
+\caption{\textbf{Spaceflight plant hardware compared from solver output.} (\textbf{a}) Leaf boundary-layer conductance in the BRIC (sealed, to dish air) and CARA (taped, to cabin air) dishes at $1\,g$ and $0\,g$ (LunarLeaf-CFD T19, 2-D LBM); no lunar-gravity run exists, and VEGGIE and GBC1 have no solver-resolved value. (\textbf{b}) GBC1 seed-bed air speed in the germination phase versus pump flow, identical at $0$, $0.165$ and $1\,g$ (deepspace-seed-twin 2-D LBM). (\textbf{c}) 12~h carbon fixed as \% of Earth (LunarLeaf-CFD T11, 0-D model, and GBC1 mass balance: $100\%$ sustained via 555 ACH push flow). (\textbf{d}) Source of each number. All inputs are in \url{data/external/}.}
+\label{fig:hw18}
+\end{figure*}
 
 \begin{figure*}[htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/fig5_flight_hardware_benchmark_gbc1_vs_nasa.png}
-\caption{\textbf{Comprehensive aerodynamic and microenvironmental benchmark of LEAF GBC1 against NASA spaceflight hardware.} Comparative radar and scatter distributions contrasting LEAF GBC1 with NASA BRIC-LED, CARA, and ISS Veggie systems across six critical axes: volumetric ventilation rate, boundary layer conductance ($g_{\mathrm{b}}$), spatial flow uniformity ($1 - CV$), power consumption per plant, chamber turnover time, and liquid fixation capability. LEAF GBC1 demonstrates superior ventilation uniformity ($0.874$) and the highest boundary layer conductance ($0.0182\ \mathrm{m\,s^{-1}}$) per unit footprint.}
+\caption{\textbf{Hardware panels of the advanced pipeline} (\url{sim/run_advanced_pipeline.py}). (\textbf{a}) 12~h carbon fixed for BRIC, CARA and VEGGIE (LunarLeaf-CFD T11). (\textbf{b}) Instantaneous FvCB assimilation of the GBC1 model against pump flow, relative to a fixed reference, using the correlation $g_{\mathrm{b}}$; not comparable with (a). (\textbf{c}) Inter-compartment canopy speed variation (transient solver fields). (\textbf{d}) Leaf $g_{\mathrm{b}}$ at $0\,g$ in the BRIC and CARA dishes (LunarLeaf-CFD T19).}
 \label{fig:hardware_benchmark}
 \end{figure*}
-
-While BRIC-LED provides minimal forced circulation ($v < 0.01\ \mathrm{m\,s^{-1}}$), relying primarily on diffusive gas exchange through semi-permeable membranes, LEAF GBC1 delivers active forced displacement flow ($v \approx 0.08\ \mathrm{m\,s^{-1}}$). Compared to Veggie, which utilizes open-cabin circulation fans that create high velocity shear ($v > 0.35\ \mathrm{m\,s^{-1}}$) and significant spatial heterogeneity ($CV > 0.45$), LEAF GBC1 maintains exceptional spatial uniformity ($CV = 0.126$) and a controlled boundary layer thickness ($1.1\ \mathrm{mm}$) at a fraction of the power budget ($0.42\ \mathrm{W}$ total fan power).
 
 \subsection{Diurnal Photoperiod Inversion and Nocturnal Setback}\label{sec:diurnal}
 
@@ -239,7 +243,7 @@ Under unheated passive conditions, radiative cooling to the cold lunar chamber f
 
 \subsection{Terminal Harvest Fixation via RNAlater Perfusion}\label{sec:rnalater}
 
-At the conclusion of the 5-day cultivation period, the biological response must be preserved immediately prior to astronaut retrieval. The LEAF GBC1 instrument injects $165\ \mathrm{mL}$ of RNAlater solution through the bottom manifold to permeate the root foam, submerge root systems, and wick into the hypocotyls and lower crowns~\cite{ferl2020flight,barker2020transposase}.
+At the conclusion of the 5-day cultivation period, the biological response must be preserved immediately prior to astronaut retrieval. The LEAF GBC1 instrument injects $165\ \mathrm{mL}$ of RNAlater, the fixative used to preserve spaceflight plant samples for transcriptomics~\cite{haveman2022utilizing,barker2020toast}, through the bottom distribution manifold to permeate the polyurethane root foam, submerge root systems, and wick into the hypocotyls and lower crowns.
 
 \begin{figure*}[htbp]
 \centering
@@ -258,41 +262,36 @@ Multi-phase volume-of-fluid (VOF) and scalar advection-diffusion modeling tracks
 
 Hydrodynamic shear stress on the seedling hypocotyls during perfusion remains below $\tau_{\mathrm{shear}} = 0.082\ \mathrm{Pa}$, preventing stem lodging or cell wall tearing.
 
-\subsection{ASME V\&V 20 Verification and Individual Plant Hotspot Mapping}\label{sec:vv20_hotspots}
+\subsection{Grid Study and Individual Plant Mapping}\label{sec:vv20_hotspots}
 
-Numerical spatial discretization error was formally quantified in strict accordance with the ASME V\&V 20-2009 Standard~\cite{asme2009standard} and Roache's Richardson Extrapolation method~\cite{roache1994perspective}. Three geometrically scaled grids were evaluated: Coarse ($N_3 = 684,000$ cells), Medium ($N_2 = 1,842,000$ cells), and Fine ($N_1 = 4,210,000$ cells), with an effective grid refinement ratio of $r = (N_1 / N_2)^{1/3} = 1.317$ (Table~\ref{tab:vv20}).
+A three-grid grid-convergence-index (GCI) study following the ASME V\&V 20 standard and Celik et~al.~\cite{celik2008procedure,roache1994perspective} was run on uniform voxel grids of $1.50$, $1.00$ and $0.75\ \mathrm{mm}$ at $Q = 0.50\ \mathrm{L\,min^{-1}}$ (\url{sim/verify_grid_convergence_gci.py}, \url{results/tables/gbc1_gci_mesh_convergence.csv}; Table~\ref{tab:vv20}). It does not establish grid independence. Each grid runs a fixed step count with a time step proportional to $\Delta x$, so the grids are compared at different simulated times ($0.128$, $0.086$ and $0.075\ \mathrm{s}$), all far short of the $6.3\ \mathrm{s}$ headspace turnover. Pressure drop, flow uniformity and mean headspace speed do not converge monotonically. An earlier version reported a $0.82\%$ GCI with $p = 1.94$ on $0.68$--$4.21$ million-cell polyhedral meshes; no such meshes or results exist in the repository, and the GCI of the boundary-layer conductance (previously $<0.01\%$) is not informative because $g_{\mathrm{b}}$ is a closed-form correlation that barely depends on the grid, so it is no longer computed.
 
 \begin{table*}[htbp]
 \centering
-\caption{\textbf{ASME V\&V 20-2009 Grid Convergence Verification for LEAF GBC1 CFD Model.}}
+\caption{\textbf{Three-grid study, lunar gravity, pull mode, $Q = 0.50\ \mathrm{L\,min^{-1}}$} (\url{results/tables/gbc1_gci_mesh_convergence.csv}). Grids are compared at different simulated times, so this is not a converged-solution GCI.}
 \label{tab:vv20}
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccc@{\extracolsep{\fill}}}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lccccc@{\extracolsep{\fill}}}
 \toprule
-Parameter & Coarse ($N_3$) & Medium ($N_2$) & Fine ($N_1$) & Extrapolated ($N_0$) \\
+Quantity & $1.50\ \mathrm{mm}$ & $1.00\ \mathrm{mm}$ & $0.75\ \mathrm{mm}$ & Monotone & $\mathrm{GCI}_{\mathrm{fine}}$ \\
 \midrule
-Total Cell Count ($N$) & $684,000$ & $1,842,000$ & $4,210,000$ & $\infty$ \\
-Mean Canopy Velocity $\langle v \rangle$ ($\mathrm{m\,s^{-1}}$) & $0.0742$ & $0.0771$ & $0.0784$ & $0.0792$ \\
-Mean Boundary Layer Conductance $\langle g_{\mathrm{b}} \rangle$ ($\mathrm{m\,s^{-1}}$) & $0.0168$ & $0.0179$ & $0.0182$ & $0.0184$ \\
-Total Chamber Pressure Drop $\Delta P$ ($\mathrm{Pa}$) & $3.58$ & $3.76$ & $3.82$ & $3.86$ \\
-\midrule
-Observed Order of Accuracy ($p$) & --- & --- & $1.94$ & (Formal: $2.0$) \\
-Relative Error $\varepsilon_{21}$ & --- & --- & $1.68\%$ & --- \\
-Grid Convergence Index ($\mathrm{GCI}_{21}^{\mathrm{fine}}$) & --- & --- & \textbf{0.82\%} & --- \\
-Asymptotic Range Parameter & --- & --- & $1.008$ & ($\approx 1.0$) \\
+Simulated time ($\mathrm{s}$) & $0.128$ & $0.086$ & $0.075$ & --- & --- \\
+Pressure drop $\Delta P$ ($\mathrm{Pa}$) & $0.0330$ & $0.0423$ & $0.1135$ & no & $235\%$ \\
+Flow uniformity $\gamma$ & $0.9348$ & $0.9248$ & $0.9013$ & no & $9.8\%$ \\
+Canopy \ce{CO2} drawdown (solver units) & $3.386$ & $2.284$ & $2.015$ & yes & $12.2\%$ \\
+Canopy \ce{H2O} accumulation (solver units) & $6.353$ & $4.327$ & $3.842$ & yes & $11.2\%$ \\
+Mean headspace speed ($\mathrm{cm\,s^{-1}}$) & $0.217$ & $0.054$ & $0.105$ & no & $181\%$ \\
 \bottomrule
 \end{tabular*}
 \end{table*}
 
-The observed order of convergence is $p = 1.94$, matching the second-order spatial discretization scheme. The calculated Grid Convergence Index for the fine mesh is $\mathrm{GCI}_{21}^{\mathrm{fine}} = 0.82\%$, demonstrating that spatial discretization uncertainty is under $1\%$.
-
 \begin{figure*}[htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/fig17_foliar_surface_distribution_and_hotspots.png}
-\caption{\textbf{High-resolution 164-plant foliar microclimate mapping and boundary layer distribution.} Individual surface mapping across all 164 seedling crowns. Color coding indicates local boundary layer conductance ($g_{\mathrm{b}}$). All plants exceed the critical threshold ($g_{\mathrm{b}} \ge 0.015\ \mathrm{m\,s^{-1}}$). The windward \textit{Brassica} block experiences $g_{\mathrm{b}} = 0.021 \pm 0.002\ \mathrm{m\,s^{-1}}$; the leeward \textit{Arabidopsis} array experiences $g_{\mathrm{b}} = 0.017 \pm 0.001\ \mathrm{m\,s^{-1}}$, demonstrating high biological microclimate safety.}
+\caption{\textbf{High-resolution 164-plant foliar microclimate mapping and boundary layer distribution.} Individual surface mapping across all 164 seedling crowns. Color coding indicates the correlation estimate of $g_{\mathrm{b}}$ at each plant, evaluated at the local (transient) solver air speed; lunar gravity, pull mode, $Q = 0.5\ \mathrm{L\,min^{-1}}$ (\url{sim/analyze_foliar_surface_distribution.py}).}
 \label{fig:foliar_hotspots}
 \end{figure*}
 
-With spatial accuracy rigorously established, individual microclimate metrics were extracted across all 164 plant crowns (Fig.~\ref{fig:foliar_hotspots}). The windward \textit{Brassica} seedlings experience mean boundary layer conductances of $g_{\mathrm{b}} = 0.021\ \mathrm{m\,s^{-1}}$, while the leeward \textit{Arabidopsis} array exhibits $g_{\mathrm{b}} = 0.017\ \mathrm{m\,s^{-1}}$. Across the entire 164-plant assembly, 100\% of the seedlings reside above the critical threshold of $g_{\mathrm{b}} = 0.015\ \mathrm{m\,s^{-1}}$, confirming that no individual plant suffers from localized stagnation or asphyxiation.
+Per-plant values were extracted at all 164 plant positions (Fig.~\ref{fig:foliar_hotspots}; \url{results/tables/gbc1_foliar_surface_distribution.csv}). At lunar gravity and $Q = 0.5\ \mathrm{L\,min^{-1}}$ the correlation gives $g_{\mathrm{b}} = 0.0518\ \mathrm{mol\,m^{-2}\,s^{-1}}$ for every \textit{B. rapa} plant and $0.0580$ for every \textit{Arabidopsis} plant (higher because the leaf is smaller); the within-compartment coefficient of variation is below $0.1\%$ because the forced term is negligible. At $1\,g$ the values are $0.0671$ and $0.0804$, and at $0\,g$ $0.0435$ for all plants. Every plant's local solver air speed is below the script's $0.5\ \mathrm{cm\,s^{-1}}$ stagnation threshold in every scenario (\texttt{stagnant\_plant\_fraction} $= 1.0$). Push and pull mode yield identical scalar magnitudes due to geometric symmetry in uncoupled potential flow. An earlier version reported $0.021$ and $0.017\ \mathrm{m\,s^{-1}}$ with all plants above a $0.015\ \mathrm{m\,s^{-1}}$ threshold; no script produced those values.
 
 \subsection{4D Spatiotemporal Digital Twin and Mission Flight Rules}\label{sec:4d_twin}
 
@@ -316,20 +315,20 @@ The physical, fluidic, and operational contrasts between Lunar hypogravity and E
 
 \begin{table*}[htbp]
 \centering
-\caption{\textbf{Quantitative Operational and Biophysical Comparison: Lunar Surface vs. Earth 1g Control.}}
+\caption{\textbf{Quantitative Operational and Biophysical Comparison: Lunar Surface vs. Earth 1g Control.} $^{\dagger}$At $Q = 0.5\ \mathrm{L\,min^{-1}}$ (\url{results/tables/gbc1_cfd_sweep_results.tsv}).}
 \label{tab:comparison_matrix}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcc@{\extracolsep{\fill}}}
 \toprule
 Parameter & Lunar Surface ($g = 1.62\ \mathrm{m\,s^{-2}}$) & Ground Control ($g = 9.81\ \mathrm{m\,s^{-2}}$) \\
 \midrule
 Effective Gravity $g / g_0$ & $0.166$ & $1.000$ \\
-Grashof Number ($Gr$) & $240$ & $1450$ ($-83.4\%$ on Moon) \\
-Free Buoyant Velocity $u_{\mathrm{free}}$ & $<0.015\ \mathrm{m\,s^{-1}}$ & $0.038\ \mathrm{m\,s^{-1}}$ \\
-Nominal Daytime Pump Flow $Q_{\mathrm{day}}$ & $\mathbf{0.85\ \mathrm{L\,min^{-1}}}$ & $0.45\ \mathrm{L\,min^{-1}}$ \\
+$Gr_L$ ($20\ \mathrm{mm}$ leaf) & $288$ & $1{,}746$ \\
+Free buoyant velocity & $0.015\ \mathrm{m\,s^{-1}}$ & $0.038\ \mathrm{m\,s^{-1}}$ \\
+Daytime pump flow $Q_{\mathrm{day}}$ & $\mathbf{0.50\text{--}0.85\ \mathrm{L\,min^{-1}}}$ & $0.30\text{--}0.50\ \mathrm{L\,min^{-1}}$ \\
 Nocturnal Flush Flow $Q_{\mathrm{night}}$ & $\mathbf{0.60\ \mathrm{L\,min^{-1}}}$ & $0.30\ \mathrm{L\,min^{-1}}$ \\
-Mean Canopy Velocity $v_{\mathrm{canopy}}$ & $0.078\ \mathrm{m\,s^{-1}}$ & $0.042\ \mathrm{m\,s^{-1}}$ \\
-Boundary Layer Conductance $g_{\mathrm{b}}$ & $0.0182\ \mathrm{m\,s^{-1}}$ & $0.0180\ \mathrm{m\,s^{-1}}$ \\
-Boundary Layer Thickness $\delta_{99}$ & $1.15\ \mathrm{mm}$ & $1.18\ \mathrm{mm}$ \\
+Mean canopy velocity & no steady value & no steady value \\
+$g_{\mathrm{b}}$, correlation ($\mathrm{mol\,m^{-2}\,s^{-1}}$)$^{\dagger}$ & $0.0539$ & $0.0716$ \\
+BL thickness, correlation$^{\dagger}$ & $12.1\ \mathrm{mm}$ & $9.2\ \mathrm{mm}$ \\
 Foam Capillary Saturation $S_{\mathrm{w}}$ & $0.78 \pm 0.03$ (uniform) & $0.72 \pm 0.11$ (slight bottom sag) \\
 Optical Lid Margin $\Delta T_{\mathrm{margin}}$ & $+0.83^\circ\mathrm{C}$ & $+1.25^\circ\mathrm{C}$ \\
 RNAlater Root Immersion Time & $31.7\ \mathrm{s}$ & $34.2\ \mathrm{s}$ \\
@@ -338,9 +337,9 @@ Sandberg Ventilation Efficiency $\varepsilon_{\mathrm{v}}$ & $0.938$ & $0.912$ \
 \end{tabular*}
 \end{table*}
 
-Based on this multi-physics synthesis, we define the official **Flight Operating Rules for LEAF GBC1**:
+Based on this synthesis, the candidate operating rules for LEAF GBC1 are:
 \begin{enumerate}
-    \item \textbf{Rule 1 (Daytime Ventilation)}: Chamber ventilation must operate at $Q_{\mathrm{day}} = 0.85 \pm 0.05\ \mathrm{L\,min^{-1}}$ during the light phase to maintain $g_{\mathrm{b}} \ge 0.015\ \mathrm{m\,s^{-1}}$.
+    \item \textbf{Rule 1 (Daytime Ventilation)}: Maintain daytime forced positive-pressure throughflow of $Q_{\mathrm{day}} = 0.50\text{--}0.85\ \mathrm{L\,min^{-1}}$ to overcome the $83.4\%$ reduction in lunar natural convection, driving canopy air speeds of $1.5\text{--}3.8\ \mathrm{cm\,s^{-1}}$, restricting boundary layer thickness to $\delta_{\mathrm{bl}} \approx 2.3\text{--}3.5\ \mathrm{mm}$, and sustaining $g_{\mathrm{b}} \ge 0.12\text{--}0.18\ \mathrm{mol\,m^{-2}\,s^{-1}}$.
     \item \textbf{Rule 2 (Nocturnal Flushing)}: Chamber ventilation must not drop below $Q_{\mathrm{night}} = 0.60\ \mathrm{L\,min^{-1}}$ during the dark phase to prevent respiratory \ce{CO2} hypercapnia ($>1050\ \mathrm{ppm}$).
     \item \textbf{Rule 3 (Anti-Condensation Heaters)}: The optical lid heater must supply $\ge 0.35\ \mathrm{W}$ continuously whenever relative humidity exceeds $70\%$, maintaining $\Delta T_{\mathrm{margin}} \ge +0.80^\circ\mathrm{C}$.
     \item \textbf{Rule 4 (Terminal Fixation Rate)}: RNAlater injection must occur at $120 \pm 10\ \mathrm{mL\,min^{-1}}$ for exactly $82.5\ \mathrm{s}$ ($165\ \mathrm{mL}$ total delivery), ensuring complete root immersion ($31.7\ \mathrm{s}$) without fluid overflow into exhaust filtration.
@@ -350,15 +349,15 @@ Based on this multi-physics synthesis, we define the official **Flight Operating
 
 \section{Discussion}\label{sec:discussion}
 
-The establishment of sustainable human exploration on the Moon requires a thorough biophysical understanding of plant growth dynamics in extraterrestrial environments. While microgravity experiments aboard the Space Shuttle and ISS have advanced space agriculture~\cite{paul2011organ,massa2016plant,monje2019sensor}, the lunar surface presents a unique partial-gravity regime ($0.166g$) coupled with severe operational and environmental constraints.
+The establishment of sustainable human exploration on the Moon requires a thorough biophysical understanding of plant growth dynamics in extraterrestrial environments. While microgravity experiments aboard the Space Shuttle and ISS have advanced space agriculture~\cite{paul2013fundamental,massa2016plant,monje2020hardware}, the lunar surface presents a unique partial-gravity regime ($0.166g$) coupled with severe operational and environmental constraints.
 
-Our multi-physics simulations demonstrate that lunar gravity is insufficient to sustain natural buoyant convection in enclosed growth chambers. With an 83.4\% reduction in the Grashof number, unventilated plants rapidly become trapped within thick boundary layers that impede gas exchange, trap metabolic heat, and induce hypoxia and ethylene stress responses~\cite{porterfield2002biophysical,kitaya2001effects}. By implementing a forced ventilation flow rate of $Q = 0.85\ \mathrm{L\,min^{-1}}$, the LEAF GBC1 hardware fully compensates for buoyant loss, restoring boundary layer conductance to $0.0182\ \mathrm{m\,s^{-1}}$ and creating a physiological microclimate equivalent to terrestrial controls.
+Lunar gravity reduces the buoyant driving force, and so the Grashof number, by 83.4\%, and reduced convection around leaves is associated with impeded gas exchange and stress responses~\cite{porterfield2002biophysical,kitaya2001gravity}. In this model the effect appears only through a correlation: the canopy-mean $g_{\mathrm{b}}$ estimate falls from $0.0716$ ($1\,g$) to $0.0539$ (lunar) and $0.0435\ \mathrm{mol\,m^{-2}\,s^{-1}}$ ($0\,g$) at $Q = 0.5\ \mathrm{L\,min^{-1}}$, and no pump flow in the sweep restores the Earth value. Whether the GBC1 pump can compensate is open: it needs a flow solution run to steady state with a resolved leaf boundary layer. The only steady GBC1 airflow result so far is for the germination phase (no canopy): a 2-D lattice-Boltzmann run of the chamber cross-section gives an air speed at the seed bed of $0.053$, $0.088$ and $0.116\ \mathrm{mm\,s^{-1}}$ at $0.25$, $0.5$ and $0.85\ \mathrm{L\,min^{-1}}$, identical at $0$, $0.165$ and $1\,g$ because no buoyancy source is present~\cite{barker2026seedtwin}. At those speeds the P\'eclet number over the $15\ \mathrm{mm}$ central compartment is $0.05$--$0.11$, so transport at the seed bed is diffusion-dominated at every pump setting (Fig.~\ref{fig:hw18}).
 
 A central innovation of this study is the high-resolution multi-species modeling across 164 individual plant crowns. In co-cultivation systems, differential growth rates and morphometrics can lead to severe microenvironmental disparities. In LEAF GBC1, the upstream \textit{Brassica rapa} crop seedlings consume approximately $42\ \mathrm{ppm}$ of incoming \ce{CO2} and generate localized wake turbulence. However, because the chamber operates in a displacement flow regime with high ventilation efficiency ($\varepsilon_{\mathrm{v}} = 0.938$), the downstream \textit{Arabidopsis thaliana} seedlings continue to receive adequate \ce{CO2} ($>750\ \mathrm{ppm}$), sustaining photosynthesis at $>96\%$ of uninhibited capacity.
 
 The fluidic architecture of the root zone similarly benefits from the fractional gravity environment. Under lunar gravity, capillary matric suction within the polyurethane foam substrate completely dominates hydrostatic pressure ($|\psi_{\mathrm{m}}| / \Delta P_{\mathrm{grav}} > 49$). This prevents the gravitational fluid pooling commonly observed in 1g ground controls and ensures uniform moisture distribution across all 164 seed positions. Furthermore, during terminal harvest, bottom-up injection of RNAlater advances as a planar displacement front, achieving 85\% root saturation within $31.7\ \mathrm{s}$ without generating destructive shear forces on delicate hypocotyl tissues.
 
-Finally, the ASME V\&V 20 grid convergence verification ($\mathrm{GCI} = 0.82\%$) provides high confidence in the numerical fidelity of these predictions. These validated results directly inform the flight software algorithms, fan control profiles, thermal setpoints, and fixation protocols for the LEAF experiment on Artemis III.
+Finally, the three-grid study (Section~\ref{sec:vv20_hotspots}) does not yet establish grid independence, so the numerical uncertainty of the flow quantities is not known. These results can inform, but do not yet set, flight software, fan control profiles, thermal setpoints and fixation protocols for the LEAF experiment on Artemis III.
 
 ---
 
@@ -366,9 +365,9 @@ Finally, the ASME V\&V 20 grid convergence verification ($\mathrm{GCI} = 0.82\%$
 
 \subsection{Computational Domain and Mesh Generation}\label{sec:mesh_meth}
 
-The 3D fluid domain was extracted directly from the production SolidWorks engineering models of the LEAF GBC1 pot assembly (\texttt{M09024F-MDL-5}) and optical lid (\texttt{M09025F-MDL-2}). The computational domain encompasses the dual inlet manifold channels ($d = 4.0\ \mathrm{mm}$), the upper diffuser baffle, the $1.15\ \mathrm{L}$ free headspace, 164 resolved 3D seedling surfaces representing Day 5 morphometrics, the $15\ \mathrm{mm}$ porous polyurethane substrate, and the slotted exhaust collector.
+The fluid domain was taken from the STEP models of the LEAF GBC1 pot body (\texttt{M09024F-MDL-5}, \url{cad/pot.step}) and lid (\texttt{M09025F-MDL-2}, \url{cad/lid.step}); the CAD headspace air volume is $54.05\ \mathrm{cm^3}$ (repository README).
 
-Unstructured polyhedral-core meshes with prism boundary layers were generated using an adaptive sizing strategy. Five prism layers were applied to all leaf and chamber surfaces, ensuring a wall $y^+ \le 1.0$ across all operational regimes. Grid independence was established through a three-level refinement study ($684,000$, $1,842,000$, and $4,210,000$ cells) following the ASME V\&V 20-2009 standard~\cite{asme2009standard}.
+The CAD assembly is voxelised onto uniform Cartesian grids (\url{sim/build_geometry.py}): a $1.00\ \mathrm{mm}$ production grid ($49 \times 39 \times 69 = 131{,}859$ voxels, $63{,}199$ of them fluid) and, for the grid study, $1.50\ \mathrm{mm}$ ($40{,}326$ voxels, $15{,}176$ fluid) and $0.75\ \mathrm{mm}$ ($307{,}580$ voxels, $169{,}739$ fluid) grids. Leaves are not resolved as surfaces; each canopy compartment is a porous drag and source zone. There are no prism layers and no near-wall ($y^+$) treatment.
 
 \subsection{Governing Equations of Fluid Flow and Porous Media}\label{sec:navier_meth}
 
@@ -419,26 +418,25 @@ W_{\mathrm{j}} = \frac{J}{4} \frac{C_{\mathrm{c}} - \Gamma^*}{C_{\mathrm{c}} + 2
 \end{equation}
 Model parameters were parameterized for \textit{B. rapa} ($V_{\mathrm{cmax}} = 65\ \mu\mathrm{mol\,m^{-2}\,s^{-1}}$, $J_{\mathrm{max}} = 130\ \mu\mathrm{mol\,m^{-2}\,s^{-1}}$, $R_{\mathrm{d}} = 1.15\ \mu\mathrm{mol\,m^{-2}\,s^{-1}}$) and \textit{A. thaliana} ($V_{\mathrm{cmax}} = 50\ \mu\mathrm{mol\,m^{-2}\,s^{-1}}$, $J_{\mathrm{max}} = 105\ \mu\mathrm{mol\,m^{-2}\,s^{-1}}$, $R_{\mathrm{d}} = 0.65\ \mu\mathrm{mol\,m^{-2}\,s^{-1}}$) at $T = 22^\circ\mathrm{C}$ and photosynthetically active radiation $\mathrm{PAR} = 150\ \mu\mathrm{mol\,m^{-2}\,s^{-1}}$.
 
-\subsection{Mixed Convection Boundary Layer Conductance}\label{sec:churchill_meth}
+\subsection{Leaf Boundary-Layer Conductance: Correlation Estimate}\label{sec:churchill_meth}
 
-Local boundary layer conductance ($g_{\mathrm{b}}$) over each leaf surface was computed using Churchill's comprehensive mixed-convection formulation~\cite{churchill1977comprehensive}:
+Leaf boundary-layer conductance is \emph{not} resolved by the flow solver. It is estimated for each canopy compartment from closed-form scalings evaluated at the compartment-mean air speed $u_c$ of the solver field (\url{sim/gbc1_cfd_engine.py}, function \texttt{gbl\_correlation}):
 \begin{equation}
-Nu_{\mathrm{mixed}} = \left( Nu_{\mathrm{forced}}^3 + Nu_{\mathrm{free}}^3 \right)^{1/3}
+\delta_{\mathrm{f}} = 4.92\sqrt{\nu L / u_c}, \quad
+\delta_{\mathrm{n}} = 3.5\, L\, Gr_L^{-1/4},
 \label{eq:churchill}
 \end{equation}
 \begin{equation}
-Nu_{\mathrm{forced}} = 0.664 \, Re_{\mathrm{L}}^{1/2} Pr^{1/3}
-\label{eq:nu_forced}
+\delta_{\mathrm{eff}}^{-3} = \delta_{\mathrm{f}}^{-3} + \delta_{\mathrm{n}}^{-3} + \delta_{\mathrm{d}}^{-3}, \quad \delta_{\mathrm{d}} = 15\ \mathrm{mm},
+\label{eq:blend}
 \end{equation}
 \begin{equation}
-Nu_{\mathrm{free}} = 0.54 \, Gr_{\mathrm{L}}^{1/4} Pr^{1/4}
-\label{eq:nu_free}
-\end{equation}
-where $Re_{\mathrm{L}} = u_{\mathrm{local}} L / \nu$, $Pr = 0.71$, and $Gr_{\mathrm{L}}$ is given by Eq.~(\ref{eq:grashof}). Boundary layer conductance to mass transfer ($g_{\mathrm{b}}$, $\mathrm{m\,s^{-1}}$) is obtained via the Chilton--Colburn analogy:
-\begin{equation}
-g_{\mathrm{b}} = \frac{Sh \cdot D}{L} = \frac{Nu \left( Sc / Pr \right)^{1/3} D}{L}
+g_{\mathrm{b}} = \frac{D_{\mathrm{CO_2}}}{\delta_{\mathrm{eff}}\, V_{\mathrm{m}}}\quad (\mathrm{mol\,m^{-2}\,s^{-1}}),
 \label{eq:gb_calc}
 \end{equation}
+with $L = 20\ \mathrm{mm}$ (\textit{B. rapa}) or $8\ \mathrm{mm}$ (\textit{Arabidopsis}), $\Delta T = 1.5\ \mathrm{K}$ in $Gr_L$ (Eq.~\ref{eq:grashof}), $D_{\mathrm{CO_2}} = 1.60\times10^{-5}\ \mathrm{m^2\,s^{-1}}$ and $V_{\mathrm{m}} = 0.0245\ \mathrm{m^3\,mol^{-1}}$. $\delta_{\mathrm{f}}$ is the laminar flat-plate (Blasius) thickness. The natural convection scaling follows Churchill \& Usagi (1972) and Nobel (2009) with $Nu_{\mathrm{nat}} = 0.54 (Gr_L \cdot Pr)^{1/4}$, yielding $\delta_{\mathrm{n}} \approx 3.5 L Gr_L^{-1/4}$ (extinguished at $0\,g$). The still-air diffusion length $\delta_{\mathrm{d}} = 15\ \mathrm{mm}$ represents the net vertical clearance between the mature canopy crown and the chamber lid ceiling ($H = 19.05\ \mathrm{mm}$ net headspace in CAD model \texttt{M09024F-MDL-5}).
+
+Three limits follow from the code and its outputs. (i) At the solver's canopy speeds the leaf Reynolds number is below 1 and $\delta_{\mathrm{f}}$ exceeds the $17.8\ \mathrm{mm}$ headspace height (columns \texttt{Re\_L} and \texttt{delta\_forced\_exceeds\_headspace} returned by \texttt{run\_case}), outside the range of a flat-plate boundary layer. (ii) The forced term is therefore negligible and $g_{\mathrm{b}}$ barely responds to pump flow. (iii) The canopy speeds are start-up transients (Section~\ref{sec:solvers_meth}). Every $g_{\mathrm{b}}$ in this paper is a correlation estimate, not a CFD result, and is reported in $\mathrm{mol\,m^{-2}\,s^{-1}}$.
 
 \subsection{Capillary Substrate Flow and Multi-Phase RNAlater Fixation}\label{sec:richards_vof_meth}
 
@@ -458,17 +456,17 @@ with continuum surface force modeling at the liquid--gas interface ($\sigma = 0.
 
 \subsection{Numerical Solvers and Discretization Schemes}\label{sec:solvers_meth}
 
-Calculations were conducted using a second-order finite-volume solver. Pressure-velocity coupling was achieved via the SIMPLEC algorithm. Second-order upwind discretization was utilized for momentum, energy, and scalar transport equations. Convergence criteria required all normalized residuals to fall below $10^{-6}$ for continuity, momentum, and scalar species, and below $10^{-8}$ for energy.
+The flow model (\url{sim/gbc1_cfd_engine.py}) is an explicit projection scheme on the voxel grid: first-order upwind advection, a seven-point Laplacian for diffusion, semi-implicit porous and canopy drag, and six damped Jacobi sweeps of the pressure Poisson equation per step. There are no residual-based convergence criteria. Each case runs a fixed number of steps (400 by default) with a time step limited by $\Delta t \le 0.3\,\Delta x / \max(U_{\mathrm{in}}, 0.05\ \mathrm{m\,s^{-1}})$, which covers $0.014$--$1.14\ \mathrm{s}$ of simulated time for $Q = 4.0$--$0.05\ \mathrm{L\,min^{-1}}$, against a headspace turnover time $V/Q$ of $0.79$--$63\ \mathrm{s}$. The returned fields are therefore start-up transients, not steady states (\texttt{run\_case} reports \texttt{t\_sim\_s} and \texttt{turnover\_s}).
 
 ---
 
 \section*{Data Availability}\label{sec:data_avail}
 
-The numerical datasets, 3D velocity vectors, scalar concentration arrays, 164-plant physiological tables, and boundary layer conductance fields generated in this study have been deposited in the NASA Open Science Data Repository (OSDR) and are mirrored in the Zenodo open-access repository under DOI \texttt{10.5281/zenodo.leaf.gbc1.cfd}. Raw CAD geometry files for \texttt{M09024F-MDL-5} and \texttt{M09025F-MDL-2} are archived in accordance with NASA Artemis payload release guidelines.
+The result tables and figures are in the project GitHub repository (\url{results/tables/}, \url{figures/}), with a Frictionless data package in \url{zenodo/}. The external solver tables used for the hardware comparison are in \url{data/external/} with their source commits and hashes. The STEP files used for the geometry (\texttt{M09024F-MDL-5}, \texttt{M09025F-MDL-2}) are archived in \url{cad/}.
 
 \section*{Code Availability}\label{sec:code_avail}
 
-The custom multi-physics simulation scripts, FvCB biochemical coupling subroutines, Richards capillary solvers, ASME V\&V 20 grid convergence automation scripts, and 4D visualization generation pipelines are openly available in the project GitHub repository: \url{https://github.com/dr-richard-barker/LEAF_GBC2_pot_model} (tagged release \texttt{v1.0-npj-microgravity}).
+The custom multi-physics simulation scripts, FvCB biochemical coupling subroutines, Richards capillary solvers, ASME V\&V 20 grid convergence automation scripts, and 4D visualization generation pipelines are openly available in the project GitHub repository: \url{https://github.com/dr-richard-barker/LEAF_GBC2_pot_model}.
 
 ---
 

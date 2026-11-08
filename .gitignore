@@ -29,3 +29,6 @@ latex/*.blg
 latex/*.out
 latex/*.synctex.gz
 latex/*.toc
+
+# ABAI attestation (local)
+.abai/

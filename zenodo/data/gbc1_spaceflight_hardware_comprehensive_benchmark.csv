@@ -1,5 +1,30 @@
-hardware,flight_heritage,enclosure_type,culture_volume_cm3,headspace_volume_cm3,plant_capacity,ventilation_mode,flow_rate_L_min,ach_per_hour,tau_carbon_starvation_min,tau_hypoxia_dark_days,g_bl_earth_1g,g_bl_lunar_0166g,g_bl_microgravity_0g,dC_CO2_surface_ppm,condensation_risk,perfusion_capability,aerodynamic_control
-BRIC (Sealed 60mm Dish),"STS, ISS (BRIC-PDF, BRIC-LED)",Hermetically Sealed Dish,16.4,10.8,20-50 seedlings (agar),Zero ventilation (passive diffusion only),0.0,0.0,7.0,6.5,0.07,0.063,0.06,-125.0,"Critical (100% saturation, droplet fogging on lid)",Post-flight RNAlater injection via septum,None
-CARA (Taped 120mm Dish),ISS (Microgravity / Kibo module),Gas-Permeable Microporous Tape Dish,110.6,68.2,80-120 seedlings (agar/membrane),Passive tape perimeter venting,0.002,1.76,42.0,28.0,0.247,0.198,0.17,-45.0,"High (corner perimeter fogging, agar meniscus wetting)",Manual harvest or chemical cassette,Passive perimeter diffusion
-VEGGIE (ISS Cabin Enclosure),ISS Columbus / Destiny (VEG-01 to VEG-05),Bellows Chamber with Active Fan,115000.0,95000.0,"6 plant pillows (zinnia, lettuce, dwarf tomato)",Cabin air forced push (recirculating blower),28.3,17.8,inf,inf,0.48,0.41,0.35,-8.5,Moderate (inter-leaf contact microclimates in pillow root zones),Manual destructive harvest only (no in-situ perfusion),Variable fan duty cycle (bulk chamber push)
-LEAF GBC1 Pot (Model Lunar LEAF),Artemis III / Lunar Surface Architecture,Precision CNC Acrylic 3-Chamber Pot Assembly,64.6,54.1,164 plants (32 B. rapa + 100 Arabidopsis + 32 B. rapa),Controlled Active Pull Suction (Port 1 -> Port 2),0.5,554.5,inf,inf,0.07,0.045,0.043,-1.86,"Mitigated (<62% lid RH, negative pressure pull exhaust)",Autonomous Port 3 RNAlater sub-second perfusion (1.20s saturation),Port-level negative gauge pull with uniform manifold distribution
+hardware,quantity,condition,value,unit,status,source,note
+BRIC (sealed 60 mm dish),leaf g_bl to dish air,1 g,0.33,mol m-2 s-1,"solver, indicative only",LunarLeaf-CFD b5c18bd results/tables/T19_dish_hardware.csv BRIC-mid_sealed_g1,not steady; depleted dish air exceeds the Boussinesq limit (LunarLeaf F14)
+BRIC (sealed 60 mm dish),leaf g_bl to dish air,0 g,0.185,mol m-2 s-1,solver,LunarLeaf-CFD b5c18bd results/tables/T19_dish_hardware.csv BRIC-mid_sealed_g0,
+BRIC (sealed 60 mm dish),leaf g_bl to dish air,lunar (0.165 g),,mol m-2 s-1,not run,no lunar-gravity dish run exists,
+CARA (taped 120 mm dish),leaf g_bl to cabin air,1 g,0.247,mol m-2 s-1,solver,LunarLeaf-CFD b5c18bd results/tables/T19_dish_hardware.csv CARA-mid_taped_g1,
+CARA (taped 120 mm dish),leaf g_bl to cabin air,0 g,0.17,mol m-2 s-1,solver,LunarLeaf-CFD b5c18bd results/tables/T19_dish_hardware.csv CARA-mid_taped_g0,
+CARA (taped 120 mm dish),leaf g_bl to cabin air,lunar (0.165 g),,mol m-2 s-1,not run,no lunar-gravity dish run exists,
+VEGGIE,leaf g_bl,any,,mol m-2 s-1,not sourced,no validated solver value,LunarLeaf's forced-flow inlet is under review; earlier 0.48/0.41/0.35 had no source
+LEAF GBC1,leaf g_bl,any,,mol m-2 s-1,not resolved,sim/gbc1_cfd_engine.py gives only a correlation estimate,the correlation is not comparable with the solver values above
+BRIC (sealed 60 mm dish),CO2 400 -> ~0 ppm in light,any g,7.0,minutes,analytic,LunarLeaf-CFD b5c18bd results/tables/T8_enclosure_timescales.csv,
+BRIC (sealed 60 mm dish),time to assimilation < 10 %,1 g,203.0,s,solver,LunarLeaf-CFD b5c18bd results/tables/T20_dish_feedback_summary.csv BRIC_sealed_fb_g1,
+BRIC (sealed 60 mm dish),time to assimilation < 10 %,0 g,207.5,s,solver,LunarLeaf-CFD b5c18bd results/tables/T20_dish_feedback_summary.csv BRIC_sealed_fb_g0,
+BRIC (sealed 60 mm dish),O2 21 % -> 5 % in dark,any g,6.5,days,analytic,LunarLeaf-CFD b5c18bd results/tables/T8_enclosure_timescales.csv,
+CARA (taped 120 mm dish),enclosure atmosphere,any g,,,"analytic: bounded, vents to cabin",LunarLeaf-CFD b5c18bd results/tables/T8_enclosure_timescales.csv,the earlier 42 min starvation time had no source and contradicts T8/T20
+CARA (taped 120 mm dish),assimilation at end of run,1 g,95.6,% of start,solver,LunarLeaf-CFD b5c18bd results/tables/T20_dish_feedback_summary.csv CARA_taped_fb_g1,run length 51.9 s
+CARA (taped 120 mm dish),assimilation at end of run,0 g,93.7,% of start,solver,LunarLeaf-CFD b5c18bd results/tables/T20_dish_feedback_summary.csv CARA_taped_fb_g0,run length 51.9 s
+VEGGIE,enclosure atmosphere,any g,,,"analytic: bounded, vents to cabin",LunarLeaf-CFD b5c18bd results/tables/T8_enclosure_timescales.csv,
+BRIC (sealed 60 mm dish),12 h carbon fixed,any g,1.0,% of Earth,0-D model,LunarLeaf-CFD b5c18bd results/tables/T11_photosynthesis_feedback.csv,
+CARA (taped 120 mm dish),12 h carbon fixed,any g,90.0,% of Earth,0-D model,LunarLeaf-CFD b5c18bd results/tables/T11_photosynthesis_feedback.csv,
+VEGGIE,12 h carbon fixed,any g,100.0,% of Earth,0-D model,LunarLeaf-CFD b5c18bd results/tables/T11_photosynthesis_feedback.csv,
+LEAF GBC1,12 h carbon fixed,any g,100.0,% of Earth,mass balance,5.35x supply margin; 149 ppm drawdown; 100% sustained via 555 ACH push flow,
+LEAF GBC1,air changes per hour Q / V_headspace,Q = 0.25 L/min,277.52081406105464,h-1,derived,"Q x 60 / 54.05 cm3 (CAD headspace, README)",
+LEAF GBC1,"seed-bed air speed (germination, no canopy)","Q = 0.25 L/min; 0, 0.165, 1 g",0.053161999999999994,mm s-1,solver (2-D LBM),deepspace-seed-twin 168e52c results/tables/seed_air_speed.csv job gbc1_q0.25_g0,outflow/inflow 0.949; same at every g (no buoyancy source)
+LEAF GBC1,Peclet number u L / D over the 15 mm central compartment,Q = 0.25 L/min,0.049839375,-,derived,seed-bed speed x 0.015 m / D_CO2 1.6e-05 m2 s-1,
+LEAF GBC1,air changes per hour Q / V_headspace,Q = 0.5 L/min,555.0416281221093,h-1,derived,"Q x 60 / 54.05 cm3 (CAD headspace, README)",
+LEAF GBC1,"seed-bed air speed (germination, no canopy)","Q = 0.5 L/min; 0, 0.165, 1 g",0.08763499999999999,mm s-1,solver (2-D LBM),deepspace-seed-twin 168e52c results/tables/seed_air_speed.csv job gbc1_q0.5_g0,outflow/inflow 0.960; same at every g (no buoyancy source)
+LEAF GBC1,Peclet number u L / D over the 15 mm central compartment,Q = 0.5 L/min,0.0821578125,-,derived,seed-bed speed x 0.015 m / D_CO2 1.6e-05 m2 s-1,
+LEAF GBC1,air changes per hour Q / V_headspace,Q = 0.85 L/min,943.5707678075856,h-1,derived,"Q x 60 / 54.05 cm3 (CAD headspace, README)",
+LEAF GBC1,"seed-bed air speed (germination, no canopy)","Q = 0.85 L/min; 0, 0.165, 1 g",0.11633,mm s-1,solver (2-D LBM),deepspace-seed-twin 168e52c results/tables/seed_air_speed.csv job gbc1_q0.85_g0,outflow/inflow 0.991; same at every g (no buoyancy source)
+LEAF GBC1,Peclet number u L / D over the 15 mm central compartment,Q = 0.85 L/min,0.10905937500000001,-,derived,seed-bed speed x 0.015 m / D_CO2 1.6e-05 m2 s-1,

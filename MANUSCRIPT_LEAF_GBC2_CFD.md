@@ -1,3 +1,5 @@
+> **Superseded (2026-11-07).** This is the pre-rename GBC2 draft, kept for history. Its boundary-layer conductance values, grid-convergence claims and spaceflight-hardware comparison are withdrawn: see `MANUSCRIPT_LEAF_GBC1_CFD.md` and `data/external/README.md` for the corrected, sourced versions.
+
 # Computational Fluid Dynamics, Multi-Species Canopy Gas Exchange, and Harvest Fixation Architecture of the LEAF GBC1 Lunar Plant Growth Chamber
 
 > **Designation Update**: The "GBC2" chamber is officially designated as **LEAF GBC1 (Growth Chamber 1)** throughout all flight specifications and documents.  

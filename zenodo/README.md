@@ -1,6 +1,6 @@
 # LEAF GBC1 "Model Lunar LEAF" 5-Day Spaceflight Simulation Dataset
 
-[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.leaf--gbc1--lunar-blue)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/)
+[![DOI](https://img.shields.io/badge/DOI-pending%20(not%20yet%20deposited)-lightgrey)](https://dr-richard-barker.github.io/LEAF_GBC2_pot_model/)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
 This archive contains the open-science research data, CFD metrics, and developmental biophysical time series for the **Model Lunar LEAF** 5-day (120-hour) spaceflight simulation conducted in the **LEAF GBC1** plant growth hardware (`M09024F-MDL-5` pot and `M09025F-MDL-2` lid assembly).
@@ -42,7 +42,7 @@ Comparative aerodynamic data evaluating Push Mode (forced inlet at Port 1) vs. P
 - `tau_residence_s`: Mean headspace flush residence time (s).
 - `push_delta_P_Pa` / `pull_delta_P_Pa`: Total aerodynamic pressure drop across loop (Pa).
 - `push_p_gauge_Pa` / `pull_p_gauge_Pa`: Internal static gauge pressure (Pa).
-- `push_g_bl_mean_mol_m2_s` / `pull_g_bl_mean_mol_m2_s`: Mean boundary layer conductance (mol/m² s).
+- `push_g_bl_mean_mol_m2_s` / `pull_g_bl_mean_mol_m2_s`: Boundary-layer conductance scaling (mol/m² s): 0.225·sqrt(Q/0.5) scaled by per-chamber geometry factors following Nobel (2009).
 - `push_uniformity_gamma` / `pull_uniformity_gamma`: Inter-chamber flow uniformity coefficient γ.
 
 ### 3. `zenodo_gravity_temp_response_surface.csv`
@@ -54,7 +54,7 @@ Comparative aerodynamic data evaluating Push Mode (forced inlet at Port 1) vs. P
 - `Gr`: Thermal Grashof number.
 - `Ri`: Richardson number (Ri = Gr / Re²).
 - `convection_regime`: Classification (Forced, Mixed, or Natural Convection).
-- `g_bl_mol_m2_s`: Effective boundary layer conductance (mol/m² s).
+- `g_bl_mol_m2_s`: Boundary-layer conductance from placeholder scalings (typed-in canopy speed, unsourced coefficients); illustrative, not CFD (mol/m² s).
 - `r_b_s_m`: Boundary layer resistance (s/m).
 - `A_net_brapa_umol_m2_s` / `A_net_arab_umol_m2_s`: Net canopy assimilation rate (µmol/m² s).
 - `delta_T_margin_C`: Optical lid anti-fogging margin (°C).

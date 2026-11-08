@@ -119,36 +119,44 @@ def run_advanced_pipeline():
     # -------------------------------------------------------------
     # BUILD SPACEFLIGHT HARDWARE BENCHMARK COMPARISON TABLE
     # -------------------------------------------------------------
-    # Data compiled from NASA OSDR meta-analysis Table S7
+    # BRIC / CARA / VEGGIE values are read from LunarLeaf-CFD solver tables vendored in
+    # data/external/ (see its README). The previous rows were typed in ("NASA OSDR meta-analysis
+    # Table S7", never identified): all three shared g_bl 0.291 and delta_bl 2.29 mm, and CARA's
+    # 12 h carbon was 50 % where LunarLeaf T11 gives 90 %. Unsourced cells are NaN.
+    t19 = pd.read_csv('data/external/lunarleaf_cfd/T19_dish_hardware.csv').set_index('job')
+    t11 = pd.read_csv('data/external/lunarleaf_cfd/T11_photosynthesis_feedback.csv').set_index('enclosure')
+    t8 = pd.read_csv('data/external/lunarleaf_cfd/T8_enclosure_timescales.csv')
+    bric_min = float(t8[t8['enclosure atmosphere event'].str.startswith('BRIC light')]['time'].iloc[0])
+    ll = 'LunarLeaf-CFD b5c18bd '
     hw_benchmarks = [
-        {'hardware': 'BRIC', 'condition': 'Microgravity (0g)', 'ventilation': 'Sealed (0 cm/s)',
-         'carbon_12h_pct_earth': 1.0, 'g_bl_mol_m2_s': 0.291, 'delta_bl_mm': 2.29, 'dC_CO2_ppm': 13.2,
-         'enclosure_co2_depletion_min': 7.0, 'notes': 'Extreme hypoxia & CO2 starvation in 7 min'},
-        {'hardware': 'CARA', 'condition': 'Microgravity (0g)', 'ventilation': 'Passive membrane (0 cm/s)',
-         'carbon_12h_pct_earth': 50.0, 'g_bl_mol_m2_s': 0.291, 'delta_bl_mm': 2.29, 'dC_CO2_ppm': 13.2,
-         'enclosure_co2_depletion_min': 999.0, 'notes': 'Diffusive boundary layer limitation'},
-        {'hardware': 'Veggie', 'condition': 'Microgravity (0g)', 'ventilation': 'Forced fan (~2.8 cm/s)',
-         'carbon_12h_pct_earth': 99.3, 'g_bl_mol_m2_s': 0.291, 'delta_bl_mm': 2.29, 'dC_CO2_ppm': 7.8,
-         'enclosure_co2_depletion_min': 999.0, 'notes': 'Open-cabin ventilation with fans'},
-        {'hardware': 'LEAF GBC1', 'condition': 'Lunar (0.166g, Q=0.10 L/min)', 'ventilation': 'Low Pump (u=0.21 m/s)',
-         'carbon_12h_pct_earth': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.10', 'carbon_12h_pct_earth'].values[0]),
-         'g_bl_mol_m2_s': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.10', 'g_bl_mean_mol_m2_s'].values[0]),
-         'delta_bl_mm': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.10', 'delta_bl_mm'].values[0]),
-         'dC_CO2_ppm': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.10', 'dC_CO2_mean_ppm'].values[0]),
-         'enclosure_co2_depletion_min': 999.0, 'notes': 'Lunar convection penalty regime'},
-        {'hardware': 'LEAF GBC1', 'condition': 'Lunar (0.166g, Q=0.50 L/min)', 'ventilation': 'Nominal Pump (u=1.05 m/s)',
-         'carbon_12h_pct_earth': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.50', 'carbon_12h_pct_earth'].values[0]),
-         'g_bl_mol_m2_s': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.50', 'g_bl_mean_mol_m2_s'].values[0]),
-         'delta_bl_mm': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.50', 'delta_bl_mm'].values[0]),
-         'dC_CO2_ppm': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.50', 'dC_CO2_mean_ppm'].values[0]),
-         'enclosure_co2_depletion_min': 999.0, 'notes': 'Forced-convection threshold reached'},
-        {'hardware': 'LEAF GBC1', 'condition': 'Lunar (0.166g, Q=1.00 L/min)', 'ventilation': 'Optimal Pump (u=2.10 m/s)',
-         'carbon_12h_pct_earth': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q1.00', 'carbon_12h_pct_earth'].values[0]),
-         'g_bl_mol_m2_s': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q1.00', 'g_bl_mean_mol_m2_s'].values[0]),
-         'delta_bl_mm': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q1.00', 'delta_bl_mm'].values[0]),
-         'dC_CO2_ppm': float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q1.00', 'dC_CO2_mean_ppm'].values[0]),
-         'enclosure_co2_depletion_min': 999.0, 'notes': 'Optimal gas exchange; zero gravity penalty'}
+        {'hardware': 'BRIC', 'condition': 'Microgravity (0g)', 'ventilation': 'Sealed',
+         'carbon_12h_pct_earth': float(t11.loc['BRIC', '12h carbon (% Earth)']), 'carbon_metric': '12 h carbon, 0-D model (T11)',
+         'g_bl_mol_m2_s': float(t19.loc['BRIC-mid_sealed_g0', 'g_bl_vs_enclosure_bulk']), 'g_bl_method': 'LBM, leaf to dish air (T19)',
+         'delta_bl_mm': np.nan, 'dC_CO2_ppm': np.nan,
+         'enclosure_co2_depletion_min': bric_min, 'source': ll + 'T11, T19, T8'},
+        {'hardware': 'CARA', 'condition': 'Microgravity (0g)', 'ventilation': 'Taped (vents to cabin)',
+         'carbon_12h_pct_earth': float(t11.loc['CARA', '12h carbon (% Earth)']), 'carbon_metric': '12 h carbon, 0-D model (T11)',
+         'g_bl_mol_m2_s': float(t19.loc['CARA-mid_taped_g0', 'g_bl_vs_ambient']), 'g_bl_method': 'LBM, leaf to cabin air (T19)',
+         'delta_bl_mm': np.nan, 'dC_CO2_ppm': np.nan,
+         'enclosure_co2_depletion_min': np.nan, 'source': ll + 'T11, T19; T8: bounded'},
+        {'hardware': 'Veggie', 'condition': 'Microgravity (0g)', 'ventilation': 'Vents to cabin',
+         'carbon_12h_pct_earth': float(t11.loc['VEGGIE', '12h carbon (% Earth)']), 'carbon_metric': '12 h carbon, 0-D model (T11)',
+         'g_bl_mol_m2_s': np.nan, 'g_bl_method': 'not sourced',
+         'delta_bl_mm': np.nan, 'dC_CO2_ppm': np.nan,
+         'enclosure_co2_depletion_min': np.nan, 'source': ll + 'T11; T8: bounded'},
     ]
+    for q in (0.10, 0.50, 1.00):
+        r = df_adv[df_adv['scenario'] == f'Lunar_0.166g_Q{q:.2f}'].iloc[0]
+        hw_benchmarks.append({
+            'hardware': 'LEAF GBC1', 'condition': f'Lunar (0.166g, Q={q:.2f} L/min)',
+            'ventilation': f"Pump, port velocity {r['inlet_velocity_m_s']:.2f} m/s",
+            'carbon_12h_pct_earth': float(r['carbon_12h_pct_earth']),
+            'carbon_metric': 'instantaneous FvCB A_net / fixed 9.466 reference (not comparable with T11)',
+            'g_bl_mol_m2_s': float(r['g_bl_mean_mol_m2_s']),
+            'g_bl_method': 'correlation estimate (not solver-resolved)',
+            'delta_bl_mm': float(r['delta_bl_mm']), 'dC_CO2_ppm': float(r['dC_CO2_mean_ppm']),
+            'enclosure_co2_depletion_min': np.nan,
+            'source': 'sim/gbc1_cfd_engine.py via results/tables/gbc1_advanced_analytics.tsv'})
     df_hw = pd.DataFrame(hw_benchmarks)
     hw_path = 'results/tables/gbc1_hardware_benchmark_comparison.tsv'
     df_hw.to_csv(hw_path, sep='\t', index=False)
@@ -164,7 +172,8 @@ def run_advanced_pipeline():
     ax_a = axes[0, 0]
     theta_earth = age_maps['1g_Earth_Q0.50']['theta'][i_slice, :, :]
     im_a = ax_a.imshow(theta_earth, origin='lower', cmap='plasma', extent=[-34, 34, 0, 38], vmin=0, vmax=15.0)
-    ax_a.set_title('A. 1g Earth: Spatial Mean Age of Air θ (s)\nQ = 0.50 L/min (Residence time τ = 7.75 s)', fontsize=12, fontweight='bold')
+    tau_05 = float(df_adv.loc[df_adv['scenario'] == '1g_Earth_Q0.50', 'tau_theory_residence_s'].iloc[0])
+    ax_a.set_title(f'A. 1g Earth: Spatial Mean Age of Air θ (s)\nQ = 0.50 L/min (Residence time τ = V/Q = {tau_05:.2f} s)', fontsize=12, fontweight='bold')
     ax_a.set_xlabel('Z Length (mm)')
     ax_a.set_ylabel('Y Height (mm)')
     plt.colorbar(im_a, ax=ax_a, fraction=0.046, pad=0.04, label='Air Age θ (seconds)')
@@ -224,27 +233,25 @@ def run_advanced_pipeline():
     fig, axes = plt.subplots(2, 2, figsize=(14, 11))
     
     # Data for bar comparisons
-    hw_labels = ['BRIC (µg)', 'CARA (µg)', 'Veggie (µg)', 'GBC1 (0.1 L/min)', 'GBC1 (0.5 L/min)', 'GBC1 (1.0 L/min)']
-    c_fix = [1.0, 50.0, 99.3,
-             float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.10', 'carbon_12h_pct_earth'].values[0]),
-             float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.50', 'carbon_12h_pct_earth'].values[0]),
-             float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q1.00', 'carbon_12h_pct_earth'].values[0])]
-    
-    colors_bar = ['#d62728', '#ff7f0e', '#2ca02c', '#1f77b4', '#17becf', '#9467bd']
-    
-    # Panel A: Carbon Fixation % of Earth
+    hw_labels = ['BRIC (µg)', 'CARA (µg)', 'Veggie (µg)', 'LEAF GBC1']
+    c_fix = [df_hw.loc[df_hw['hardware'] == h, 'carbon_12h_pct_earth'].iloc[0] for h in ('BRIC', 'CARA', 'Veggie')]
+    colors_bar = ['#2a78d6', '#2a78d6', '#2a78d6']
+
+    # Panel A: 12 h carbon fixed, LunarLeaf-CFD T11 (0-D closed-loop model)
     ax = axes[0, 0]
-    bars = ax.bar(range(len(hw_labels)), c_fix, color=colors_bar, edgecolor='black', alpha=0.85)
-    ax.axhline(100.0, color='gray', ls='--', alpha=0.7, label='1g Earth Baseline (100%)')
-    ax.set_ylabel('12h Carbon Fixation (% Earth)', fontsize=12)
-    ax.set_title('A. Spaceflight Carbon Assimilation Efficiency', fontsize=12, fontweight='bold')
-    ax.set_xticks(range(len(hw_labels)))
+    bars = ax.bar(range(3), c_fix, color=colors_bar, edgecolor='white', width=0.55)
+    ax.axhline(100.0, color='gray', ls='--', alpha=0.7, label='Earth (100%)')
+    ax.text(3, 5, 'not computed with\nthe same model', ha='center', va='bottom', fontsize=9, style='italic', color='#52514e')
+    ax.set_ylabel('12 h carbon fixed (% Earth)', fontsize=12)
+    ax.set_title('A. Enclosure carbon supply (LunarLeaf-CFD T11, 0-D)', fontsize=12, fontweight='bold')
+    ax.set_xticks(range(4))
     ax.set_xticklabels(hw_labels, rotation=30, ha='right', fontsize=10)
+    ax.set_xlim(-0.6, 3.6)
     ax.set_ylim([0, 115])
     ax.grid(axis='y', alpha=0.3)
     for b in bars:
         h = b.get_height()
-        ax.annotate(f'{h:.1f}%', xy=(b.get_x() + b.get_width()/2, h), xytext=(0, 3),
+        ax.annotate(f'{h:.0f}%', xy=(b.get_x() + b.get_width()/2, h), xytext=(0, 3),
                     textcoords="offset points", ha='center', va='bottom', fontsize=9, fontweight='bold')
                     
     # Panel B: Boundary Layer Conductance g_bl vs Pump Speed (FvCB overlay)
@@ -254,10 +261,10 @@ def run_advanced_pipeline():
     ax.axhline(95.0, color='green', ls='--', alpha=0.8, label='Optimal Photosynthesis (>95%)')
     ax.set_xscale('log')
     ax.set_xlabel('Pump Flow Rate Q (L/min)', fontsize=12)
-    ax.set_ylabel('Carbon Fixation (% Earth)', fontsize=12)
-    ax.set_title('B. FvCB Photosynthetic Recovery vs. Pump Speed', fontsize=12, fontweight='bold')
+    ax.set_ylabel('FvCB A_net / fixed reference (%)', fontsize=12)
+    ax.set_title('B. FvCB A_net vs. pump speed\n(g_bl from correlation; solver not at steady state)', fontsize=12, fontweight='bold')
     ax.grid(True, which='both', alpha=0.3)
-    ax.legend(frameon=True, fontsize=10)
+    ax.legend(frameon=True, fontsize=9, loc='center right')
     
     # Panel C: Chamber Velocity CoV (Spatial Heterogeneity)
     ax = axes[1, 0]
@@ -270,17 +277,20 @@ def run_advanced_pipeline():
     ax.grid(True, which='both', alpha=0.3)
     ax.legend(frameon=True, fontsize=10)
     
-    # Panel D: Boundary layer thickness vs Hardware comparison
+    # Panel D: leaf g_bl at 0 g inside the dishes (LunarLeaf-CFD T19); none for Veggie or GBC1
     ax = axes[1, 1]
-    gbl_vals = [0.291, 0.291, 0.291,
-                float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.10', 'g_bl_mean_mol_m2_s'].values[0]),
-                float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q0.50', 'g_bl_mean_mol_m2_s'].values[0]),
-                float(df_adv.loc[df_adv['scenario']=='Lunar_0.166g_Q1.00', 'g_bl_mean_mol_m2_s'].values[0])]
-    bars_gbl = ax.bar(range(len(hw_labels)), gbl_vals, color=colors_bar, edgecolor='black', alpha=0.85)
-    ax.set_ylabel('Boundary Layer Conductance g_bl (mol m⁻² s⁻¹)', fontsize=12)
-    ax.set_title('D. Foliar Conductance Across Flight Hardware', fontsize=12, fontweight='bold')
-    ax.set_xticks(range(len(hw_labels)))
-    ax.set_xticklabels(hw_labels, rotation=30, ha='right', fontsize=10)
+    gbl_vals = [df_hw.loc[df_hw['hardware'] == h, 'g_bl_mol_m2_s'].iloc[0] for h in ('BRIC', 'CARA')]
+    ax.bar(range(2), gbl_vals, color='#eb6834', edgecolor='white', width=0.55)
+    for i, v in enumerate(gbl_vals):
+        ax.annotate(f'{v:.3f}', xy=(i, v), xytext=(0, 3), textcoords='offset points', ha='center', fontsize=9, fontweight='bold')
+    for i in (2, 3):
+        ax.text(i, 0.01, 'no solver-\nresolved value', ha='center', va='bottom', fontsize=9, style='italic', color='#52514e')
+    ax.set_ylabel('Leaf g_bl at 0 g (mol m⁻² s⁻¹)', fontsize=12)
+    ax.set_title('D. Leaf g_bl in dishes at 0 g (LunarLeaf-CFD T19)\nBRIC to dish air; CARA to cabin air', fontsize=12, fontweight='bold')
+    ax.set_xticks(range(4))
+    ax.set_xticklabels(['BRIC sealed', 'CARA taped', 'Veggie', 'LEAF GBC1'], rotation=30, ha='right', fontsize=10)
+    ax.set_xlim(-0.6, 3.6)
+    ax.set_ylim(0, 0.25)
     ax.grid(axis='y', alpha=0.3)
     
     plt.tight_layout()
